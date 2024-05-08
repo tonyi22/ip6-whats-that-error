@@ -1,4 +1,4 @@
-interface SystemMonitoringIssue {
+export interface SystemMonitoringIssue {
     id: number,
     title: string;
     description: string;

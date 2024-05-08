@@ -1,3 +1,4 @@
+import { SystemMonitoringIssue } from '../data/data';
 import issues from '../data/issues.json' assert { type: 'json' };;
 import styles from '../issues.module.css'
 
@@ -24,7 +25,7 @@ function MainCard({ firstIssue }: { firstIssue: SystemMonitoringIssue }) {
     )
 }
 
-const systemMonitoringIssuesArray: SystemMonitoringIssue[] = issues.map(issue => {
+export const systemMonitoringIssuesArray: SystemMonitoringIssue[] = issues.map(issue => {
     return {
         ...issue,
         timestamp: new Date(issue.timestamp),
