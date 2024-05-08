@@ -99,9 +99,7 @@ function IssueView({ params }: { params: { id: string } }) {
                 </div>
 
 
-                {/* <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2' > */}
                 <TabComponent />
-                {/* </div> */}
             </div>
         </div >
     );

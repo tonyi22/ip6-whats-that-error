@@ -6,19 +6,19 @@ export function TabComponent() {
     return (
         <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2 relative'>
 
-            <div className='p-1 absolute top-1 left-0 transform -translate-y-full bg-gray-50 rounded-t-lg'>
+            <div className='p-1 absolute top-0 left-1 transform -translate-y-full bg-white border border-black rounded-t-lg'>
                 <button
-                    className={`px-2 py-1 text-xs ${activeTab === 'comments' ? 'bg-white text-black rounded-lg' : 'text-gray-500'}`}
+                    className={`px-2 py-1 text-xs ${activeTab === 'comments' ? 'bg-gray-300 text-black rounded-lg' : 'bg-white text-gray-500'}`}
                     onClick={() => setActiveTab('comments')}
                 >
-                    Comm
+                    C
                 </button>
 
                 <button
-                    className={`px-2 py-1 text-xs ${activeTab === 'attachments' ? 'bg-white text-black rounded-lg' : 'text-gray-500'}`}
+                    className={`px-2 py-1 text-xs ${activeTab === 'attachments' ? 'bg-gray-300 text-black rounded-lg' : 'bg-white text-gray-500'}`}
                     onClick={() => setActiveTab('attachments')}
                 >
-                    Att
+                    A
                 </button>
             </div>
 
