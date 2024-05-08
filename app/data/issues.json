@@ -1,0 +1,292 @@
+[
+    {
+        "title": "System Issue 1",
+        "id": 1,
+        "description": "Description of System Issue 1",
+        "status": "In Progress",
+        "timestamp": "2024-02-25T00:43:55.048651",
+        "creator": "User9",
+        "duration": 12,
+        "endTime": "2024-02-26T12:43:55.048651",
+        "lastUpdated": "2024-02-25T10:43:48.048651",
+        "impact": "Impact level 1",
+        "affectedSystems": [
+            "System5",
+            "System9"
+        ],
+        "alertType": "Critical",
+        "incidentType": "Storage",
+        "priority": 10,
+        "severity": "Medium",
+        "preventativeMeasures": "Measure 2",
+        "attachments": [
+            "Attachment3.txt",
+            "Attachment5.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 1",
+            "Further investigation needed 9"
+        ]
+    },
+    {
+        "title": "System Issue 2",
+        "id": 2,
+        "description": "Description of System Issue 2",
+        "status": "In Progress",
+        "timestamp": "2023-10-08T08:29:45.048651",
+        "creator": "User2",
+        "duration": 19,
+        "endTime": "2023-10-10T03:29:45.048651",
+        "lastUpdated": "2023-10-08T12:29:37.048651",
+        "impact": "Impact level 3",
+        "affectedSystems": [
+            "System4",
+            "System8"
+        ],
+        "alertType": "Critical",
+        "incidentType": "Storage",
+        "priority": 9,
+        "severity": "Low",
+        "preventativeMeasures": "Measure 1",
+        "attachments": [
+            "Attachment3.txt",
+            "Attachment5.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 1",
+            "Further investigation needed 9"
+        ]
+    },
+    {
+        "title": "System Issue 3",
+        "id": 3,
+        "description": "Description of System Issue 3",
+        "status": "Open",
+        "timestamp": "2023-06-07T04:05:30.048651",
+        "creator": "User2",
+        "duration": 6,
+        "endTime": "2023-06-09T10:05:30.048651",
+        "lastUpdated": "2023-06-08T08:35:24.048651",
+        "impact": "Impact level 4",
+        "affectedSystems": [
+            "System1",
+            "System10"
+        ],
+        "alertType": "Info",
+        "incidentType": "Overheating",
+        "priority": 5,
+        "severity": "High",
+        "preventativeMeasures": "Measure 3",
+        "attachments": [
+            "Attachment1.txt",
+            "Attachment6.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 3",
+            "Further investigation needed 10"
+        ]
+    },
+    {
+        "title": "System Issue 4",
+        "id": 4,
+        "description": "Description of System Issue 4",
+        "status": "Closed",
+        "timestamp": "2023-11-20T14:22:10.048651",
+        "creator": "User5",
+        "duration": 48,
+        "endTime": "2023-11-22T14:22:10.048651",
+        "lastUpdated": "2023-11-21T18:50:56.048651",
+        "impact": "Impact level 5",
+        "affectedSystems": [
+            "System2",
+            "System7"
+        ],
+        "alertType": "Warning",
+        "incidentType": "Power",
+        "priority": 1,
+        "severity": "Low",
+        "preventativeMeasures": "Measure 4",
+        "attachments": [
+            "Attachment2.txt",
+            "Attachment4.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 4",
+            "Further investigation needed 8"
+        ]
+    },
+    {
+        "title": "System Issue 5",
+        "id": 5,
+        "description": "Description of System Issue 5",
+        "status": "In Progress",
+        "timestamp": "2024-01-15T17:38:30.048651",
+        "creator": "User7",
+        "duration": 24,
+        "endTime": "2024-01-17T17:38:30.048651",
+        "lastUpdated": "2024-01-16T20:56:18.048651",
+        "impact": "Impact level 2",
+        "affectedSystems": [
+            "System3",
+            "System6"
+        ],
+        "alertType": "Info",
+        "incidentType": "Backups",
+        "priority": 3,
+        "severity": "High",
+        "preventativeMeasures": "Measure 5",
+        "attachments": [
+            "Attachment1.txt",
+            "Attachment3.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 5",
+            "Further investigation needed 7"
+        ]
+    },
+    {
+        "title": "System Issue 6",
+        "id": 6,
+        "description": "Description of System Issue 6",
+        "status": "Open",
+        "timestamp": "2023-05-12T12:11:20.048651",
+        "creator": "User6",
+        "duration": 36,
+        "endTime": "2023-05-14T00:11:20.048651",
+        "lastUpdated": "2023-05-13T15:30:15.048651",
+        "impact": "Impact level 1",
+        "affectedSystems": [
+            "System8",
+            "System9"
+        ],
+        "alertType": "Warning",
+        "incidentType": "Performance",
+        "priority": 6,
+        "severity": "Medium",
+        "preventativeMeasures": "Measure 3",
+        "attachments": [
+            "Attachment2.txt",
+            "Attachment6.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 6",
+            "Further investigation needed 5"
+        ]
+    },
+    {
+        "title": "System Issue 7",
+        "id": 7,
+        "description": "Description of System Issue 7",
+        "status": "Closed",
+        "timestamp": "2023-12-03T11:47:40.048651",
+        "creator": "User1",
+        "duration": 72,
+        "endTime": "2023-12-06T11:47:40.048651",
+        "lastUpdated": "2023-12-05T14:08:32.048651",
+        "impact": "Impact level 3",
+        "affectedSystems": [
+            "System1",
+            "System5"
+        ],
+        "alertType": "Critical",
+        "incidentType": "Overheating",
+        "priority": 8,
+        "severity": "High",
+        "preventativeMeasures": "Measure 2",
+        "attachments": [
+            "Attachment1.txt",
+            "Attachment3.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 2",
+            "Further investigation needed 4"
+        ]
+    },
+    {
+        "title": "System Issue 8",
+        "id": 8,
+        "description": "Description of System Issue 8",
+        "status": "In Progress",
+        "timestamp": "2023-09-28T15:56:50.048651",
+        "creator": "User10",
+        "duration": 8,
+        "endTime": "2023-09-28T23:56:50.048651",
+        "lastUpdated": "2023-09-28T19:36:42.048651",
+        "impact": "Impact level 4",
+        "affectedSystems": [
+            "System2",
+            "System7"
+        ],
+        "alertType": "Info",
+        "incidentType": "Backups",
+        "priority": 4,
+        "severity": "Low",
+        "preventativeMeasures": "Measure 4",
+        "attachments": [
+            "Attachment2.txt",
+            "Attachment5.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 4",
+            "Further investigation needed 3"
+        ]
+    },
+    {
+        "title": "System Issue 9",
+        "id": 9,
+        "description": "Description of System Issue 9",
+        "status": "Open",
+        "timestamp": "2023-05-31T20:52:21.048651",
+        "creator": "User3",
+        "duration": 12,
+        "endTime": "2023-06-02T08:52:21.048651",
+        "lastUpdated": "2023-06-02T07:12:47.048651",
+        "impact": "Impact level 2",
+        "affectedSystems": [
+            "System2",
+            "System6"
+        ],
+        "alertType": "Critical",
+        "incidentType": "Power",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Measure 1",
+        "attachments": [
+            "Attachment1.txt",
+            "Attachment4.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 1",
+            "Further investigation needed 6"
+        ]
+    },
+    {
+        "title": "System Issue 10",
+        "id": 10,
+        "description": "Description of System Issue 10",
+        "status": "In Progress",
+        "timestamp": "2024-04-13T10:00:37.048651",
+        "creator": "User8",
+        "duration": 4,
+        "endTime": "2024-04-13T14:00:37.048651",
+        "lastUpdated": "2024-04-13T11:43:28.048651",
+        "impact": "Impact level 1",
+        "affectedSystems": [
+            "System3",
+            "System10"
+        ],
+        "alertType": "Critical",
+        "incidentType": "Power",
+        "priority": 9,
+        "severity": "Medium",
+        "preventativeMeasures": "Measure 2",
+        "attachments": [
+            "Attachment1.txt",
+            "Attachment4.pdf"
+        ],
+        "comments": [
+            "Comment about resolution steps 1",
+            "Further investigation needed 6"
+        ]
+    }
+]
