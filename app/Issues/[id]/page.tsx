@@ -1,8 +1,9 @@
 'use client'
 import React, { useState } from 'react';
 import { IoWarningOutline } from "react-icons/io5";
+import { PiWarningOctagonBold } from "react-icons/pi";
+import { TfiInfoAlt } from "react-icons/tfi";
 import { systemMonitoringIssuesArray } from '../page';
-import { SystemMonitoringIssue } from '../../data/data';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { TabComponent } from './TabComponent';
@@ -17,6 +18,19 @@ function IssueView({ params }: { params: { id: string } }) {
     //helper function to format date
     const formatDate = (date: string | number | Date) => {
         return format(new Date(date), 'dd.MM.yyyy HH:mm:ss', { locale: de });
+    };
+
+    //function to show the correct icon depending on the alert type
+    const getAlertIcon = (alertType: string) => {
+        switch (alertType) {
+            case 'Warning':
+                return <IoWarningOutline className='text-4xl text-yellow-500' />;
+            case 'Critical':
+                return <PiWarningOctagonBold className='text-4xl text-red-500' />;
+            case 'Info':
+            default:
+                return <TfiInfoAlt className='text-4xl text-blue-500' />;
+        }
     };
 
     const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
@@ -35,7 +49,7 @@ function IssueView({ params }: { params: { id: string } }) {
 
                 <div className='flex min-h-[50px] col-span-1 justify-center items-center'>
                     <div className='p-1 col-span-1 bg-white border-black border rounded-lg shadow-xl flex justify-center items-center'>
-                        <IoWarningOutline className='text-4xl text-yellow-500' />
+                        {getAlertIcon(issue.alertType)}
                     </div>
                 </div>
 
