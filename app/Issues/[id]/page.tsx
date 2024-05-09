@@ -81,14 +81,14 @@ function IssueView({ params }: { params: { id: string } }) {
 
 
                 <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-4 p-1'>
-                    <p className='flex justify-center items-center'>Info</p>
+                    <p className='font-bold flex justify-center items-center'>Info</p>
 
-                    <h2 className='flex'>Creator: {issue.creator}</h2>
-                    <h2 className='flex'>Timestamp: {formatDate(issue.timestamp)}</h2>
-                    <h2 className='flex'>Issue Nr. {issue.id}</h2>
-                    <h2 className='flex'>Duration: {issue.duration}</h2>
-                    <h2 className='flex'>End time: {formatDate(issue.endTime)}</h2>
-                    <h2 className='flex'>Last updated: {formatDate(issue.lastUpdated)}</h2>
+                    <h2 className='flex'>- Creator: {issue.creator}</h2>
+                    <h2 className='flex'>- Timestamp: {formatDate(issue.timestamp)}</h2>
+                    <h2 className='flex'>- Issue Nr. {issue.id}</h2>
+                    <h2 className='flex'>- Duration: {issue.duration}</h2>
+                    <h2 className='flex'>- End time: {formatDate(issue.endTime)}</h2>
+                    <h2 className='flex'>- Last updated: {formatDate(issue.lastUpdated)}</h2>
 
                 </div>
 
@@ -98,35 +98,38 @@ function IssueView({ params }: { params: { id: string } }) {
 
 
                 <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 flex justify-center items-center' >
-                    <p>Priority: {issue.priority}/10</p>
+                    <p>Priority: <span className='bg-gray-200 border border-gray-500 rounded p-2'>{issue.priority}/10</span></p>
                 </div>
 
 
                 <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2'>Impact</p>
+                    <p className='p-2 font-bold'>Impact</p>
                     <br></br>
-                    <p> {issue.impact}</p>
+                    <p className='p-1'> - {issue.impact}</p>
                 </div>
 
 
                 <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2'>Affected Systems</p>
+                    <p className='p-2 font-bold'>Affected Systems</p>
+                    <div className="space-y-1"> {/* Dies fügt vertikalen Abstand zwischen den Elementen hinzu */}
+                        {issue.affectedSystems.map((system, index) => (
+                            <p className='p-1' key={index} > - {system}</p> // Verwenden des Index als Schlüssel ist akzeptabel, wenn die Liste stabil ist
+                        ))}
+                    </div>
+                </div>
+
+
+                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
+                    <p className='p-2 font-bold'>Preventative Measures</p>
                     <br></br>
-                    <p> {issue.affectedSystems}</p>
+                    <p className='p-1'> - {issue.preventativeMeasures}</p>
                 </div>
 
                 <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2'>Preventative Measures</p>
+                    <p className='p-2 font-bold'>Description</p>
                     <br></br>
-                    <p> {issue.preventativeMeasures}</p>
+                    <p className='p-1'> - {issue.description}</p>
                 </div>
-
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2'>Description</p>
-                    <br></br>
-                    <p> {issue.description}</p>
-                </div>
-
 
                 <TabComponent />
             </div>
