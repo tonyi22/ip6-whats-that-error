@@ -33,6 +33,20 @@ function IssueView({ params }: { params: { id: string } }) {
         }
     };
 
+    //function to change the color depending on severity
+    const getSeverityColor = (severity: string) => {
+        switch (severity) {
+            case 'Low':
+                return 'bg-green-500';
+            case 'Medium':
+                return 'bg-yellow-500';
+            case 'High':
+                return 'bg-red-500';
+            default:
+                return 'bg-gray-500';
+        }
+    };
+
     const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
 
     return (
@@ -47,23 +61,24 @@ function IssueView({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-                <div className='flex min-h-[50px] col-span-1 justify-center items-center'>
+                <div className='flex -translate-x-9 min-h-[50px] col-span-1 justify-center items-center'>
                     <div className='p-1 col-span-1 bg-white border-black border rounded-lg shadow-xl flex justify-center items-center'>
                         {getAlertIcon(issue.alertType)}
                     </div>
                 </div>
 
-                <div className="flex min-h-[50px] justify-center items-center ">
+                <div className="flex -translate-x-9 min-h-[50px] justify-center items-center ">
                     <div className='p-2 bg-white border-black border rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
                         <p>open</p>
                     </div>
                 </div>
 
-                <div className='flex min-h-[50px] justify-center items-center'>
-                    <div className='bg-yellow-500 border-black border rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
-                        <p>Severity: {issue.severity} </p>
+                <div className='whitespace-nowrap flex justify-center items-center max-w-l'>
+                    <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
+                        <p>Severity: <span className={`${getSeverityColor(issue.severity)} border border-gray-500 rounded p-2`}>{issue.severity}</span></p>
                     </div>
                 </div>
+
 
                 <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-4 p-1'>
                     <p className='flex justify-center items-center'>Info</p>
