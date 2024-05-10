@@ -2,12 +2,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 100px 20px;
+    padding: 80px 20px;
 }
 
 .mainIssue {
-
-    box-shadow: 15px 10px #c6bec9;
+    box-shadow: 30px 20px #ebe0ee;
+    /* Example with a blur radius of 30px */
 }
 
 .issueList {

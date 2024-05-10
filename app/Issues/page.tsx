@@ -3,6 +3,8 @@
 import { ReactNode, useState } from 'react';
 import issues from '../data/issues.json' assert { type: 'json' };;
 import styles from '../issues.module.css'
+import { format } from 'date-fns';
+import { MdOutlineFiberNew } from "react-icons/md";
 import {
     IoWarningOutline
 } from "react-icons/io5";
@@ -10,6 +12,10 @@ import {
     FaGreaterThan,
     FaLessThan
 } from "react-icons/fa";
+import { PiWarningOctagonBold } from 'react-icons/pi';
+import { TfiInfoAlt } from 'react-icons/tfi';
+import { de } from 'date-fns/locale';
+import { SlOptionsVertical } from "react-icons/sl";
 
 function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
     return validValues.includes(value) ? value : defaultValue;
@@ -29,67 +35,79 @@ const systemMonitoringIssuesArray: SystemMonitoringIssue[] = issues.map(issue =>
     };
 });
 
-/*
-function List({ list }: { list: SystemMonitoringIssue[] }) {
-    return (
-        <div className={styles.issueList}>
-
-            {list.slice(1).map(issue => (
-                <div key={issue.id} className={styles.issueCard}>
-                    <h2>{issue.title}</h2>
-                    <p>{issue.description}</p>
-                </div>
-            ))}
-        </div>
-    )
-}*/
+const formatDate = (date: string | number | Date) => {
+    return format(new Date(date), 'dd.MM.yyyy HH:mm:ss', { locale: de });
+};
 
 function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
+
+
+
+    const getAlertIcon = (alertType: string) => {
+        switch (alertType) {
+            case 'Warning':
+                return <IoWarningOutline className='text-4xl text-yellow-500 dark:text-yellow-300' />;
+            case 'Critical':
+                return <PiWarningOctagonBold className='text-4xl text-red-500 dark:text-red-300' />;
+            case 'Info':
+            default:
+                return <TfiInfoAlt className='text-4xl text-blue-500 dark:text-blue-300' />;
+        }
+    };
+
     return (
-        <div className="flex flex-col gap-2 rounded-xl shadow-lg p-6 bg-white">
-            <div className="flex items-center gap-4">
-                <div className="shrink-0"> <IoWarningOutline /></div>
-                <div>
-                    <h3 className="text-xl font-semibold">{issue.title}</h3>
-                    <p className="text-sm text-gray-500">{issue.description}</p>
-                </div>
-            </div>
-            <div className="mt-4">
-                <p><strong>Impact:</strong> {issue.impact}</p>
-                <p><strong>Affected Systems:</strong> {issue.affectedSystems.join(', ')}</p>
-                <p><strong>Alert Type:</strong> {issue.alertType}</p>
-                <p><strong>Incident Type:</strong> {issue.incidentType}</p>
-                <p><strong>Priority:</strong> {issue.priority}</p>
-                <p><strong>Severity:</strong> {issue.severity}</p>
-                <p><strong>Last Updated:</strong> {issue.lastUpdated.toLocaleString()}</p>
-                <p><strong>Preventative Measures:</strong> {issue.preventativeMeasures}</p>
-            </div>
+        <div className="flex justify-between items-center p-6 bg-[#fcf4ff] border-b w-full rounded-xl shadow-lg hover:bg-[#f2ebf5]">
+            {getAlertIcon(issue.alertType)}
+            <h3 className="mx-4 text-lg font-semibold flex-none min-w-0">{issue.title}</h3>
+            <p className="mx-4 flex-none" style={{ minWidth: '80px' }}>{issue.description}</p>
+            <p className="mx-4 flex-none" style={{ minWidth: '80px' }}>{issue.priority} / 10</p>
+
+            <p className="mx-4 flex-none" style={{ minWidth: '160px' }}> {formatDate(issue.timestamp)}</p>
+            <SlOptionsVertical className="text-gray-500 text-2xl" />
         </div>
     );
 }
+
+function CardsHeader() {
+    return (
+        <div className="flex justify-between items-center p-6 bg-white border-b w-full rounded-t-xl shadow-lg">
+            <span className="text-lg font-bold">Alert Type</span>
+            <span className="mx-4 text-lg font-semibold flex-none min-w-0">Title</span>
+            <span className="text-lg font-bold mx-4 flex-none" style={{ minWidth: '80px' }}>Description</span>
+            <span className="text-lg font-bold mx-4 flex-none" style={{ minWidth: '80px' }}>Priority</span>
+            <span className="text-lg font-bold mx-4 flex-none" style={{ minWidth: '160px' }}>Timestamp</span>
+            <span className="text-lg font-bold">Options</span>
+        </div>
+    );
+}
+
 function List({ list }: { list: SystemMonitoringIssue[] }) {
     return (
-        <div className="grid gap-6 grid-cols-3">
+        <div className="flex flex-col w-5/6 gap-4">
+            <CardsHeader />
             {list.map(listIssue => (
-                <IssueCard issue={listIssue} />
+                <IssueCard key={listIssue.id} issue={listIssue} />
             ))}
         </div>
     );
 }
 
-function Card1({ heading, description, icon, className = '' }: { heading: string, description: string, icon: ReactNode, className?: string }) {
+function Card1({ heading, description, icon, className = '', priority, timestamp }: { heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string }) {
     return (
-        <div className={`flex gap-4 rounded-xl shadow-sm p-6 shadow-2xl ${className}`}>
-            <div className="min-w-max">{icon}</div>
-            <div className="space-y-2">
-                <h3 className="text-[22px] font-semibold">{heading}</h3>
-                <p className="leading-8 text-gray-500 font-normal">{description}</p>
+        <div className={`flex flex-col gap-4 rounded-xl shadow-sm p-6 shadow-2xl relative bg-[#fcf4ff] ${className}`}>
+            <MdOutlineFiberNew className="text-red-500 absolute top-0 right-0 text-3xl" style={{ top: '-15px', right: '-15px' }} />
+            <div className="flex gap-4">
+                <div className="min-w-max">{icon}</div>
+                <div className="space-y-2 flex-grow">
+                    <h3 className="text-[26px] font-semibold">{heading}</h3>
+                    <p className="leading-8 text-gray-500 font-normal">{description}</p>
+                    <p className="text-gray-600">Priority: {priority}</p>  {/* New */}
+                    <p className="text-gray-600">Timestamp: {timestamp}</p>  {/* New */}
+                </div>
             </div>
         </div>
     );
 }
-
-
 
 export default function IssuesPage() {
     const [openIssues, setOpenIssues] = useState<SystemMonitoringIssue[]>(systemMonitoringIssuesArray.filter(issue => issue.status !== "New").
@@ -144,10 +162,12 @@ export default function IssuesPage() {
             {currentIndex !== -1 &&
                 <div className="flex flex-col items-center space-y-4">
                     <Card1
-                        className={`bg-[#fcf4ff] w-full max-w-lg shadow-lg ${issues.length > 1 ? styles.mainIssue : ''}`}
+                        className={issues.length > 1 ? styles.mainIssue : ''}
                         heading={issues[currentIndex].title}
                         description={issues[currentIndex].description}
-                        icon={<IoWarningOutline size="2.5rem" className="text-[#D566FF]" />}
+                        icon={<IoWarningOutline size="3.5rem" className="text-[#D566FF]" />}
+                        priority={issues[currentIndex].priority}
+                        timestamp={formatDate(issues[currentIndex].timestamp)}
                     />
                     <div className="flex justify-between items-center w-full max-w-lg p-10">
                         <button
@@ -168,7 +188,8 @@ export default function IssuesPage() {
                     </div>
                 </div>
             }
-            <h3 className="text-5xl font-semibold text-left m-7">Issues</h3>
+            <h3 className="text-5xl font-semibold mb-7">Issues</h3>
+
             <List list={openIssues} />
         </div>
     )
