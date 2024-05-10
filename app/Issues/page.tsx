@@ -1,24 +1,19 @@
 "use client";
 
-import { ReactNode, useState } from 'react';
 import issues from '../data/issues.json' assert { type: 'json' };
 import styles from '../issues.module.css'
-import { format } from 'date-fns';
-import { MdOutlineFiberNew } from "react-icons/md";
-import {
-    IoWarningOutline
-} from "react-icons/io5";
-import {
-    FaGreaterThan,
-    FaLessThan
-} from "react-icons/fa";
+
+import { FaGreaterThan, FaLessThan } from "react-icons/fa";
+import { SystemMonitoringIssue } from '../data/data';
 import { PiWarningOctagonBold } from 'react-icons/pi';
+import { SlOptionsVertical } from "react-icons/sl";
+import { MdOutlineFiberNew } from "react-icons/md";
+import { IoWarningOutline } from "react-icons/io5";
 import { TfiInfoAlt } from 'react-icons/tfi';
 import { de } from 'date-fns/locale';
-import { SlOptionsVertical } from "react-icons/sl";
-import React from 'react';
-import { SystemMonitoringIssue } from '../data/data';
-
+import { format } from 'date-fns';
+import { useState } from 'react';
+import Link from 'next/link';
 
 function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
     return validValues.includes(value) ? value : defaultValue;
@@ -43,8 +38,6 @@ const formatDate = (date: string | number | Date) => {
 
 function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
 
-
-
     const getAlertIcon = (alertType: string) => {
         switch (alertType) {
             case 'Warning':
@@ -63,7 +56,6 @@ function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
             <h3 className="mx-4 text-lg font-semibold flex-none min-w-0">{issue.title}</h3>
             <p className="mx-4 flex-none" style={{ minWidth: '80px' }}>{issue.description}</p>
             <p className="mx-4 flex-none" style={{ minWidth: '80px' }}>{issue.priority} / 10</p>
-
             <p className="mx-4 flex-none" style={{ minWidth: '160px' }}> {formatDate(issue.timestamp)}</p>
             <SlOptionsVertical className="text-gray-500 text-2xl" />
         </div>
@@ -87,10 +79,14 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
     return (
         <div className="flex flex-col w-5/6 gap-4">
             <CardsHeader />
-            {list.map(listIssue => (
-                <IssueCard key={listIssue.id} issue={listIssue} />
-            ))}
-        </div>
+            <div>
+                {list.map(listIssue => (
+                    <Link key={listIssue.id} href={`/Issues/${listIssue.id}`}>
+                        <IssueCard issue={listIssue} />
+                    </Link>
+                ))}
+            </div>
+        </div >
     );
 }
 
