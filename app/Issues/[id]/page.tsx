@@ -48,32 +48,34 @@ function IssueView({ params }: { params: { id: string } }) {
     const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
 
     return (
-        <div className="mx-4 my-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
-            {/* <p className="p-5 justify-center items-center flex bg-github-secondary dark:bg-github-dark-tertiary">Detailansicht eines Issues</p> */}
+        <div className="mx-4 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
+            <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Issue Detailansicht</h3>
 
-            <div className='rounded-lg  grid grid-cols-1 sm:grid-cols-9 grid-rows-1 sm:grid-rows-7 gap-x-10 gap-y-10 p-5 grid-flow-row-dense dark:border-github-primary'>
+            <div className='rounded-lg  grid grid-cols-1 sm:grid-cols-9 grid-rows-1 sm:grid-rows-7 gap-x-10 gap-y-20 p-5 grid-flow-row-dense dark:border-github-primary'>
 
-                <div className='flex min-h-[50px] col-span-3 '>
-                    <div className='p-2 bg-github-tertiary dark:bg-github-dark-tertiary rounded-lg shadow-xl flex justify-center items-center'>
-                        <p> Titel: {issue.title} </p>
+                <div className='flex min-h-[50px] col-span-1'>
+                    <div className='text-xl p-2 bg-github-tertiary dark:bg-github-dark-tertiary rounded-lg shadow-xl flex flex-col'>
+                        <p className='text-lg'>Titel</p>
+                        <p className='text-xl'>{issue.title}</p>
                     </div>
                 </div>
 
+
                 <div className='flex -translate-x-9 min-h-[50px] col-span-1 justify-center items-center'>
-                    <div className='p-1 col-span-1 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl flex justify-center items-center'>
+                    <div className='p-1 col-span-1 bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-xl flex justify-center items-center'>
                         {getAlertIcon(issue.alertType)}
                     </div>
                 </div>
 
-                <div className="flex -translate-x-9 min-h-[50px] justify-center items-center ">
-                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
+                <div className="flex -translate-x-9 min-h-[50px] justify-center col-span-1 items-center ">
+                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
                         <p>open</p>
                     </div>
                 </div>
 
-                <div className='whitespace-nowrap flex justify-center items-center max-w-l'>
+                <div className='whitespace-nowrap flex justify-center col-span-3 items-center max-w-l'>
                     <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
-                        <p>Severity: <span className={`${getSeverityColor(issue.severity)}  rounded-xl p-2`}>{issue.severity}</span></p>
+                        <p>Severity: <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2`}>{issue.severity}</span></p>
                     </div>
                 </div>
 
