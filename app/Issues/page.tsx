@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useState } from 'react';
-import issues from '../data/issues.json' assert { type: 'json' };;
+import issues from '../data/issues.json' assert { type: 'json' };
 import styles from '../issues.module.css'
 import { format } from 'date-fns';
 import { MdOutlineFiberNew } from "react-icons/md";
@@ -16,13 +16,15 @@ import { PiWarningOctagonBold } from 'react-icons/pi';
 import { TfiInfoAlt } from 'react-icons/tfi';
 import { de } from 'date-fns/locale';
 import { SlOptionsVertical } from "react-icons/sl";
+import React from 'react';
+import { SystemMonitoringIssue } from '../data/data';
+
 
 function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
     return validValues.includes(value) ? value : defaultValue;
 }
 
-const systemMonitoringIssuesArray: SystemMonitoringIssue[] = issues.map(issue => {
-
+export const systemMonitoringIssuesArray: SystemMonitoringIssue[] = issues.map(issue => {
     return {
         ...issue,
         status: validateType(issue.status, ['New', 'Open', 'Closed', 'In Progress'], "Open"),
