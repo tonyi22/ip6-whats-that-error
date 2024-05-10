@@ -7,12 +7,10 @@ import { systemMonitoringIssuesArray } from '../page';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { TabComponent } from './TabComponent';
-
-
-
+import Link from 'next/link';
+import './detailView.css';
 
 function IssueView({ params }: { params: { id: string } }) {
-
     const [activeTab, setActiveTab] = useState('comments');
 
     //helper function to format date
@@ -24,12 +22,12 @@ function IssueView({ params }: { params: { id: string } }) {
     const getAlertIcon = (alertType: string) => {
         switch (alertType) {
             case 'Warning':
-                return <IoWarningOutline className='text-4xl text-yellow-500' />;
+                return <IoWarningOutline className='text-4xl text-yellow-500 dark:text-yellow-300' />;
             case 'Critical':
-                return <PiWarningOctagonBold className='text-4xl text-red-500' />;
+                return <PiWarningOctagonBold className='text-4xl text-red-500 dark:text-red-300' />;
             case 'Info':
             default:
-                return <TfiInfoAlt className='text-4xl text-blue-500' />;
+                return <TfiInfoAlt className='text-4xl text-blue-500 dark:text-blue-300' />;
         }
     };
 
@@ -37,104 +35,104 @@ function IssueView({ params }: { params: { id: string } }) {
     const getSeverityColor = (severity: string) => {
         switch (severity) {
             case 'Low':
-                return 'bg-green-500';
+                return 'bg-green-500 dark:bg-green-700';
             case 'Medium':
-                return 'bg-yellow-500';
+                return 'bg-yellow-500 dark:bg-yellow-700';
             case 'High':
-                return 'bg-red-500';
+                return 'bg-red-500 dark:bg-red-700';
             default:
-                return 'bg-gray-500';
+                return 'bg-gray-500 dark:bg-gray-700';
         }
     };
 
     const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
 
     return (
-        <div className="mx-4 my-8">
-            <p className="justify-center items-center flex">Detailansicht eines Issues</p>
+        <div className="mx-4 my-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
+            {/* <p className="p-5 justify-center items-center flex bg-github-secondary dark:bg-github-dark-tertiary">Detailansicht eines Issues</p> */}
 
-            <div className='bg-gray-200 border border-black rounded-lg shadow-xl grid grid-cols-1 sm:grid-cols-9 grid-rows-1 sm:grid-rows-6 gap-x-10 gap-y-10 p-5 grid-flow-row-dense mx-4 my-8'>
+            <div className='rounded-lg  grid grid-cols-1 sm:grid-cols-9 grid-rows-1 sm:grid-rows-7 gap-x-10 gap-y-10 p-5 grid-flow-row-dense dark:border-github-primary'>
 
-                <div className='flex min-h-[50px] col-span-3 justify-center items-center'>
-                    <div className='p-2 bg-white p-2 border-black border rounded-lg shadow-xl flex justify-center items-center'>
+                <div className='flex min-h-[50px] col-span-3 '>
+                    <div className='p-2 bg-github-tertiary dark:bg-github-dark-tertiary rounded-lg shadow-xl flex justify-center items-center'>
                         <p> Titel: {issue.title} </p>
                     </div>
                 </div>
 
                 <div className='flex -translate-x-9 min-h-[50px] col-span-1 justify-center items-center'>
-                    <div className='p-1 col-span-1 bg-white border-black border rounded-lg shadow-xl flex justify-center items-center'>
+                    <div className='p-1 col-span-1 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl flex justify-center items-center'>
                         {getAlertIcon(issue.alertType)}
                     </div>
                 </div>
 
                 <div className="flex -translate-x-9 min-h-[50px] justify-center items-center ">
-                    <div className='p-2 bg-white border-black border rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
+                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
                         <p>open</p>
                     </div>
                 </div>
 
                 <div className='whitespace-nowrap flex justify-center items-center max-w-l'>
-                    <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
-                        <p>Severity: <span className={`${getSeverityColor(issue.severity)} border border-gray-500 rounded p-2`}>{issue.severity}</span></p>
+                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] flex justify-center items-center'>
+                        <p>Severity: <span className={`${getSeverityColor(issue.severity)}  rounded-xl p-2`}>{issue.severity}</span></p>
                     </div>
                 </div>
 
-
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-4 p-1'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-4 p-1'>
                     <p className='font-bold flex justify-center items-center'>Info</p>
-
                     <h2 className='flex'>- Creator: {issue.creator}</h2>
                     <h2 className='flex'>- Timestamp: {formatDate(issue.timestamp)}</h2>
                     <h2 className='flex'>- Issue Nr. {issue.id}</h2>
                     <h2 className='flex'>- Duration: {issue.duration}</h2>
                     <h2 className='flex'>- End time: {formatDate(issue.endTime)}</h2>
                     <h2 className='flex'>- Last updated: {formatDate(issue.lastUpdated)}</h2>
-
                 </div>
 
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 flex justify-center items-center' >
-                    <p>Incident type: <span className='bg-gray-200 border border-gray-500 rounded p-2'>{issue.incidentType}</span></p>
+                <div className='flex min-h-[50px] col-span-3'>
+                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-xl flex justify-center items-center'>
+                        <p>Incident type: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.incidentType}</span></p>
+                    </div>
                 </div>
 
-
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 flex justify-center items-center' >
-                    <p>Priority: <span className='bg-gray-200 border border-gray-500 rounded p-2'>{issue.priority}/10</span></p>
+                <div className='flex min-h-[50px] col-span-3'>
+                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl flex justify-center items-center'>
+                        <p>Priority: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.priority}/10</span></p>
+                    </div>
                 </div>
 
-
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
                     <p className='p-2 font-bold'>Impact</p>
-                    <br></br>
                     <p className='p-1'> - {issue.impact}</p>
                 </div>
 
-
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
                     <p className='p-2 font-bold'>Affected Systems</p>
-                    <div className="space-y-1"> {/* Dies fügt vertikalen Abstand zwischen den Elementen hinzu */}
+                    <div className="space-y-1">
                         {issue.affectedSystems.map((system, index) => (
-                            <p className='p-1' key={index} > - {system}</p> // Verwenden des Index als Schlüssel ist akzeptabel, wenn die Liste stabil ist
+                            <p className='p-1' key={index}> - {system}</p>
                         ))}
                     </div>
                 </div>
 
-
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
                     <p className='p-2 font-bold'>Preventative Measures</p>
-                    <br></br>
                     <p className='p-1'> - {issue.preventativeMeasures}</p>
                 </div>
 
-                <div className='bg-white border-black border rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-xl min-h-[50px] col-span-3 row-span-2'>
                     <p className='p-2 font-bold'>Description</p>
-                    <br></br>
                     <p className='p-1'> - {issue.description}</p>
                 </div>
 
                 <TabComponent />
+
+                <div className='col-span-9'>
+                    <div className='flex justify-end'>
+                        <button className='bg-github-primary dark:bg-github-dark-primary text-white p-2 rounded-lg shadow-xl'>Close and Feedback</button>
+                    </div>
+                </div>
             </div>
-        </div >
+        </div>
     );
-};
+}
 
 export default IssueView;
