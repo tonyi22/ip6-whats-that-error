@@ -1,14 +1,13 @@
 'use client'
 import React, { useState } from 'react';
-import { IoWarningOutline } from "react-icons/io5";
-import { PiWarningOctagonBold } from "react-icons/pi";
-import { TfiInfoAlt } from "react-icons/tfi";
+
 import { systemMonitoringIssuesArray } from '../page';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
 import Link from 'next/link';
+import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
 
 function IssueView({ params }: { params: { id: string } }) {
 
@@ -17,45 +16,131 @@ function IssueView({ params }: { params: { id: string } }) {
         return format(new Date(date), 'dd.MM.yyyy HH:mm:ss', { locale: de });
     };
 
-    //function to show the correct icon depending on the alert type
-    const getAlertIcon = (alertType: string) => {
-        switch (alertType) {
-            case 'Warning':
-                return <IoWarningOutline className='text-4xl text-yellow-500 dark:text-yellow-300' />;
-            case 'Critical':
-                return <PiWarningOctagonBold className='text-4xl text-red-500 dark:text-red-300' />;
-            case 'Info':
-            default:
-                return <TfiInfoAlt className='text-4xl text-blue-500 dark:text-blue-300' />;
-        }
-    };
+
 
     //function to change the color depending on severity
-    const getSeverityColor = (severity: string) => {
-        switch (severity) {
-            case 'Low':
-                return 'bg-green-500 dark:bg-green-700';
-            case 'Medium':
-                return 'bg-yellow-500 dark:bg-yellow-700';
-            case 'High':
-                return 'bg-red-500 dark:bg-red-700';
-            default:
-                return 'bg-gray-500 dark:bg-gray-700';
-        }
-    };
+
 
     const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
 
     return (
-        <div className="mx-4 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
+        <div className="mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
             <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Issue Detailansicht</h3>
 
-            <div className='rounded-lg  grid grid-cols-1 sm:grid-cols-9 grid-rows-1 sm:grid-rows-7 gap-x-10 gap-y-20 p-5 grid-flow-row-dense dark:border-github-primary'>
+            <div className="grid grid-cols-3 grid-rows-4 gap-4">
+                <div>
+                    <div className="flex justify-between items-center p-4">
+                        <div>
+                            <h3 className="text-3xl font-semibold">{issue.title}</h3>
+                        </div>
+                        <div>
+                            {getAlertIcon(issue.alertType)}
+                        </div>
+                    </div>
+                </div>
 
-                <div className='flex min-h-[50px] col-span-1'>
-                    <div className='text-xl p-2 bg-github-tertiary dark:bg-github-dark-tertiary rounded-lg shadow-md flex flex-col'>
-                        <p className='text-lg'>Titel</p>
-                        <p className='text-xl'>{issue.title}</p>
+                <div>
+                    <div className="flex justify-between items-center p-4">
+                        <div>
+                            <p>Severity: <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2`}>{issue.severity}</span></p>
+                        </div>
+                        <div>
+                            <p>Status: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.status}</span></p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div>
+                    <div className="flex justify-between items-center p-4">
+                        <div>
+                            <p>Incident type: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.incidentType}</span></p>
+
+                        </div>
+
+                        <div>
+                            <p>Priority: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.priority}/10</span></p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                    <p className='font-bold pb-2'>Description</p>
+                    <p >{issue.description}</p>
+                </div>
+
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                    <p className='font-bold pb-2'>Affected Systems</p>
+                    <div className="space-y-1">
+                        {issue.affectedSystems.map((system, index) => (
+                            <p key={index}> - {system}</p>
+                        ))}
+                    </div>
+                </div>
+
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-2 p-4'>
+                    <p className='font-bold pb-2 ' >Info</p>
+                    <div className='grid grid-cols-2 gap-2'>
+                        <p className='text-gray-600 dark:text-gray-400'>Creator:</p>
+                        <p className='text-right'>{issue.creator}</p>
+
+                        <p className='text-gray-600 dark:text-gray-400'>Timestamp:</p>
+                        <p className='text-right'>{formatDate(issue.timestamp)}</p>
+
+                        <p className='text-gray-600 dark:text-gray-400'>Issue Nr.:</p>
+                        <p className='text-right'>{issue.id}</p>
+
+                        <p className='text-gray-600 dark:text-gray-400'>Duration:</p>
+                        <p className='text-right'>{issue.duration}</p>
+
+                        <p className='text-gray-600 dark:text-gray-400'>End time:</p>
+                        <p className='text-right'>{formatDate(issue.endTime)}</p>
+
+                        <p className='text-gray-600 dark:text-gray-400'>Last updated:</p>
+                        <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
+                    </div>
+                </div>
+
+
+
+
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                    <p className='p-2 font-bold'>Impact</p>
+                    <p className='p-1'> - {issue.impact}</p>
+                </div>
+
+
+
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                    <p className='p-2 font-bold'>Preventative Measures</p>
+                    <p className='p-1'> - {issue.preventativeMeasures}</p>
+                </div>
+
+                <TabComponent />
+
+                <div className='col-start-3 col-span-1'>
+                    <div className='flex justify-end'>
+                        <Link href={`/Issues/${issue.id}/feedback`}>
+                            <button className='bg-github-primary dark:bg-github-dark-primary text-white p-2 rounded-lg shadow-md'>Close and Feedback</button>
+                        </Link>
+                    </div>
+                </div>
+
+
+            </div>
+
+            {/* 
+
+            <div className='rounded-lg  grid grid-cols-3 sm:grid-cols-9 grid-rows-3 sm:grid-rows-7 gap-x-10 gap-y-20 p-5 grid-flow-row-dense dark:border-github-primary'>
+
+                <div className='flex min-h-[50px]'>
+                    <div className='p-2 bg-github-tertiary dark:bg-github-dark-tertiary rounded-lg shadow-md'>
+                        <p>Titel</p>
+                        <p>{issue.title}</p>
                     </div>
                 </div>
 
@@ -68,7 +153,7 @@ function IssueView({ params }: { params: { id: string } }) {
 
                 <div className="flex -translate-x-9 min-h-[50px] justify-center col-span-1 items-center ">
                     <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[50px] flex justify-center items-center'>
-                        <p>open</p>
+                        <p>{issue.status}</p>
                     </div>
                 </div>
 
@@ -78,14 +163,16 @@ function IssueView({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-md min-h-[50px] col-span-3 row-span-4 p-1'>
-                    <p className='font-bold flex justify-center items-center'>Info</p>
-                    <h2 className='flex'>- Creator: {issue.creator}</h2>
-                    <h2 className='flex'>- Timestamp: {formatDate(issue.timestamp)}</h2>
-                    <h2 className='flex'>- Issue Nr. {issue.id}</h2>
-                    <h2 className='flex'>- Duration: {issue.duration}</h2>
-                    <h2 className='flex'>- End time: {formatDate(issue.endTime)}</h2>
-                    <h2 className='flex'>- Last updated: {formatDate(issue.lastUpdated)}</h2>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[450px] col-span-3 row-span-4 p-4'>
+                    <p className='font-bold text-center mb-4'>Info</p>
+                    <div className='space-y-10'>
+                        <p>Creator: {issue.creator}</p>
+                        <p>Timestamp: {formatDate(issue.timestamp)}</p>
+                        <p>Issue Nr. {issue.id}</p>
+                        <p>Duration: {issue.duration}</p>
+                        <p>End time: {formatDate(issue.endTime)}</p>
+                        <p>Last updated: {formatDate(issue.lastUpdated)}</p>
+                    </div>
                 </div>
 
                 <div className='flex min-h-[50px] col-span-3'>
@@ -105,14 +192,7 @@ function IssueView({ params }: { params: { id: string } }) {
                     <p className='p-1'> - {issue.impact}</p>
                 </div>
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-md min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2 font-bold'>Affected Systems</p>
-                    <div className="space-y-1">
-                        {issue.affectedSystems.map((system, index) => (
-                            <p className='p-1' key={index}> - {system}</p>
-                        ))}
-                    </div>
-                </div>
+
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-md min-h-[50px] col-span-3 row-span-2'>
                     <p className='p-2 font-bold'>Preventative Measures</p>
@@ -124,7 +204,12 @@ function IssueView({ params }: { params: { id: string } }) {
                     <p className='p-1'> - {issue.description}</p>
                 </div>
 
-                <TabComponent />
+                <div>
+                    <div className="h-100">&nbsp;</div>
+
+                    <TabComponent />
+                </div>
+
 
                 <div className='col-span-9'>
                     <div className='flex justify-end'>
@@ -133,8 +218,8 @@ function IssueView({ params }: { params: { id: string } }) {
                         </Link>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>*/}
+        </div >
     );
 }
 

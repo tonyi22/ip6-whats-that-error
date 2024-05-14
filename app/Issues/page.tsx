@@ -14,6 +14,7 @@ import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import Link from 'next/link';
+import { getAlertIcon, getAlertIconBig } from '../helperFunction';
 
 function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
     return validValues.includes(value) ? value : defaultValue;
@@ -37,18 +38,6 @@ const formatDate = (date: string | number | Date) => {
 };
 
 function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
-
-    const getAlertIcon = (alertType: string) => {
-        switch (alertType) {
-            case 'Warning':
-                return <IoWarningOutline className='text-4xl text-yellow-500 dark:text-yellow-300' />;
-            case 'Critical':
-                return <PiWarningOctagonBold className='text-4xl text-red-500 dark:text-red-300' />;
-            case 'Info':
-            default:
-                return <TfiInfoAlt className='text-4xl text-blue-500 dark:text-blue-300' />;
-        }
-    };
 
     return (
         <div className="flex justify-between items-center p-6 bg-[#fcf4ff] border-b w-full rounded-xl shadow-lg hover:bg-[#f2ebf5]">
@@ -163,7 +152,7 @@ export default function IssuesPage() {
                         className={issues.length > 1 ? styles.mainIssue : ''}
                         heading={issues[currentIndex].title}
                         description={issues[currentIndex].description}
-                        icon={<IoWarningOutline size="3.5rem" className="text-[#D566FF]" />}
+                        icon={getAlertIconBig(issues[currentIndex].alertType)}
                         priority={issues[currentIndex].priority}
                         timestamp={formatDate(issues[currentIndex].timestamp)}
                     />
