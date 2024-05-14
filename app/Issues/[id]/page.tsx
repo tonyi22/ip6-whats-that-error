@@ -28,8 +28,8 @@ function IssueView({ params }: { params: { id: string } }) {
             <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Issue Detailansicht</h3>
 
             <div className="grid grid-cols-3 grid-rows-4 gap-4">
-                <div>
-                    <div className="flex justify-between items-center p-4">
+                <div className="flex flex-col justify-center">
+                    <div className="flex justify-between items-center p">
                         <div>
                             <h3 className="text-3xl font-semibold">{issue.title}</h3>
                         </div>
@@ -39,7 +39,7 @@ function IssueView({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-                <div>
+                <div className="flex flex-col justify-center">
                     <div className="flex justify-between items-center p-4">
                         <div>
                             <p>Severity: <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2`}>{issue.severity}</span></p>
@@ -51,7 +51,7 @@ function IssueView({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-                <div>
+                <div className="flex flex-col justify-center">
                     <div className="flex justify-between items-center p-4">
                         <div>
                             <p>Incident type: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.incidentType}</span></p>
