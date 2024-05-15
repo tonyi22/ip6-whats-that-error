@@ -2,7 +2,7 @@
     {
         "title": "System Issue 1",
         "id": 1,
-        "description": "Description of System Issue 1",
+        "description": "Description of System Issue 1, this is a longert description than usual",
         "status": "New",
         "timestamp": "2024-02-25T00:43:55.048651",
         "creator": "User9",

@@ -5,10 +5,8 @@ import styles from '../issues.module.css'
 
 import { FaGreaterThan, FaLessThan } from "react-icons/fa";
 import { SystemMonitoringIssue } from '../data/data';
-import { PiWarningOctagonBold } from 'react-icons/pi';
 import { SlOptionsVertical } from "react-icons/sl";
 import { MdOutlineFiberNew } from "react-icons/md";
-import { IoWarningOutline } from "react-icons/io5";
 import { TfiInfoAlt } from 'react-icons/tfi';
 import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
@@ -40,7 +38,7 @@ const formatDate = (date: string | number | Date) => {
 function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
 
     return (
-        <div className="flex justify-between items-center p-6 bg-[#fcf4ff] border-b w-full rounded-xl shadow-lg hover:bg-[#f2ebf5]">
+        <div className="flex justify-between items-center p-6 bg-[#fcf4ff] m-1 border-b w-full rounded-xl shadow-lg hover:bg-[#f2ebf5]">
             {getAlertIcon(issue.alertType)}
             <h3 className="mx-4 text-lg font-semibold flex-none min-w-0">{issue.title}</h3>
             <p className="mx-4 flex-none" style={{ minWidth: '80px' }}>{issue.description}</p>
@@ -68,7 +66,7 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
     return (
         <div className="flex flex-col w-5/6 gap-4">
             <CardsHeader />
-            <div>
+            <div className="space-y-4">
                 {list.map(listIssue => (
                     <Link key={listIssue.id} href={`/Issues/${listIssue.id}`}>
                         <IssueCard issue={listIssue} />
@@ -81,13 +79,13 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
 
 function Card1({ heading, description, icon, className = '', priority, timestamp }: { heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string }) {
     return (
-        <div className={`flex flex-col gap-4 rounded-xl shadow-sm p-6 shadow-2xl relative bg-[#fcf4ff] ${className}`}>
+        <div className={`flex flex-col gap-4 rounded-xl shadow-sm p-6 shadow-2xl relative bg-[#fcf4ff] ${className} w-96`}>
             <MdOutlineFiberNew className="text-red-500 absolute top-0 right-0 text-3xl" style={{ top: '-15px', right: '-15px' }} />
             <div className="flex gap-4">
                 <div className="min-w-max">{icon}</div>
                 <div className="space-y-2 flex-grow">
                     <h3 className="text-[26px] font-semibold">{heading}</h3>
-                    <p className="leading-8 text-gray-500 font-normal">{description}</p>
+                    <p className="leading-8 text-gray-500 font-normal break-words overflow-hidden">{description}</p>
                     <p className="text-gray-600">Priority: {priority}</p>  {/* New */}
                     <p className="text-gray-600">Timestamp: {timestamp}</p>  {/* New */}
                 </div>

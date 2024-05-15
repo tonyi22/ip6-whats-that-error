@@ -27,38 +27,40 @@ function IssueView({ params }: { params: { id: string } }) {
         <div className="mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
             <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Issue Detailansicht</h3>
 
-            <div className="grid grid-cols-3 grid-rows-4 gap-4">
-                <div className="flex flex-col justify-center">
-                    <div className="flex justify-between items-center p">
-                        <div>
+            <div className="grid grid-cols-3 grid-rows-[auto, 1fr, 1fr, 1fr] gap-4">
+
+                <div className="flex flex-col justify-center flex-none">
+
+                    <div className="flex justify-around items-center flex-none p">
+                        <div className="flex-none">
                             <h3 className="text-3xl font-semibold">{issue.title}</h3>
                         </div>
-                        <div>
+                        <div className="flex-none">
                             {getAlertIcon(issue.alertType)}
                         </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col justify-center">
-                    <div className="flex justify-between items-center p-4">
-                        <div>
+                <div className="flex flex-col justify-between flex-none">
+                    <div className="flex justify-between items-center p-4 flex-none">
+                        <div className="flex-none">
                             <p>Severity: <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2`}>{issue.severity}</span></p>
                         </div>
-                        <div>
+                        <div className="flex-none">
                             <p>Status: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.status}</span></p>
                         </div>
 
                     </div>
                 </div>
 
-                <div className="flex flex-col justify-center">
-                    <div className="flex justify-between items-center p-4">
-                        <div>
+                <div className="flex flex-col justify-around flex-none">
+                    <div className="flex justify-between items-center p-4 flex-none">
+                        <div className="flex-none">
                             <p>Incident type: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.incidentType}</span></p>
 
                         </div>
 
-                        <div>
+                        <div className="grow-0">
                             <p>Priority: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.priority}/10</span></p>
                         </div>
                     </div>
@@ -68,12 +70,12 @@ function IssueView({ params }: { params: { id: string } }) {
 
 
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
                     <p className='font-bold pb-2'>Description</p>
                     <p >{issue.description}</p>
                 </div>
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
                     <p className='font-bold pb-2'>Affected Systems</p>
                     <div className="space-y-1">
                         {issue.affectedSystems.map((system, index) => (
@@ -108,14 +110,14 @@ function IssueView({ params }: { params: { id: string } }) {
 
 
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
                     <p className='p-2 font-bold'>Impact</p>
                     <p className='p-1'> - {issue.impact}</p>
                 </div>
 
 
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-250px] col-span-1 row-span-1 p-4'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
                     <p className='p-2 font-bold'>Preventative Measures</p>
                     <p className='p-1'> - {issue.preventativeMeasures}</p>
                 </div>

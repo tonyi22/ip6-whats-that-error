@@ -1,16 +1,18 @@
 import { IoWarningOutline } from "react-icons/io5";
-import { PiWarningOctagonBold } from "react-icons/pi";
-import { TfiInfoAlt } from "react-icons/tfi";
+//import { PiWarningOctagonBold } from "react-icons/pi";
+// import { TfiInfoAlt } from "react-icons/tfi";
+import { RiErrorWarningLine } from "react-icons/ri";
+import { IoInformationCircleOutline } from "react-icons/io5";
 
 export const getAlertIconBig = (alertType: string) => {
     switch (alertType) {
         case 'Warning':
             return <IoWarningOutline size="3.5rem" className="text-[#D566FF]" />;
         case 'Critical':
-            return <PiWarningOctagonBold size="3.5rem" className="text-[#D566FF]" />;
+            return < RiErrorWarningLine size="3.5rem" className="text-[#D566FF]" />;
         case 'Info':
         default:
-            return <TfiInfoAlt size="3.5rem" className="text-[#D566FF]" />;
+            return <IoInformationCircleOutline size="3.5rem" className="text-[#D566FF]" />;
     }
 };
 
@@ -21,10 +23,10 @@ export const getAlertIcon = (alertType: string) => {
         case 'Warning':
             return <IoWarningOutline className='text-5xl text-yellow-800 dark:text-yellow-800' />;
         case 'Critical':
-            return <PiWarningOctagonBold className='text-5xl text-red-800 dark:text-red-800' />;
+            return < RiErrorWarningLine className='text-5xl text-red-800 dark:text-red-800' />;
         case 'Info':
         default:
-            return <TfiInfoAlt className='text-5xl text-blue-800 dark:text-blue-800' />;
+            return <IoInformationCircleOutline className='text-5xl text-blue-800 dark:text-blue-800' />;
     }
 };
 
