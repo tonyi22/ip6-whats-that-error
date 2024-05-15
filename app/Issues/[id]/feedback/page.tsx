@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { systemMonitoringIssuesArray } from '../../page';
 import '../detailView.css';
 import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
+import SliderComponent from './Slider';
+import SternComponent from './Stern';
+import ThumbComponent from './Thumb';
 
-// Define a type for the RatingComponent props
 type RatingComponentProps = {
     onChange: (rating: number) => void;
 };
@@ -21,6 +23,10 @@ const RatingComponent: React.FC<RatingComponentProps> = ({ onChange }) => {
 
 export function Feedback({ params }: { params: { id: string } }) {
     const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
+    const [sliderRating, setSliderRating] = useState(2);
+    const [starRating, setStarRating] = useState(0);
+    const [thumbsRating, setThumbsRating] = useState(0);
+
 
     return (
 
@@ -35,7 +41,14 @@ export function Feedback({ params }: { params: { id: string } }) {
                     </div>
                     <div className="flex flex-col items-center p-4 space-y-3">
                         <h2 className="font-bold">Rate Title:</h2>
-                        <RatingComponent onChange={(rating) => console.log('Title Rating:', rating)} />
+                        <SliderComponent
+                            value={sliderRating}
+                            onChange={setSliderRating}
+                            min={0}
+                            max={5}
+                        />
+                        <SternComponent rating={starRating} onChange={setStarRating} />
+                        <ThumbComponent rating={thumbsRating} onChange={setThumbsRating} />
                     </div>
 
                     <div className="flex flex-col p-4 space-y-3">
@@ -153,7 +166,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
