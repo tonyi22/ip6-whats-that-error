@@ -6,6 +6,9 @@ import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
 import ThumbComponent from './Thumb';
+import TextBoxComponent from './Textbox';
+import EmojiComponent from './Emoji';
+import CheckboxComponent from './Checkbox';
 
 type RatingComponentProps = {
     onChange: (rating: number) => void;
@@ -26,6 +29,10 @@ export function Feedback({ params }: { params: { id: string } }) {
     const [sliderRating, setSliderRating] = useState(2);
     const [starRating, setStarRating] = useState(0);
     const [thumbsRating, setThumbsRating] = useState(0);
+    const [feedbackText, setFeedbackText] = useState('');
+    const [emojiRating, setEmojiRating] = useState(0);
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+    const checkboxOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
 
 
     return (
@@ -49,6 +56,9 @@ export function Feedback({ params }: { params: { id: string } }) {
                         />
                         <SternComponent rating={starRating} onChange={setStarRating} />
                         <ThumbComponent rating={thumbsRating} onChange={setThumbsRating} />
+                        <TextBoxComponent value={feedbackText} onChange={setFeedbackText} />
+                        <EmojiComponent rating={emojiRating} onChange={setEmojiRating} />
+                        <CheckboxComponent options={checkboxOptions} selectedOptions={selectedOptions} onChange={setSelectedOptions} />
                     </div>
 
                     <div className="flex flex-col p-4 space-y-3">
