@@ -78,6 +78,23 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
 }
 
 function Card1({ heading, description, icon, className = '', priority, timestamp }: { heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string }) {
+
+    const extractDescription = (desc: string) => {
+        const prefix = "Einleitung";
+        if (desc.startsWith(prefix)) {
+            desc = desc.slice(prefix.length);  // Remove "Einleitung:"
+        }
+        const firstNewlineIndex = desc.indexOf('\n');
+        if (firstNewlineIndex === -1) return ''; // No newline found, return empty string
+
+        const secondNewlineIndex = desc.indexOf('\n', firstNewlineIndex + 1);
+        if (secondNewlineIndex === -1) return ''; // No second newline found, return empty string
+
+        return desc.substring(firstNewlineIndex + 1, secondNewlineIndex).trim();
+    };
+
+    const truncatedDescription = extractDescription(description);
+
     return (
         <div className={`flex flex-col gap-4 rounded-xl shadow-sm p-6 shadow-2xl relative bg-[#fcf4ff] ${className} w-96`}>
             <MdOutlineFiberNew className="text-red-500 absolute top-0 right-0 text-3xl" style={{ top: '-15px', right: '-15px' }} />
@@ -85,7 +102,7 @@ function Card1({ heading, description, icon, className = '', priority, timestamp
                 <div className="min-w-max">{icon}</div>
                 <div className="space-y-2 flex-grow">
                     <h3 className="text-[26px] font-semibold">{heading}</h3>
-                    <p className="leading-8 text-gray-500 font-normal break-words overflow-hidden">{description}</p>
+                    <p className="leading-8 text-gray-500 font-normal break-words overflow-hidden">{truncatedDescription}</p>
                     <p className="text-gray-600">Priority: {priority}</p>  {/* New */}
                     <p className="text-gray-600">Timestamp: {timestamp}</p>  {/* New */}
                 </div>

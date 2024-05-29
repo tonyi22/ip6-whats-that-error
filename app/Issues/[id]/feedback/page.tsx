@@ -168,30 +168,8 @@ export function Feedback({ params }: { params: { id: string } }) {
                     {/* Neue Sektion für spezifische Fragen zur Feedback-Qualität */}
                     <div className="flex flex-col p-4 space-y-3">
                         <h2 className="font-bold">Feedback-Qualität</h2>
-                        <div className="flex flex-col space-y-2">
-                            <p>War das Feedbackgeben verständlich?</p>
-                            <div className="flex space-x-4">
-                                <label>
-                                    <input type="radio" name="understandable" value="yes" /> Ja
-                                </label>
-                                <label>
-                                    <input type="radio" name="understandable" value="no" /> Nein
-                                </label>
-                            </div>
-                            <textarea placeholder="Wenn Nein, bitte beschreiben..." className="w-full p-2"></textarea>
-                        </div>
-                        <div className="flex flex-col space-y-2">
-                            <p>War das gegebene Feedback hilfreich?</p>
-                            <div className="flex space-x-4">
-                                <label>
-                                    <input type="radio" name="helpful" value="yes" /> Ja
-                                </label>
-                                <label>
-                                    <input type="radio" name="helpful" value="no" /> Nein
-                                </label>
-                            </div>
-                            <textarea placeholder="Wenn Nein, bitte beschreiben..." className="w-full p-2"></textarea>
-                        </div>
+
+
                         <div className="flex flex-col space-y-2">
                             <p>Wusstest du, was zu tun ist, um das Issue zu lösen?</p>
                             <div className="flex space-x-4">
@@ -229,7 +207,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <textarea placeholder="Wenn Nein, bitte beschreiben..." className="w-full p-2"></textarea>
                         </div>
                         <div className="flex flex-col space-y-2">
-                            <p>Ist das Problem gelöst?</p>
+                            <p>Ist das Issue relevant?</p>
                             <div className="flex space-x-4">
                                 <label>
                                     <input type="radio" name="solved" value="yes" /> Ja
@@ -240,15 +218,11 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <textarea placeholder="Wenn Nein, bitte beschreiben..." className="w-full p-2"></textarea>
                         </div>
-                        <div className="flex flex-col space-y-2">
-                            <p>Ist das Issue wirklich gelöst?</p>
-                            <input type="text" placeholder="Status" className="w-full p-2" />
-                            <textarea placeholder="Kommentare zur Nachverfolgung..." className="w-full p-2"></textarea>
-                        </div>
+
                     </div>
 
                     {/* Neue Sektion für Fragen zur Benutzerfreundlichkeit des Feedback-Formulars */}
-                    <div className="flex flex-col p-4 space-y-3">
+                    {/* <div className="flex flex-col p-4 space-y-3">
                         <h2 className="font-bold">Benutzerfreundlichkeit des Feedback-Formulars</h2>
                         <div className="flex flex-col space-y-2">
                             <p>War das Feedback-Formular einfach zu verstehen?</p>
@@ -274,7 +248,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <textarea placeholder="Wenn Nein, bitte beschreiben..." className="w-full p-2"></textarea>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
