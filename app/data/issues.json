@@ -92,15 +92,17 @@
         "duration": 5,
         "endTime": "2024-03-02T14:00:00.000Z",
         "lastUpdated": "2024-03-01T14:05:00.000Z",
-        "impact": "Low impact",
+        "impact": "Systemüberwachungsberichte können nicht generiert werden, was zu einem Mangel an Überwachung der Netzwerkperformance führt",
         "affectedSystems": [
-            "System1"
+            "PRTG Core Server",
+            "Network Switch A",
+            "Storage Server 3"
         ],
         "alertType": "Low",
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "Low",
-        "preventativeMeasures": "Keine vorbeugenden Maßnahmen erforderlich",
+        "preventativeMeasures": "Keine vorbeugenden Massnahmen erforderlich",
         "attachments": [
             "logfile.txt"
         ],

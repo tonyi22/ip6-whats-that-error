@@ -167,7 +167,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                     {/* Neue Sektion für spezifische Fragen zur Feedback-Qualität */}
                     <div className="flex flex-col p-4 space-y-3">
-                        <h2 className="font-bold">Feedback-Qualität</h2>
+                        <h2 className="font-bold">Issue Feedback</h2>
 
 
                         <div className="flex flex-col space-y-2">

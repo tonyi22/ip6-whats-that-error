@@ -36,14 +36,13 @@ const formatDate = (date: string | number | Date) => {
 };
 
 function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
-
     return (
-        <div className="flex justify-between items-center p-6 bg-[#fcf4ff] m-1 border-b w-full rounded-xl shadow-lg hover:bg-[#f2ebf5]">
+        <div className="flex flex-wrap justify-between items-center p-6 bg-[#fcf4ff] m-1 border-b w-full rounded-xl shadow-lg hover:bg-[#f2ebf5]">
             {getAlertIcon(issue.alertType)}
-            <h3 className="mx-4 text-lg font-semibold flex-none min-w-0">{issue.title}</h3>
-            <p className="mx-4 flex-none" style={{ minWidth: '80px' }}>{issue.description}</p>
-            <p className="mx-4 flex-none" style={{ minWidth: '80px' }}>{issue.priority} / 10</p>
-            <p className="mx-4 flex-none" style={{ minWidth: '160px' }}> {formatDate(issue.timestamp)}</p>
+            <h3 className="mx-4 text-base font-semibold flex-1 min-w-0 break-words">{issue.title}</h3>
+            <p className="mx-4 text-sm flex-1 min-w-0" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{issue.description}</p>
+            <p className="mx-4 text-sm flex-none" style={{ minWidth: '80px' }}>{issue.priority} / 10</p>
+            <p className="mx-4 text-sm flex-none" style={{ minWidth: '160px' }}>{formatDate(issue.timestamp)}</p>
             <SlOptionsVertical className="text-gray-500 text-2xl" />
         </div>
     );
