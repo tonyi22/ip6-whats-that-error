@@ -7,82 +7,308 @@ import { de } from 'date-fns/locale';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
 import Link from 'next/link';
-import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
+import { getAlertIcon, getSeverityColor, validateType } from '@/app/helperFunction';
 
 function IssueView({ params }: { params: { id: string } }) {
+    const alertTypes = ['Critical', 'Warning', 'Info', 'None']; // Define your alert types here
+    const severityTypes = ['Low', 'Medium', 'High']; // Define your alert types here
+    const statusTypes = ['New', 'Open', 'Closed', 'In Progress']; // Define your alert types here
+    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power'];
+    const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
+
+    const [isEditMode, setEditMode] = useState(false);
+    const [issue, setIssue] = useState(() =>
+        systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id)));
+    const [issueCopy, setIssueCopy] = useState(null);
 
     //helper function to format date
     const formatDate = (date: string | number | Date) => {
         return format(new Date(date), 'dd.MM.yyyy HH:mm:ss', { locale: de });
     };
 
+    const handleAddSystem = () => {
+        setIssue(prev => {
+            if (!prev) return prev;
+
+            return {
+                ...prev,
+                affectedSystems: [...prev.affectedSystems, '']
+            };
+        });
+    };
+
+    const handleSystemChange = (index: number, value: string) => {
+        setIssue(prev => {
+
+            if (!prev) return prev;
+            const updatedSystems = [...prev.affectedSystems];
+            updatedSystems[index] = value;
+            return {
+                ...prev,
+                affectedSystems: updatedSystems
+            };
+        });
+    };
+
+    const handleRemoveSystem = (index: number) => {
+        setIssue(prev => {
+            if (!prev) return prev;
+
+            const updatedSystems = prev.affectedSystems.filter((_, i) => i !== index);
+            return {
+                ...prev,
+                affectedSystems: updatedSystems
+            };
+        });
+    };
+
+    const handleEdit = () => {
+        setIssueCopy(JSON.parse(JSON.stringify(issue))); // Create a deep copy of the issue
+        setEditMode(true);
+    };
+
+    const handleCancel = () => {
+        setIssue(issueCopy!); // Revert to the original issue
+        setEditMode(false);
+    };
+
+    const handleSave = () => {
+        setEditMode(false);
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
 
 
-    //function to change the color depending on severity
+        console.log(e.target);
 
+        setIssue(prev => {
+            if (!prev) return prev;
 
-    const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
+            let newValue: any = value;
+
+            if (name === 'priority') {
+                newValue = parseInt(value, 10);
+            } else if (name === 'status') {
+                newValue = validateType(value, statusTypes, prev.status);
+            } else if (name === 'alertType') {
+                newValue = validateType(value, alertTypes, prev.alertType);
+            } else if (name === 'incidentType') {
+                newValue = validateType(value, incidentTypes, prev.incidentType);
+            } else if (name === 'severity') {
+                newValue = validateType(value, severityTypes, prev.severity);
+            }
+
+            return {
+                ...prev,
+                [name]: newValue,
+            };
+        });
+    };
+
+    if (!issue) {
+        return <div className="mx-10 my-10 text-black dark:text-github-dark-text">Issue not found</div>;
+    }
 
     return (
         <div className="mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
-            <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Issue Detailansicht</h3>
+
+            <div className="h-1">
+
+            </div>
+            <div>
+                {isEditMode ? (
+                    <input
+                        type="text"
+                        name="title"
+                        value={issue.title}
+                        onChange={handleInputChange}
+                        className="editable-input"
+                    />
+                ) : (
+                    <h3 className=" my-5 text-3xl font-semibold">{issue.title}</h3>
+                )}
+            </div>
+
+            <div className="flex justify-between items-center mb-5">
+
+                <div >
+                    {isEditMode ? (
+                        <select
+                            name="alertType"
+                            value={issue.alertType}
+                            onChange={handleInputChange}
+                            className="input"
+                        >
+                            {alertTypes.map(type => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </select>
+                    ) : (
+                        getAlertIcon(issue.alertType)
+                    )}
+
+                </div>
+
+                <div>
+                    <p>Severity:
+                        {isEditMode ? (
+                            <select
+                                name="severity"
+                                value={issue.severity}
+                                onChange={handleInputChange
+                                }
+                                className="input"
+                            >
+                                {severityTypes.map(type => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+
+                        ) : (
+                            <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2 m-2`}>
+                                {issue.severity}</span>
+                        )}
+                    </p>
+                </div>
+
+                <div>
+                    <p>Status:
+                        {isEditMode ? (
+                            <select
+                                name="status"
+                                value={issue.status}
+                                onChange={handleInputChange
+                                }
+                                className="input"
+                            >
+                                {statusTypes.map(type => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
+                                {issue.status}
+                            </span>
+                        )}
+                    </p>
+                </div>
+
+                <div>
+                    <p>Incident type:
+                        {isEditMode ? (
+                            <select
+                                name="incidentType"
+                                value={issue.incidentType}
+                                onChange={handleInputChange}
+                                className="input"
+                            >
+                                {incidentTypes.map(type => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+
+
+                        ) : (
+                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
+                                {issue.incidentType}
+                            </span>
+                        )}
+                    </p>
+                </div>
+                <div>
+                    <p>Priority:
+                        {isEditMode ? (
+                            <select
+                                name="priority"
+                                value={issue.priority}
+                                onChange={handleInputChange
+                                }
+                                className="input"
+                            >
+                                {priorities.map(priority => (
+                                    <option key={priority} value={priority}>
+                                        {priority}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
+                                {`${issue.priority}/10`}
+                            </span>
+                        )}
+                    </p>
+                </div>
+
+            </div>
 
             <div className="grid grid-cols-3 grid-rows-[auto, 1fr, 1fr, 1fr] gap-4">
-                <div className="flex flex-col justify-center flex-none">
-                    <div className="flex justify-around items-center flex-none p">
-                        <div className="flex-none max-w-xs break-words">
-                            <h3 className="text-xl font-semibold">{issue.title}</h3>
-                        </div>
-                        <div className="flex-none">
-                            {getAlertIcon(issue.alertType)}
-                        </div>
-                    </div>
-                </div>
 
-
-                <div className="flex flex-col justify-around flex-none">
-                    <div className="flex justify-between items-center p-4 flex-none">
-                        <div className="flex-none">
-                            <p>Severity: <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2`}>{issue.severity}</span></p>
-                        </div>
-                        <div className="flex-none">
-                            <p>Status: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.status}</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex flex-col justify-around flex-none">
-                    <div className="flex justify-between items-center p-4 flex-none">
-                        <div className="flex-none">
-                            <p>Incident type: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.incidentType}</span></p>
-                        </div>
-                        <div className="flex-none">
-                            <p>Priority: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.priority}/10</span></p>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4'>
                     <p className='font-bold pb-2'>Description</p>
-                    <p style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description}</p>
+                    {isEditMode ? (
+                        <textarea
+                            name="description"
+                            value={issue.description}
+                            onChange={handleInputChange}
+                            className="editable-input"
+                        />
+                    ) : (
+                        <p style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description}</p>
+                    )}
                 </div>
-
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
                     <p className='font-bold pb-2'>Affected Systems</p>
                     <div className="space-y-1">
-                        {issue.affectedSystems.map((system, index) => (
-                            <p key={index}> - {system}</p>
-                        ))}
+                        {isEditMode ? (
+                            <>
+                                {issue.affectedSystems.map((system, index) => (
+
+                                    <div key={index} className="flex items-center mb-2">
+                                        <input
+                                            type="text"
+                                            name={`affectedSystems-${index}`}
+                                            value={system}
+                                            onChange={(e) => handleSystemChange(index, e.target.value)}
+                                            className="editable-input flex-grow"
+                                        />
+                                        <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                                    </div>
+
+
+
+
+                                ))}
+                                <button type="button" onClick={handleAddSystem} className="text-blue-500">Add Affected System</button>
+                            </>
+                        ) : (
+                            issue.affectedSystems.length > 0 ? (
+                                issue.affectedSystems.map((system, index) => (
+                                    <p key={index}> - {system}</p>
+                                ))
+                            ) : (
+                                <p>No affected systems</p> // Or leave it empty if you prefer
+                            )
+                            // TODO: - nur wenn liste nicht leer, 
+                            // ebenfalls mit Array schauen wie speichern 
+
+
+                        )
+                        }
                     </div>
                 </div>
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-2 p-4'>
-                    <p className='font-bold pb-2 ' >Info</p>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4'>
+                    <p className='font-bold pb-2'>Info</p>
                     <div className='grid grid-cols-2 gap-2'>
                         <p className='text-gray-600 dark:text-gray-400'>Creator:</p>
                         <p className='text-right'>{issue.creator}</p>
@@ -104,122 +330,55 @@ function IssueView({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-
-
-
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
                     <p className='p-2 font-bold'>Impact</p>
-                    <p className='p-1'> - {issue.impact}</p>
+                    {isEditMode ? (
+                        <textarea
+                            name="impact"
+                            value={issue.impact}
+                            onChange={handleInputChange}
+                            className="editable-input"
+                        />
+                    ) : (
+                        <p className='p-1'>{issue.impact}</p>
+                    )}
                 </div>
-
-
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4'>
                     <p className='p-2 font-bold'>Preventative Measures</p>
-                    <p className='p-1'> - {issue.preventativeMeasures}</p>
+                    {isEditMode ? (
+                        <textarea
+                            name="preventativeMeasures"
+                            value={issue.preventativeMeasures}
+                            onChange={handleInputChange}
+                            className="editable-input"
+                        />
+                    ) : (
+                        <p className='p-1'> - {issue.preventativeMeasures}</p>
+                    )}
                 </div>
 
                 <TabComponent />
 
                 <div className='col-start-3 col-span-1'>
                     <div className='flex justify-end'>
+                        {isEditMode ? (
+                            <>
+                                <button onClick={handleSave} className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Save</button>
+                                <button onClick={handleCancel} className='bg-gray-500 text-white p-2 rounded-lg shadow-md ml-2'>Cancel</button>
+                            </>
+                        ) : (
+                            <button onClick={handleEdit} className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Edit</button>
+                        )}
                         <Link href={`/Issues/${issue.id}/feedback`}>
-                            <button className='bg-github-primary dark:bg-github-dark-primary text-white p-2 rounded-lg shadow-md'>Close and Feedback</button>
+                            <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Close and Feedback</button>
                         </Link>
                     </div>
                 </div>
-
-
             </div>
-
-            {/* 
-
-            <div className='rounded-lg  grid grid-cols-3 sm:grid-cols-9 grid-rows-3 sm:grid-rows-7 gap-x-10 gap-y-20 p-5 grid-flow-row-dense dark:border-github-primary'>
-
-                <div className='flex min-h-[50px]'>
-                    <div className='p-2 bg-github-tertiary dark:bg-github-dark-tertiary rounded-lg shadow-md'>
-                        <p>Titel</p>
-                        <p>{issue.title}</p>
-                    </div>
-                </div>
-
-
-                <div className='flex -translate-x-9 min-h-[50px] col-span-1 justify-center items-center'>
-                    <div className='p-1 col-span-1 bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md flex justify-center items-center'>
-                        {getAlertIcon(issue.alertType)}
-                    </div>
-                </div>
-
-                <div className="flex -translate-x-9 min-h-[50px] justify-center col-span-1 items-center ">
-                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[50px] flex justify-center items-center'>
-                        <p>{issue.status}</p>
-                    </div>
-                </div>
-
-                <div className='whitespace-nowrap flex justify-center col-span-3 items-center max-w-l'>
-                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-md min-h-[50px] flex justify-center items-center'>
-                        <p>Severity: <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2`}>{issue.severity}</span></p>
-                    </div>
-                </div>
-
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[450px] col-span-3 row-span-4 p-4'>
-                    <p className='font-bold text-center mb-4'>Info</p>
-                    <div className='space-y-10'>
-                        <p>Creator: {issue.creator}</p>
-                        <p>Timestamp: {formatDate(issue.timestamp)}</p>
-                        <p>Issue Nr. {issue.id}</p>
-                        <p>Duration: {issue.duration}</p>
-                        <p>End time: {formatDate(issue.endTime)}</p>
-                        <p>Last updated: {formatDate(issue.lastUpdated)}</p>
-                    </div>
-                </div>
-
-                <div className='flex min-h-[50px] col-span-3'>
-                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md flex justify-center items-center'>
-                        <p>Incident type: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.incidentType}</span></p>
-                    </div>
-                </div>
-
-                <div className='flex min-h-[50px] col-span-3'>
-                    <div className='p-2 bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-md flex justify-center items-center'>
-                        <p>Priority: <span className='bg-gray-200 dark:bg-gray-500  rounded-xl p-2'>{issue.priority}/10</span></p>
-                    </div>
-                </div>
-
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2 font-bold'>Impact</p>
-                    <p className='p-1'> - {issue.impact}</p>
-                </div>
-
-
-
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-md min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2 font-bold'>Preventative Measures</p>
-                    <p className='p-1'> - {issue.preventativeMeasures}</p>
-                </div>
-
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary  rounded-lg shadow-md min-h-[50px] col-span-3 row-span-2'>
-                    <p className='p-2 font-bold'>Description</p>
-                    <p className='p-1'> - {issue.description}</p>
-                </div>
-
-                <div>
-                    <div className="h-100">&nbsp;</div>
-
-                    <TabComponent />
-                </div>
-
-
-                <div className='col-span-9'>
-                    <div className='flex justify-end'>
-                        <Link href={`/Issues/${issue.id}/feedback`}>
-                            <button className='bg-github-primary dark:bg-github-dark-primary text-white p-2 rounded-lg shadow-md'>Close and Feedback</button>
-                        </Link>
-                    </div>
-                </div>
-            </div>*/}
         </div >
     );
 }
+
 
 export default IssueView;

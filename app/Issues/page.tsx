@@ -12,11 +12,8 @@ import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import Link from 'next/link';
-import { getAlertIcon, getAlertIconBig } from '../helperFunction';
+import { getAlertIcon, getAlertIconBig, validateType } from '../helperFunction';
 
-function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
-    return validValues.includes(value) ? value : defaultValue;
-}
 
 export const systemMonitoringIssuesArray: SystemMonitoringIssue[] = issues.map(issue => {
     return {

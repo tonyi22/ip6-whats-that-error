@@ -4,6 +4,10 @@ import { IoWarningOutline } from "react-icons/io5";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { IoInformationCircleOutline } from "react-icons/io5";
 
+export function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
+    return validValues.includes(value) ? value : defaultValue;
+}
+
 export const getAlertIconBig = (alertType: string) => {
     switch (alertType) {
         case 'Warning':
