@@ -93,6 +93,10 @@ const NewIssue = () => {
         });
     };
 
+    const handleCancel = () => {
+        router.push('/Issues');
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         systemMonitoringIssuesArray.push(newIssue as SystemMonitoringIssue); // In a real app, this would be a POST request to the backend
@@ -288,6 +292,7 @@ const NewIssue = () => {
                     </div>
 
                     <div className="flex justify-end">
+                        <button type="button" onClick={handleCancel} className="bg-gray-500 text-white p-2 rounded-lg shadow-md mx-2">Cancel</button>
                         <button type="submit" className="bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md">Create Issue</button>
                     </div>
                 </form>

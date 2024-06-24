@@ -113,20 +113,26 @@ function IssueView({ params }: { params: { id: string } }) {
     return (
         <div className="mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
 
-            <div className="h-1">
 
-            </div>
-            <div>
+            <Link href={`/Issues`}>
+                <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 my-1 text-3xl'>&#8592;</button>
+
+            </Link>
+
+            <div className='my-2'>
                 {isEditMode ? (
-                    <input
-                        type="text"
-                        name="title"
-                        value={issue.title}
-                        onChange={handleInputChange}
-                        className="editable-input"
-                    />
+                    <div>
+                        <p className='font-bold pb-2'>Title</p>
+                        <input
+                            type="text"
+                            name="title"
+                            value={issue.title}
+                            onChange={handleInputChange}
+                            className="editable-input"
+                        />
+                    </div>
                 ) : (
-                    <h3 className=" my-5 text-3xl font-semibold">{issue.title}</h3>
+                    <h3 className="  text-3xl font-semibold">{issue.title}</h3>
                 )}
             </div>
 
@@ -134,18 +140,20 @@ function IssueView({ params }: { params: { id: string } }) {
 
                 <div >
                     {isEditMode ? (
-                        <select
-                            name="alertType"
-                            value={issue.alertType}
-                            onChange={handleInputChange}
-                            className="input"
-                        >
-                            {alertTypes.map(type => (
-                                <option key={type} value={type}>
-                                    {type}
-                                </option>
-                            ))}
-                        </select>
+                        <p>Alert type:
+                            <select
+                                name="alertType"
+                                value={issue.alertType}
+                                onChange={handleInputChange}
+                                className="input mx-2"
+                            >
+                                {alertTypes.map(type => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+                        </p>
                     ) : (
                         getAlertIcon(issue.alertType)
                     )}
@@ -160,7 +168,7 @@ function IssueView({ params }: { params: { id: string } }) {
                                 value={issue.severity}
                                 onChange={handleInputChange
                                 }
-                                className="input"
+                                className="input mx-2"
                             >
                                 {severityTypes.map(type => (
                                     <option key={type} value={type}>
@@ -184,7 +192,7 @@ function IssueView({ params }: { params: { id: string } }) {
                                 value={issue.status}
                                 onChange={handleInputChange
                                 }
-                                className="input"
+                                className="input mx-2"
                             >
                                 {statusTypes.map(type => (
                                     <option key={type} value={type}>
@@ -207,7 +215,7 @@ function IssueView({ params }: { params: { id: string } }) {
                                 name="incidentType"
                                 value={issue.incidentType}
                                 onChange={handleInputChange}
-                                className="input"
+                                className="input mx-2"
                             >
                                 {incidentTypes.map(type => (
                                     <option key={type} value={type}>
@@ -232,7 +240,7 @@ function IssueView({ params }: { params: { id: string } }) {
                                 value={issue.priority}
                                 onChange={handleInputChange
                                 }
-                                className="input"
+                                className="input mx-2"
                             >
                                 {priorities.map(priority => (
                                     <option key={priority} value={priority}>
@@ -298,10 +306,6 @@ function IssueView({ params }: { params: { id: string } }) {
                             ) : (
                                 <p>No affected systems</p> // Or leave it empty if you prefer
                             )
-                            // TODO: - nur wenn liste nicht leer, 
-                            // ebenfalls mit Array schauen wie speichern 
-
-
                         )
                         }
                     </div>
@@ -364,15 +368,19 @@ function IssueView({ params }: { params: { id: string } }) {
                     <div className='flex justify-end'>
                         {isEditMode ? (
                             <>
+                                <button onClick={handleCancel} className='bg-gray-500 text-white p-2 rounded-lg shadow-md mr-2'>Cancel</button>
                                 <button onClick={handleSave} className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Save</button>
-                                <button onClick={handleCancel} className='bg-gray-500 text-white p-2 rounded-lg shadow-md ml-2'>Cancel</button>
+
                             </>
                         ) : (
-                            <button onClick={handleEdit} className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Edit</button>
+                            <>
+                                <button onClick={handleEdit} className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md mr-2'>Edit</button>
+                                <Link href={`/Issues/${issue.id}/feedback`}>
+                                    <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Close and Feedback</button>
+                                </Link>
+                            </>
                         )}
-                        <Link href={`/Issues/${issue.id}/feedback`}>
-                            <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Close and Feedback</button>
-                        </Link>
+
                     </div>
                 </div>
             </div>
