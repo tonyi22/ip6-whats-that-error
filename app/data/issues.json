@@ -26,7 +26,8 @@
         "comments": [
             "Optimierung der Speicherplatzverwaltung erforderlich",
             "Weitere Untersuchungen zur Ursache der Dateninkonsistenz notwendig"
-        ]
+        ],
+        "isInitialGiven": false
     },
     {
         "title": "Speicherplatzverwaltung Problem",
@@ -53,7 +54,8 @@
         "comments": [
             "Muss überprüft werden.",
             "Das ist wichtig."
-        ]
+        ],
+        "isInitialGiven": true
     },
     {
         "title": "Component PRTG Core Server not in CURIX",
@@ -80,7 +82,8 @@
         "comments": [
             "User couldn't find the PRTG Core Server",
             "Need to check CURIX configuration"
-        ]
+        ],
+        "isInitialGiven": false
     },
     {
         "title": "PRTG Core Server wird in CURIX nicht angezeigt",
@@ -109,6 +112,7 @@
         "comments": [
             "Benutzer konnte den PRTG Core Server nicht finden",
             "CURIX-Konfiguration überprüfen"
-        ]
+        ],
+        "isInitialGiven": false
     }
 ]

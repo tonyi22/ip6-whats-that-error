@@ -8,7 +8,7 @@ import { SystemMonitoringIssue } from '../data/data';
 import { SlOptionsVertical } from "react-icons/sl";
 import { MdOutlineFiberNew } from "react-icons/md";
 import { TfiInfoAlt } from 'react-icons/tfi';
-import { de } from 'date-fns/locale';
+import { de, id } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -37,6 +37,8 @@ const formatDate = (date: string | number | Date) => {
     return format(new Date(date), 'HH:mm dd.MM.yyyy ', { locale: de });
 };
 
+/*
+
 function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
     return (
 
@@ -51,33 +53,55 @@ function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
         </div>
     );
 }
+    */
 
 function CardsHeader() {
     return (
-        <div className="flex justify-between items-center p-6 bg-white border-b w-full rounded-t-xl shadow-lg">
-            <span className="text-lg font-bold">Alert Type</span>
-            <span className="mx-4 text-lg font-semibold flex-none min-w-0">Title</span>
-            <span className="text-lg font-bold mx-4 flex-none" style={{ minWidth: '80px' }}>Description</span>
-            <span className="text-lg font-bold mx-4 flex-none" style={{ minWidth: '80px' }}>Priority</span>
-            <span className="text-lg font-bold mx-4 flex-none" style={{ minWidth: '160px' }}>Timestamp</span>
-            <span className="text-lg font-bold">Options</span>
-        </div>
+        <thead className="bg-gray-300">
+            <tr>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-20">Alert Type</th>
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Title</th>
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Description</th>
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-20">Priority</th>
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-40">Timestamp</th>
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-[5rem]">Option</th> {/* Add padding to the right */}
+            </tr>
+        </thead>
     );
 }
 
+
+
 function List({ list }: { list: SystemMonitoringIssue[] }) {
+    const router = useRouter();
+
+    const handleRowClick = (id: number) => {
+        router.push(`/Issues/${id}`);
+    };
+
     return (
-        <div className="flex flex-col gap-4">
+
+        <table className="w-full table-fixed bg-white border border-gray-200">
             <CardsHeader />
-            <div className="space-y-4">
+            <tbody>
                 {list.map(listIssue => (
-                    <Link key={listIssue.id} href={`/Issues/${listIssue.id}`}>
-                        <IssueCard
-                            issue={listIssue} />
-                    </Link>
+                    <tr
+                        key={listIssue.id}
+                        className="bg-[#fcf4ff] border-b last:border-b-0 hover:bg-[#f2ebf5] m-5 shadow-lg rounded-lg my-2 hover:cursor-pointer"
+                        onClick={() => handleRowClick(listIssue.id)}
+                    >
+                        <td className="px-4 py-2 w-40">{getAlertIcon(listIssue.alertType)}</td>
+                        <td className="px-4 py-2 text-base font-semibold truncate">{listIssue.title}</td>
+                        <td className="px-4 py-2 text-sm truncate">{listIssue.description}</td>
+                        <td className="px-6 text-sm">{listIssue.priority}/10</td>
+                        <td className=" text-sm ">{formatDate(listIssue.timestamp)}</td>
+                        <td className="text-center"><Example
+                            id={listIssue.id}
+                            initialFeedback={listIssue.isInitialGiven} /></td>
+                    </tr>
                 ))}
-            </div>
-        </div >
+            </tbody>
+        </table>
     );
 }
 
@@ -132,7 +156,9 @@ export default function IssuesPage() {
     const [currentId, setCurrentId] = useState(issues.length > 0 ? issues[currentIndex].id : -1)
 
 
-
+    const handleRowClick = (id: number) => {
+        router.push(`/Issues/${id}`);
+    };
     const handleNext = () => {
         const nextIndex = (currentIndex + 1) % issues.length;
         setCurrentId(issues[nextIndex].id)

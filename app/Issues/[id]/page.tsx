@@ -113,11 +113,20 @@ function IssueView({ params }: { params: { id: string } }) {
     return (
         <div className="mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
 
+            <div className='flex items-center p-2 space-x-5'>
+                <Link href={`/Issues`}>
+                    <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 my-1 text-3xl'>&#8592;</button>
+                </Link>
 
-            <Link href={`/Issues`}>
-                <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 my-1 text-3xl'>&#8592;</button>
+                {!issue.isInitialGiven && (
+                    <Link href={`/Issues/${issue.id}/initial-feedback`}>
+                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
+                            Give Initial Feedback
+                        </button>
+                    </Link>
+                )}
 
-            </Link>
+            </div>
 
             <div className='my-2'>
                 {isEditMode ? (

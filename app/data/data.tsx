@@ -1,5 +1,5 @@
 export interface SystemMonitoringIssue {
-    id: number,
+    id: number;
     title: string;
     description: string;
     status: 'New' | 'Open' | 'Closed' | 'In Progress';
@@ -17,4 +17,5 @@ export interface SystemMonitoringIssue {
     preventativeMeasures: string;
     attachments: string[];
     comments: string[];
+    isInitialGiven: boolean;
 }

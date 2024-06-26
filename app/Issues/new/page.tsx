@@ -33,7 +33,8 @@ const NewIssue = () => {
         preventativeMeasures: '',
         comments: [],
         attachments: [],
-        duration: 0
+        duration: 0,
+        isInitialGiven: false,
     });
 
     const router = useRouter();
