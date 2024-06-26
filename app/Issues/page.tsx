@@ -14,7 +14,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { getAlertIcon, getAlertIconBig, validateType } from '../helperFunction';
 import { useRouter } from 'next/navigation';
-import DropdownMenu from './dropDownMenu';
 import Example from './dropDownMenu';
 
 
