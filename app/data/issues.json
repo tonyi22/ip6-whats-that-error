@@ -1,118 +1,1035 @@
 [
     {
-        "title": "Speicherplatzverwaltung verursacht inkonsistente Daten unter hoher Last",
+        "title": "Server CT-20 verursacht Ausfall bei Netzwerkauslastung",
         "id": 1,
-        "description": "Einleitung\nBei hoher Last verursacht die Speicherplatzverwaltung des Systems inkonsistente Daten, was zu unerwartetem Verhalten führt.\n\nHintergrundinformationen\nDas Problem wurde bei Lasttests entdeckt, bei denen die Speicherplatzverwaltung intensive Schreib- und Leseoperationen durchführt.\n\nSchritte zur Reproduktion\n1. Starten Sie den Lasttest mit 1000 gleichzeitigen Benutzern.\n2. Führen Sie eine Reihe von Lese- und Schreiboperationen durch.\n3. Überprüfen Sie die Konsistenz der gespeicherten Daten.\n\nErwartetes Verhalten\nDie Daten sollten unter allen Lastbedingungen konsistent und korrekt gespeichert werden.\n\nTatsächliches Verhalten\nUnter hoher Last kommt es zu Dateninkonsistenzen, wobei einige Daten verloren gehen oder doppelt gespeichert werden.\n\nZusätzliche Informationen\nLog-Dateien der Lasttests beigefügt\nTritt auf in Version 5.6.2\nKeine Probleme bei weniger als 500 gleichzeitigen Benutzern\n\nLösungsvorschlag\nOptimieren Sie die Speicherplatzverwaltung für parallele Schreib- und Lesezugriffe. Erwägen Sie die Implementierung einer Queue-Mechanismus, um Schreiboperationen zu puffern und zu serialisieren. Führen Sie erneut Lasttests durch, um die Wirksamkeit der Änderungen zu verifizieren.",
-        "status": "New",
-        "timestamp": "2024-02-25T00:43:55.048651",
-        "creator": "User9",
-        "duration": 12,
-        "endTime": "2024-02-26T12:43:55.048651",
-        "lastUpdated": "2024-02-25T10:43:48.048651",
-        "impact": "Hohe Auswirkung auf Datenkonsistenz",
-        "affectedSystems": [
-            "Speichersystem",
-            "Datenbanksystem"
-        ],
-        "alertType": "Critical",
-        "incidentType": "Storage",
-        "priority": 10,
-        "severity": "Medium",
-        "preventativeMeasures": "Implementierung eines Queue-Mechanismus für Schreiboperationen",
-        "attachments": [
-            "Lasttest-Logs.txt",
-            "Fehlerrapport.pdf"
-        ],
-        "comments": [
-            "Optimierung der Speicherplatzverwaltung erforderlich",
-            "Weitere Untersuchungen zur Ursache der Dateninkonsistenz notwendig"
-        ],
-        "isInitialGiven": false
-    },
-    {
-        "title": "Speicherplatzverwaltung Problem",
-        "id": 2,
-        "description": "Einleitung\nEs gibt ein Problem mit der Speicherplatzverwaltung. Bei hoher Last passiert was Schlechtes mit den Daten.\n",
-        "status": "New",
-        "timestamp": "2024-02-25T00:43:55.048651",
-        "creator": "User9",
-        "duration": 12,
-        "endTime": "2024-02-26T12:43:55.048651",
-        "lastUpdated": "2024-02-25T10:43:48.048651",
-        "impact": "Es gibt eine Auswirkung auf die Daten.",
-        "affectedSystems": [
-            "System"
-        ],
-        "alertType": "Critical",
-        "incidentType": "Storage",
-        "priority": 10,
-        "severity": "Medium",
-        "preventativeMeasures": "Man sollte was machen, damit das Problem nicht wieder passiert.",
-        "attachments": [
-            "logfile.txt"
-        ],
-        "comments": [
-            "Muss überprüft werden.",
-            "Das ist wichtig."
-        ],
-        "isInitialGiven": true
-    },
-    {
-        "title": "Component PRTG Core Server not in CURIX",
-        "id": 3,
-        "description": "Einleitung\nBeim Versuch, den PRTG Core Server in CURIX zu finden, wird dieser nicht angezeigt.\n",
+        "description": "Der Server CT-20 verursacht einen vollständigen Ausfall des Netzwerks bei hoher Auslastung. Benutzer berichten, dass Verbindungen regelmäßig unterbrochen werden.",
         "status": "New",
         "timestamp": "2024-03-01T14:00:00.000Z",
         "creator": "User2",
         "duration": 5,
         "endTime": "2024-03-02T14:00:00.000Z",
         "lastUpdated": "2024-03-01T14:05:00.000Z",
-        "impact": "Low impact",
+        "impact": "Netzwerkverbindung",
         "affectedSystems": [
             "System1"
         ],
-        "alertType": "Low",
-        "incidentType": "Configuration",
+        "alertType": "High",
+        "incidentType": "Performance",
         "priority": 1,
-        "severity": "Low",
-        "preventativeMeasures": "No preventative measures needed",
+        "severity": "High",
+        "preventativeMeasures": "Überprüfung der Netzwerkkapazität und Optimierung der Servereinstellungen",
         "attachments": [
-            "logfile.txt"
+            ""
         ],
-        "comments": [
-            "User couldn't find the PRTG Core Server",
-            "Need to check CURIX configuration"
-        ],
-        "isInitialGiven": false
+        "comments": []
     },
     {
-        "title": "PRTG Core Server wird in CURIX nicht angezeigt",
+        "title": "Fehlermeldung 503 tritt auf bei Zugriff auf Webserver unter hoher Last",
+        "id": 2,
+        "description": "Bei hoher Auslastung zeigt der Webserver regelmäßig eine 503 Fehlermeldung. Dies führt zu erheblichen Unterbrechungen im Dienst.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:10:00.000Z",
+        "creator": "User3",
+        "duration": 5,
+        "endTime": "2024-03-02T14:10:00.000Z",
+        "lastUpdated": "2024-03-01T14:15:00.000Z",
+        "impact": "Webserver-Verfügbarkeit",
+        "affectedSystems": [
+            "System2"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Performance",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Skalierung der Serverkapazität und Optimierung des Lastenausgleichs",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Speicherkomponente zeigt Fehlverhalten beim Schreiben großer Dateien",
+        "id": 3,
+        "description": "Beim Versuch, große Dateien zu speichern, zeigt die Speicherkomponente Fehlverhalten und verursacht Datenverluste.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:20:00.000Z",
+        "creator": "User4",
+        "duration": 5,
+        "endTime": "2024-03-02T14:20:00.000Z",
+        "lastUpdated": "2024-03-01T14:25:00.000Z",
+        "impact": "Datenspeicherung",
+        "affectedSystems": [
+            "System3"
+        ],
+        "alertType": "High",
+        "incidentType": "Data Integrity",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Überprüfung und Upgrade der Speicherkomponente",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Datenbankmodul verursacht Verbindungsfehler bei mehreren gleichzeitigen Zugriffen",
         "id": 4,
-        "description": "Einleitung\nBeim Versuch, den PRTG Core Server in CURIX zu finden, wird dieser nicht angezeigt.\n\nHintergrundinformationen\nDieses Problem wurde von User2 gemeldet, der versuchte, den PRTG Core Server in der CURIX-Konfiguration zu finden.\n\nSchritte zur Reproduktion\n1. Öffnen Sie die CURIX-Konfigurationsseite.\n2. Suchen Sie nach dem PRTG Core Server.\n3. Überprüfen Sie die Liste der angezeigten Komponenten.\n\nErwartetes Verhalten\nDer PRTG Core Server sollte in der CURIX-Konfigurationsliste angezeigt werden.\n\nTatsächliches Verhalten\nDer PRTG Core Server wird in der CURIX-Konfigurationsliste nicht angezeigt.\n\nZusätzliche Informationen\n- Log-Datei beigefügt\n- Tritt auf in Version 3.4.1\n- Keine Auswirkungen auf andere Systeme festgestellt\n\nLösungsvorschlag\nÜberprüfen Sie die CURIX-Konfiguration und stellen Sie sicher, dass der PRTG Core Server korrekt konfiguriert und hinzugefügt wurde.",
+        "description": "Das Datenbankmodul bricht Verbindungen ab, wenn mehrere Benutzer gleichzeitig darauf zugreifen. Dies beeinträchtigt die Datenbankleistung erheblich.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:30:00.000Z",
+        "creator": "User5",
+        "duration": 5,
+        "endTime": "2024-03-02T14:30:00.000Z",
+        "lastUpdated": "2024-03-01T14:35:00.000Z",
+        "impact": "Datenbankverfügbarkeit",
+        "affectedSystems": [
+            "System4"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Connection",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Optimierung der Datenbankkonfiguration und Erhöhung der Verbindungskapazität",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Fehlermeldung 500 tritt auf bei Datenabfrage in Berichtssystem",
+        "id": 5,
+        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmäßig eine Fehlermeldung 500. Dies verhindert den Zugriff auf benötigte Berichte.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:40:00.000Z",
+        "creator": "User6",
+        "duration": 5,
+        "endTime": "2024-03-02T14:40:00.000Z",
+        "lastUpdated": "2024-03-01T14:45:00.000Z",
+        "impact": "Berichtserstellung",
+        "affectedSystems": [
+            "System5"
+        ],
+        "alertType": "High",
+        "incidentType": "Query",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Fehleranalyse der Abfrageprozesse und Optimierung der Berichtsdatenbank",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Backup-Modul reagiert nicht auf Fehler bei Speicherplatzmangel",
+        "id": 6,
+        "description": "Das Backup-Modul ignoriert Fehler, die durch unzureichenden Speicherplatz verursacht werden, und fährt fort, ohne Daten zu sichern.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:50:00.000Z",
+        "creator": "User7",
+        "duration": 5,
+        "endTime": "2024-03-02T14:50:00.000Z",
+        "lastUpdated": "2024-03-01T14:55:00.000Z",
+        "impact": "Datensicherung",
+        "affectedSystems": [
+            "System6"
+        ],
+        "alertType": "High",
+        "incidentType": "Backup",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Überprüfung und Erweiterung der Speicherkapazität sowie Anpassung der Backup-Einstellungen",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Überwachungssystem zeigt falsche Alarme unter Lastbedingungen",
+        "id": 7,
+        "description": "Das Überwachungssystem generiert falsche Alarme, wenn es unter Lastbedingungen arbeitet. Dies führt zu unnötigen Unterbrechungen und Fehlalarmen.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:00:00.000Z",
+        "creator": "User8",
+        "duration": 5,
+        "endTime": "2024-03-02T15:00:00.000Z",
+        "lastUpdated": "2024-03-01T15:05:00.000Z",
+        "impact": "Systemüberwachung",
+        "affectedSystems": [
+            "System7"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Monitoring",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Kalibrierung der Überwachungssysteme und Anpassung der Alarmschwellenwerte",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Netzwerk-Switch verursacht Paketverlust bei hoher Bandbreitennutzung",
+        "id": 8,
+        "description": "Der Netzwerk-Switch führt zu erheblichem Paketverlust, wenn die Bandbreitennutzung hoch ist. Dies beeinträchtigt die Netzwerkleistung und Stabilität.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:10:00.000Z",
+        "creator": "User9",
+        "duration": 5,
+        "endTime": "2024-03-02T15:10:00.000Z",
+        "lastUpdated": "2024-03-01T15:15:00.000Z",
+        "impact": "Netzwerkstabilität",
+        "affectedSystems": [
+            "System8"
+        ],
+        "alertType": "High",
+        "incidentType": "Network",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Erhöhung der Netzwerkbandbreite und Optimierung der Switch-Konfiguration",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Fehlermeldung 401 tritt auf bei API-Aufrufen ohne Authentifizierung",
+        "id": 9,
+        "description": "API-Aufrufe ohne Authentifizierung führen zu einer Fehlermeldung 401. Dies verhindert den Zugriff auf bestimmte Dienste und Ressourcen.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:20:00.000Z",
+        "creator": "User10",
+        "duration": 5,
+        "endTime": "2024-03-02T15:20:00.000Z",
+        "lastUpdated": "2024-03-01T15:25:00.000Z",
+        "impact": "API-Zugriff",
+        "affectedSystems": [
+            "System9"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Authentication",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Implementierung eines robusten Authentifizierungssystems für alle API-Zugriffe",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Monitoring-Dashboard zeigt keine Daten bei Verbindungsunterbrechung",
+        "id": 10,
+        "description": "Das Monitoring-Dashboard zeigt keine Daten an, wenn es zu einer Verbindungsunterbrechung kommt. Dies beeinträchtigt die Überwachung und Fehlerbehebung.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:30:00.000Z",
+        "creator": "User11",
+        "duration": 5,
+        "endTime": "2024-03-02T15:30:00.000Z",
+        "lastUpdated": "2024-03-01T15:35:00.000Z",
+        "impact": "Überwachungsdaten",
+        "affectedSystems": [
+            "System10"
+        ],
+        "alertType": "High",
+        "incidentType": "Monitoring",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Sicherstellung einer stabilen Netzwerkverbindung und Implementierung von Fallback-Mechanismen",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "CPU überlastet bei Server CT-20",
+        "id": 11,
+        "description": "Der Server CT-20 verursacht eine CPU-Überlastung bei hoher Netzwerkauslastung.",
         "status": "New",
         "timestamp": "2024-03-01T14:00:00.000Z",
         "creator": "User2",
         "duration": 5,
         "endTime": "2024-03-02T14:00:00.000Z",
         "lastUpdated": "2024-03-01T14:05:00.000Z",
-        "impact": "Systemüberwachungsberichte können nicht generiert werden, was zu einem Mangel an Überwachung der Netzwerkperformance führt",
+        "impact": "Netzwerkverbindung",
         "affectedSystems": [
-            "PRTG Core Server",
-            "Network Switch A",
-            "Storage Server 3"
+            "System1"
+        ],
+        "alertType": "High",
+        "incidentType": "Performance",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Überprüfung der Netzwerkkapazität und Optimierung der Servereinstellungen",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Fehler 503 bei hoher Last",
+        "id": 12,
+        "description": "Der Webserver zeigt regelmäßig eine Fehlermeldung 503 bei hoher Auslastung.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:10:00.000Z",
+        "creator": "User3",
+        "duration": 5,
+        "endTime": "2024-03-02T14:10:00.000Z",
+        "lastUpdated": "2024-03-01T14:15:00.000Z",
+        "impact": "Webserver-Verfügbarkeit",
+        "affectedSystems": [
+            "System2"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Performance",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Skalierung der Serverkapazität und Optimierung des Lastenausgleichs",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Fehler beim Schreiben großer Dateien",
+        "id": 13,
+        "description": "Die Speicherkomponente zeigt Fehlverhalten beim Schreiben großer Dateien und verursacht Datenverluste.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:20:00.000Z",
+        "creator": "User4",
+        "duration": 5,
+        "endTime": "2024-03-02T14:20:00.000Z",
+        "lastUpdated": "2024-03-01T14:25:00.000Z",
+        "impact": "Datenspeicherung",
+        "affectedSystems": [
+            "System3"
+        ],
+        "alertType": "High",
+        "incidentType": "Data Integrity",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Überprüfung und Upgrade der Speicherkomponente",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Verbindungsfehler bei Datenbankzugriff",
+        "id": 14,
+        "description": "Das Datenbankmodul bricht Verbindungen ab, wenn mehrere Benutzer gleichzeitig darauf zugreifen.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:30:00.000Z",
+        "creator": "User5",
+        "duration": 5,
+        "endTime": "2024-03-02T14:30:00.000Z",
+        "lastUpdated": "2024-03-01T14:35:00.000Z",
+        "impact": "Datenbankverfügbarkeit",
+        "affectedSystems": [
+            "System4"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Connection",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Optimierung der Datenbankkonfiguration und Erhöhung der Verbindungskapazität",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Fehler 500 bei Datenabfrage",
+        "id": 15,
+        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmäßig eine Fehlermeldung 500.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:40:00.000Z",
+        "creator": "User6",
+        "duration": 5,
+        "endTime": "2024-03-02T14:40:00.000Z",
+        "lastUpdated": "2024-03-01T14:45:00.000Z",
+        "impact": "Berichtserstellung",
+        "affectedSystems": [
+            "System5"
+        ],
+        "alertType": "High",
+        "incidentType": "Query",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Fehleranalyse der Abfrageprozesse und Optimierung der Berichtsdatenbank",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Fehler beim Backup bei Speicherplatzmangel",
+        "id": 16,
+        "description": "Das Backup-Modul reagiert nicht auf Fehler, die durch unzureichenden Speicherplatz verursacht werden.",
+        "status": "New",
+        "timestamp": "2024-03-01T14:50:00.000Z",
+        "creator": "User7",
+        "duration": 5,
+        "endTime": "2024-03-02T14:50:00.000Z",
+        "lastUpdated": "2024-03-01T14:55:00.000Z",
+        "impact": "Datensicherung",
+        "affectedSystems": [
+            "System6"
+        ],
+        "alertType": "High",
+        "incidentType": "Backup",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Überprüfung und Erweiterung der Speicherkapazität sowie Anpassung der Backup-Einstellungen",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Falsche Alarme unter Lastbedingungen",
+        "id": 17,
+        "description": "Das Überwachungssystem generiert falsche Alarme, wenn es unter Lastbedingungen arbeitet.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:00:00.000Z",
+        "creator": "User8",
+        "duration": 5,
+        "endTime": "2024-03-02T15:00:00.000Z",
+        "lastUpdated": "2024-03-01T15:05:00.000Z",
+        "impact": "Systemüberwachung",
+        "affectedSystems": [
+            "System7"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Monitoring",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Kalibrierung der Überwachungssysteme und Anpassung der Alarmschwellenwerte",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Paketverlust bei hoher Bandbreitennutzung",
+        "id": 18,
+        "description": "Der Netzwerk-Switch führt zu erheblichem Paketverlust, wenn die Bandbreitennutzung hoch ist.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:10:00.000Z",
+        "creator": "User9",
+        "duration": 5,
+        "endTime": "2024-03-02T15:10:00.000Z",
+        "lastUpdated": "2024-03-01T15:15:00.000Z",
+        "impact": "Netzwerkstabilität",
+        "affectedSystems": [
+            "System8"
+        ],
+        "alertType": "High",
+        "incidentType": "Network",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Erhöhung der Netzwerkbandbreite und Optimierung der Switch-Konfiguration",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Fehler 401 bei API-Aufrufen ohne Authentifizierung",
+        "id": 19,
+        "description": "API-Aufrufe ohne Authentifizierung führen zu einer Fehlermeldung 401.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:20:00.000Z",
+        "creator": "User10",
+        "duration": 5,
+        "endTime": "2024-03-02T15:20:00.000Z",
+        "lastUpdated": "2024-03-01T15:25:00.000Z",
+        "impact": "API-Zugriff",
+        "affectedSystems": [
+            "System9"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Authentication",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Implementierung eines robusten Authentifizierungssystems für alle API-Zugriffe",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Keine Daten bei Verbindungsunterbrechung",
+        "id": 20,
+        "description": "Das Monitoring-Dashboard zeigt keine Daten an, wenn es zu einer Verbindungsunterbrechung kommt.",
+        "status": "New",
+        "timestamp": "2024-03-01T15:30:00.000Z",
+        "creator": "User11",
+        "duration": 5,
+        "endTime": "2024-03-02T15:30:00.000Z",
+        "lastUpdated": "2024-03-01T15:35:00.000Z",
+        "impact": "Überwachungsdaten",
+        "affectedSystems": [
+            "System10"
+        ],
+        "alertType": "High",
+        "incidentType": "Monitoring",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Sicherstellung einer stabilen Netzwerkverbindung und Implementierung von Fallback-Mechanismen",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Threshold Violation detected",
+        "id": 21,
+        "description": "Das System hat eine Schwellenwertüberschreitung im Speichersystem erkannt, die sofortige Maßnahmen erfordert.",
+        "status": "New",
+        "timestamp": "2024-03-02T10:00:00.000Z",
+        "creator": "User12",
+        "duration": 4,
+        "endTime": "2024-03-02T14:00:00.000Z",
+        "lastUpdated": "2024-03-02T10:05:00.000Z",
+        "impact": "Speichersystem",
+        "affectedSystems": [
+            "Storage System"
+        ],
+        "alertType": "High",
+        "incidentType": "Resources",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Überwachung der Schwellenwerte und rechtzeitige Warnungen konfigurieren",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "High Risk of Outage",
+        "id": 22,
+        "description": "Das System meldet ein hohes Ausfallrisiko der Kundendatenbank aufgrund erhöhter Last.",
+        "status": "New",
+        "timestamp": "2024-03-03T08:00:00.000Z",
+        "creator": "User13",
+        "duration": 6,
+        "endTime": "2024-03-03T14:00:00.000Z",
+        "lastUpdated": "2024-03-03T08:05:00.000Z",
+        "impact": "Kundendatenbank",
+        "affectedSystems": [
+            "Customer DB"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Processes",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Lastenausgleich und Optimierung der Datenbankleistung",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Low Risk of Outage",
+        "id": 23,
+        "description": "Das System zeigt ein geringes Ausfallrisiko für den Webshop an, das überwacht werden sollte.",
+        "status": "New",
+        "timestamp": "2024-03-04T09:00:00.000Z",
+        "creator": "User14",
+        "duration": 3,
+        "endTime": "2024-03-04T12:00:00.000Z",
+        "lastUpdated": "2024-03-04T09:05:00.000Z",
+        "impact": "Webshop",
+        "affectedSystems": [
+            "Webshop"
         ],
         "alertType": "Low",
+        "incidentType": "Connectivity",
+        "priority": 3,
+        "severity": "Low",
+        "preventativeMeasures": "Regelmäßige Überprüfung der Verbindungen und Wartung der Netzwerkinfrastruktur",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Health-Score reduced",
+        "id": 24,
+        "description": "Der Gesundheitswert des Systems hat sich aufgrund einer anhaltenden Überlastung verringert.",
+        "status": "New",
+        "timestamp": "2024-03-05T08:00:00.000Z",
+        "creator": "User15",
+        "duration": 8,
+        "endTime": "2024-03-05T16:00:00.000Z",
+        "lastUpdated": "2024-03-05T08:05:00.000Z",
+        "impact": "Systemgesundheit",
+        "affectedSystems": [
+            "System1"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Performance",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Überwachung der Systemressourcen und rechtzeitige Skalierung",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Component PRTG Core Server not in CURIX",
+        "id": 25,
+        "description": "Der PRTG Core Server wurde nicht im CURIX-System registriert, was zu Überwachungsproblemen führt.",
+        "status": "New",
+        "timestamp": "2024-03-06T09:00:00.000Z",
+        "creator": "User16",
+        "duration": 10,
+        "endTime": "2024-03-06T19:00:00.000Z",
+        "lastUpdated": "2024-03-06T09:05:00.000Z",
+        "impact": "Überwachung",
+        "affectedSystems": [
+            "PRTG Core Server"
+        ],
+        "alertType": "High",
         "incidentType": "Configuration",
         "priority": 1,
-        "severity": "Low",
-        "preventativeMeasures": "Keine vorbeugenden Massnahmen erforderlich",
+        "severity": "High",
+        "preventativeMeasures": "Registrierung aller relevanten Komponenten im CURIX-System sicherstellen",
         "attachments": [
-            "logfile.txt"
+            ""
         ],
-        "comments": [
-            "Benutzer konnte den PRTG Core Server nicht finden",
-            "CURIX-Konfiguration überprüfen"
+        "comments": []
+    },
+    {
+        "title": "Component Probe Device not in CURIX",
+        "id": 26,
+        "description": "Ein Überwachungsgerät wurde nicht im CURIX-System registriert und verursacht Fehlalarme.",
+        "status": "New",
+        "timestamp": "2024-03-07T10:00:00.000Z",
+        "creator": "User17",
+        "duration": 12,
+        "endTime": "2024-03-07T22:00:00.000Z",
+        "lastUpdated": "2024-03-07T10:05:00.000Z",
+        "impact": "Überwachung",
+        "affectedSystems": [
+            "Probe Device"
         ],
-        "isInitialGiven": false
+        "alertType": "Medium",
+        "incidentType": "Configuration",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Sicherstellen, dass alle Überwachungsgeräte im CURIX-System registriert sind",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Component not in CMDB",
+        "id": 27,
+        "description": "Eine wichtige Systemkomponente fehlt in der Configuration Management Database (CMDB), was die Nachverfolgung erschwert.",
+        "status": "New",
+        "timestamp": "2024-03-08T11:00:00.000Z",
+        "creator": "User18",
+        "duration": 8,
+        "endTime": "2024-03-08T19:00:00.000Z",
+        "lastUpdated": "2024-03-08T11:05:00.000Z",
+        "impact": "Konfigurationsmanagement",
+        "affectedSystems": [
+            "CMDB"
+        ],
+        "alertType": "High",
+        "incidentType": "Configuration",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der CMDB",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Component is not managed",
+        "id": 28,
+        "description": "Eine Systemkomponente wird derzeit nicht verwaltet und kann zu unvorhergesehenen Ausfällen führen.",
+        "status": "New",
+        "timestamp": "2024-03-09T12:00:00.000Z",
+        "creator": "User19",
+        "duration": 6,
+        "endTime": "2024-03-09T18:00:00.000Z",
+        "lastUpdated": "2024-03-09T12:05:00.000Z",
+        "impact": "Systemmanagement",
+        "affectedSystems": [
+            "System Component"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Management",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Implementierung eines Management-Prozesses für alle Systemkomponenten",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Component ictv0071 not in CURIX",
+        "id": 29,
+        "description": "Die Komponente ictv0071 wurde nicht im CURIX-System registriert und verursacht Überwachungsprobleme.",
+        "status": "New",
+        "timestamp": "2024-03-10T13:00:00.000Z",
+        "creator": "User20",
+        "duration": 7,
+        "endTime": "2024-03-10T20:00:00.000Z",
+        "lastUpdated": "2024-03-10T13:05:00.000Z",
+        "impact": "Überwachung",
+        "affectedSystems": [
+            "ictv0071"
+        ],
+        "alertType": "High",
+        "incidentType": "Configuration",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Sicherstellen, dass alle relevanten Komponenten im CURIX-System registriert sind",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Component ELASTICSEARCH not in CURIX",
+        "id": 30,
+        "description": "Die ELASTICSEARCH-Komponente wurde nicht im CURIX-System registriert, was die Datenindexierung beeinträchtigt.",
+        "status": "New",
+        "timestamp": "2024-03-11T14:00:00.000Z",
+        "creator": "User21",
+        "duration": 5,
+        "endTime": "2024-03-11T19:00:00.000Z",
+        "lastUpdated": "2024-03-11T14:05:00.000Z",
+        "impact": "Datenindexierung",
+        "affectedSystems": [
+            "ELASTICSEARCH"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Configuration",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Sicherstellen, dass alle Datenbankkomponenten im CURIX-System registriert sind",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Upload CSV file that contains Jira user data",
+        "id": 31,
+        "description": "Eine CSV-Datei, die Jira-Benutzerdaten enthält, muss hochgeladen werden, um die Benutzerverwaltung zu aktualisieren.",
+        "status": "New",
+        "timestamp": "2024-03-12T08:00:00.000Z",
+        "creator": "User31",
+        "duration": 5,
+        "endTime": "2024-03-12T13:00:00.000Z",
+        "lastUpdated": "2024-03-12T08:05:00.000Z",
+        "impact": "Benutzerverwaltung",
+        "affectedSystems": [
+            "Jira"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Configuration",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der Benutzerverwaltungsdaten",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Configure Jira import in YouTrack",
+        "id": 32,
+        "description": "Die Konfiguration des Jira-Imports in YouTrack muss abgeschlossen werden, um Datenmigration zu ermöglichen.",
+        "status": "New",
+        "timestamp": "2024-03-12T08:30:00.000Z",
+        "creator": "User32",
+        "duration": 5,
+        "endTime": "2024-03-12T13:30:00.000Z",
+        "lastUpdated": "2024-03-12T08:35:00.000Z",
+        "impact": "Datenmigration",
+        "affectedSystems": [
+            "Jira",
+            "YouTrack"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Configuration",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Detaillierte Dokumentation der Konfigurationsschritte",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Export user data from Jira",
+        "id": 33,
+        "description": "Benutzerdaten müssen aus Jira exportiert werden, um sie in ein anderes System zu integrieren.",
+        "status": "New",
+        "timestamp": "2024-03-12T09:00:00.000Z",
+        "creator": "User33",
+        "duration": 5,
+        "endTime": "2024-03-12T14:00:00.000Z",
+        "lastUpdated": "2024-03-12T09:05:00.000Z",
+        "impact": "Datenintegration",
+        "affectedSystems": [
+            "Jira"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Data Export",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Regelmäßige Backups der Benutzerdaten",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "First steps for new users",
+        "id": 34,
+        "description": "Erste Schritte für neue Benutzer müssen dokumentiert werden, um den Einstieg zu erleichtern.",
+        "status": "New",
+        "timestamp": "2024-03-12T09:30:00.000Z",
+        "creator": "User34",
+        "duration": 5,
+        "endTime": "2024-03-12T14:30:00.000Z",
+        "lastUpdated": "2024-03-12T09:35:00.000Z",
+        "impact": "Benutzerschulung",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Low",
+        "incidentType": "Documentation",
+        "priority": 3,
+        "severity": "Low",
+        "preventativeMeasures": "Erstellung eines umfassenden Benutzerhandbuchs",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "First steps for project administrators",
+        "id": 35,
+        "description": "Erste Schritte für Projektadministratoren müssen dokumentiert werden, um die Projektverwaltung zu unterstützen.",
+        "status": "New",
+        "timestamp": "2024-03-12T10:00:00.000Z",
+        "creator": "User35",
+        "duration": 5,
+        "endTime": "2024-03-12T15:00:00.000Z",
+        "lastUpdated": "2024-03-12T10:05:00.000Z",
+        "impact": "Projektverwaltung",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Low",
+        "incidentType": "Documentation",
+        "priority": 3,
+        "severity": "Low",
+        "preventativeMeasures": "Erstellung eines umfassenden Projektadministrator-Handbuchs",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "First steps for system administrators",
+        "id": 36,
+        "description": "Erste Schritte für Systemadministratoren müssen dokumentiert werden, um die Systemverwaltung zu unterstützen.",
+        "status": "New",
+        "timestamp": "2024-03-12T10:30:00.000Z",
+        "creator": "User36",
+        "duration": 5,
+        "endTime": "2024-03-12T15:30:00.000Z",
+        "lastUpdated": "2024-03-12T10:35:00.000Z",
+        "impact": "Systemverwaltung",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Low",
+        "incidentType": "Documentation",
+        "priority": 3,
+        "severity": "Low",
+        "preventativeMeasures": "Erstellung eines umfassenden Systemadministrator-Handbuchs",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Launch YouTrack",
+        "id": 37,
+        "description": "YouTrack muss gestartet werden, um die Projektverfolgung zu aktivieren.",
+        "status": "New",
+        "timestamp": "2024-03-12T11:00:00.000Z",
+        "creator": "User37",
+        "duration": 5,
+        "endTime": "2024-03-12T16:00:00.000Z",
+        "lastUpdated": "2024-03-12T11:05:00.000Z",
+        "impact": "Projektverfolgung",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "High",
+        "incidentType": "Startup",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Regelmäßige Überprüfung der Systemanforderungen vor dem Start",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Create a demo project",
+        "id": 38,
+        "description": "Ein Demo-Projekt muss erstellt werden, um neue Benutzer mit den Funktionen von YouTrack vertraut zu machen.",
+        "status": "New",
+        "timestamp": "2024-03-12T11:30:00.000Z",
+        "creator": "User38",
+        "duration": 5,
+        "endTime": "2024-03-12T16:30:00.000Z",
+        "lastUpdated": "2024-03-12T11:35:00.000Z",
+        "impact": "Benutzerschulung",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Low",
+        "incidentType": "Demonstration",
+        "priority": 3,
+        "severity": "Low",
+        "preventativeMeasures": "Erstellung von Schulungsmaterialien für Demo-Projekte",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Stay informed",
+        "id": 39,
+        "description": "Benutzer müssen regelmäßig über Systemupdates und Änderungen informiert werden.",
+        "status": "New",
+        "timestamp": "2024-03-12T12:00:00.000Z",
+        "creator": "User39",
+        "duration": 5,
+        "endTime": "2024-03-12T17:00:00.000Z",
+        "lastUpdated": "2024-03-12T12:05:00.000Z",
+        "impact": "Benutzerkommunikation",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Low",
+        "incidentType": "Communication",
+        "priority": 3,
+        "severity": "Low",
+        "preventativeMeasures": "Einrichtung eines regelmäßigen Informationsverteilers",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Monitor your progress",
+        "id": 40,
+        "description": "Benutzer müssen ihre Fortschritte im System überwachen, um den Projektfortschritt zu gewährleisten.",
+        "status": "New",
+        "timestamp": "2024-03-12T12:30:00.000Z",
+        "creator": "User40",
+        "duration": 5,
+        "endTime": "2024-03-12T17:30:00.000Z",
+        "lastUpdated": "2024-03-12T12:35:00.000Z",
+        "impact": "Projektmanagement",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Monitoring",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Einrichtung regelmäßiger Berichte und Überwachungsdashboards",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Import issues and articles",
+        "id": 41,
+        "description": "Probleme und Artikel müssen importiert werden, um die Wissensdatenbank zu aktualisieren.",
+        "status": "New",
+        "timestamp": "2024-03-12T13:00:00.000Z",
+        "creator": "User41",
+        "duration": 5,
+        "endTime": "2024-03-12T18:00:00.000Z",
+        "lastUpdated": "2024-03-12T13:05:00.000Z",
+        "impact": "Wissensmanagement",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Data Import",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Regelmäßige Aktualisierung der Wissensdatenbank",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Manage user access",
+        "id": 42,
+        "description": "Benutzerzugriffe müssen verwaltet werden, um die Systemsicherheit zu gewährleisten.",
+        "status": "New",
+        "timestamp": "2024-03-12T13:30:00.000Z",
+        "creator": "User42",
+        "duration": 5,
+        "endTime": "2024-03-12T18:30:00.000Z",
+        "lastUpdated": "2024-03-12T13:35:00.000Z",
+        "impact": "Systemsicherheit",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "High",
+        "incidentType": "Security",
+        "priority": 1,
+        "severity": "High",
+        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der Zugriffsrechte",
+        "attachments": [
+            ""
+        ],
+        "comments": []
+    },
+    {
+        "title": "Manage login options",
+        "id": 43,
+        "description": "Die Anmeldeoptionen müssen verwaltet werden, um den Zugriff auf das System zu optimieren.",
+        "status": "New",
+        "timestamp": "2024-03-12T14:00:00.000Z",
+        "creator": "User43",
+        "duration": 5,
+        "endTime": "2024-03-12T19:00:00.000Z",
+        "lastUpdated": "2024-03-12T14:05:00.000Z",
+        "impact": "Benutzerzugriff",
+        "affectedSystems": [
+            "YouTrack"
+        ],
+        "alertType": "Medium",
+        "incidentType": "Configuration",
+        "priority": 2,
+        "severity": "Medium",
+        "preventativeMeasures": "Dokumentation der Anmeldeoptionen und regelmäßige Überprüfung",
+        "attachments": [
+            ""
+        ],
+        "comments": []
     }
 ]

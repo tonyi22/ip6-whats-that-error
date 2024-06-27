@@ -81,7 +81,7 @@ const InitialFeedbackForm = () => {
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Haben Sie sofort verstanden, was das Problem ist?
+                                Hast du sofort verstanden, was das Problem ist?
                             </label>
                             <textarea
                                 name="problemUnderstood"
@@ -93,7 +93,7 @@ const InitialFeedbackForm = () => {
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Wissen Sie, welche Schritte zur Lösung des Issues erforderlich sind?
+                                Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
                             </label>
                             <textarea
                                 name="stepsKnown"
@@ -105,7 +105,7 @@ const InitialFeedbackForm = () => {
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Fehlen Ihnen wichtige Informationen?
+                                Fehlen dir wichtige Informationen?
                             </label>
                             <textarea
                                 name="infoMissing"
@@ -117,7 +117,7 @@ const InitialFeedbackForm = () => {
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Wie würden Sie die Verständlichkeit des Issues bewerten?
+                                Wie würdest du die Verständlichkeit des Issues bewerten?
                             </label>
                             <textarea
                                 name="issueClarityRating"
@@ -129,7 +129,7 @@ const InitialFeedbackForm = () => {
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Ist die Priorität des Issues für Sie nachvollziehbar?
+                                Ist die Priorität des Issues für dich nachvollziehbar?
                             </label>
                             <textarea
                                 name="priorityUnderstandable"
