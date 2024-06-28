@@ -64,6 +64,19 @@ export function Feedback({ params }: { params: { id: string } }) {
         correctIncidentType: '',
         correctAlertType: '',
         correctSeverity: '',
+        correctStatus: '',
+        descriptionClarityImproved: '',
+        descriptionClarityImprovedComments: '',
+        problemUnderstandingChanged: '',
+        problemUnderstandingChangedComments: '',
+        solutionStepsClarityImproved: '',
+        priorityAdjustedCorrectlyComments: '',
+        priorityAdjustedCorrectly: '',
+        missingInfoProvided: '',
+        missingInfoProvidedComments: '',
+        issueClarityImproved: '',
+        issueClarityImprovedComments: '',
+        solutionStepsClarityImprovedComments: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -331,6 +344,145 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 />
                             </div>
                         </div>
+
+                        {/* <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                War die Beschreibung des Issues im Verlauf klarer?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="descriptionClarityImproved" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="descriptionClarityImproved" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="descriptionClarityImprovedComments"
+                                    value={responses.descriptionClarityImprovedComments}
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                Hat sich Ihr Verständnis des Problems im Verlauf geändert?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="problemUnderstandingChanged" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="problemUnderstandingChanged" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="problemUnderstandingChangedComments"
+                                    value={responses.problemUnderstandingChangedComments}
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                Waren die Schritte zur Lösung des Issues im Verlauf klarer?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="solutionStepsClarityImproved" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="solutionStepsClarityImproved" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="solutionStepsClarityImprovedComments"
+                                    value={responses.solutionStepsClarityImprovedComments}
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                Wurden die fehlenden Informationen bereitgestellt?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="missingInfoProvided" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="missingInfoProvided" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="missingInfoProvidedComments"
+                                    value={responses.missingInfoProvidedComments}
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                Hat sich die Verständlichkeit des Issues im Verlauf verbessert?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="issueClarityImproved" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="issueClarityImproved" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="issueClarityImprovedComments"
+                                    value={responses.issueClarityImprovedComments}
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                Wurde die Priorität des Issues korrekt angepasst?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="priorityAdjustedCorrectly" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="priorityAdjustedCorrectly" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="priorityAdjustedCorrectlyComments"
+                                    value={responses.priorityAdjustedCorrectlyComments}
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                        </div> */}
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <div>

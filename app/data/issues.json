@@ -13,7 +13,7 @@
         "affectedSystems": [
             "System1"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Performance",
         "priority": 1,
         "severity": "High",
@@ -37,7 +37,7 @@
         "affectedSystems": [
             "System2"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Performance",
         "priority": 2,
         "severity": "Medium",
@@ -61,7 +61,7 @@
         "affectedSystems": [
             "System3"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Data Integrity",
         "priority": 1,
         "severity": "High",
@@ -85,7 +85,7 @@
         "affectedSystems": [
             "System4"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Connection",
         "priority": 2,
         "severity": "Medium",
@@ -109,7 +109,7 @@
         "affectedSystems": [
             "System5"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Query",
         "priority": 1,
         "severity": "High",
@@ -133,7 +133,7 @@
         "affectedSystems": [
             "System6"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Backup",
         "priority": 1,
         "severity": "High",
@@ -157,7 +157,7 @@
         "affectedSystems": [
             "System7"
         ],
-        "alertType": "Medium",
+        "alertType": "Info",
         "incidentType": "Monitoring",
         "priority": 2,
         "severity": "Medium",
@@ -181,7 +181,7 @@
         "affectedSystems": [
             "System8"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Network",
         "priority": 1,
         "severity": "High",
@@ -205,7 +205,7 @@
         "affectedSystems": [
             "System9"
         ],
-        "alertType": "Medium",
+        "alertType": "Info",
         "incidentType": "Authentication",
         "priority": 2,
         "severity": "Medium",
@@ -229,7 +229,7 @@
         "affectedSystems": [
             "System10"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Monitoring",
         "priority": 1,
         "severity": "High",
@@ -253,7 +253,7 @@
         "affectedSystems": [
             "System1"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Performance",
         "priority": 1,
         "severity": "High",
@@ -277,7 +277,7 @@
         "affectedSystems": [
             "System2"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Performance",
         "priority": 2,
         "severity": "Medium",
@@ -301,7 +301,7 @@
         "affectedSystems": [
             "System3"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Data Integrity",
         "priority": 1,
         "severity": "High",
@@ -325,7 +325,7 @@
         "affectedSystems": [
             "System4"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Connection",
         "priority": 2,
         "severity": "Medium",
@@ -349,7 +349,7 @@
         "affectedSystems": [
             "System5"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Query",
         "priority": 1,
         "severity": "High",
@@ -373,7 +373,7 @@
         "affectedSystems": [
             "System6"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Backup",
         "priority": 1,
         "severity": "High",
@@ -397,7 +397,7 @@
         "affectedSystems": [
             "System7"
         ],
-        "alertType": "Medium",
+        "alertType": "Info",
         "incidentType": "Monitoring",
         "priority": 2,
         "severity": "Medium",
@@ -421,7 +421,7 @@
         "affectedSystems": [
             "System8"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Network",
         "priority": 1,
         "severity": "High",
@@ -445,7 +445,7 @@
         "affectedSystems": [
             "System9"
         ],
-        "alertType": "Medium",
+        "alertType": "Info",
         "incidentType": "Authentication",
         "priority": 2,
         "severity": "Medium",
@@ -469,7 +469,7 @@
         "affectedSystems": [
             "System10"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Monitoring",
         "priority": 1,
         "severity": "High",
@@ -493,7 +493,7 @@
         "affectedSystems": [
             "Storage System"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Resources",
         "priority": 1,
         "severity": "High",
@@ -517,7 +517,7 @@
         "affectedSystems": [
             "Customer DB"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Processes",
         "priority": 2,
         "severity": "Medium",
@@ -541,7 +541,7 @@
         "affectedSystems": [
             "Webshop"
         ],
-        "alertType": "Low",
+        "alertType": "Info",
         "incidentType": "Connectivity",
         "priority": 3,
         "severity": "Low",
@@ -565,7 +565,7 @@
         "affectedSystems": [
             "System1"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Performance",
         "priority": 2,
         "severity": "Medium",
@@ -589,7 +589,7 @@
         "affectedSystems": [
             "PRTG Core Server"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "High",
@@ -613,7 +613,7 @@
         "affectedSystems": [
             "Probe Device"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
@@ -637,7 +637,7 @@
         "affectedSystems": [
             "CMDB"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "High",
@@ -661,7 +661,7 @@
         "affectedSystems": [
             "System Component"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Management",
         "priority": 2,
         "severity": "Medium",
@@ -685,7 +685,7 @@
         "affectedSystems": [
             "ictv0071"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "High",
@@ -709,7 +709,7 @@
         "affectedSystems": [
             "ELASTICSEARCH"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
@@ -733,7 +733,7 @@
         "affectedSystems": [
             "Jira"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
@@ -758,7 +758,7 @@
             "Jira",
             "YouTrack"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
@@ -782,7 +782,7 @@
         "affectedSystems": [
             "Jira"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Data Export",
         "priority": 2,
         "severity": "Medium",
@@ -806,7 +806,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Low",
+        "alertType": "Info",
         "incidentType": "Documentation",
         "priority": 3,
         "severity": "Low",
@@ -830,7 +830,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Low",
+        "alertType": "Info",
         "incidentType": "Documentation",
         "priority": 3,
         "severity": "Low",
@@ -854,7 +854,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Low",
+        "alertType": "Info",
         "incidentType": "Documentation",
         "priority": 3,
         "severity": "Low",
@@ -878,7 +878,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Startup",
         "priority": 1,
         "severity": "High",
@@ -902,7 +902,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Low",
+        "alertType": "Info",
         "incidentType": "Demonstration",
         "priority": 3,
         "severity": "Low",
@@ -926,7 +926,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Low",
+        "alertType": "Info",
         "incidentType": "Communication",
         "priority": 3,
         "severity": "Low",
@@ -950,7 +950,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Monitoring",
         "priority": 2,
         "severity": "Medium",
@@ -974,7 +974,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Data Import",
         "priority": 2,
         "severity": "Medium",
@@ -998,7 +998,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Security",
         "priority": 1,
         "severity": "High",
@@ -1022,7 +1022,7 @@
         "affectedSystems": [
             "YouTrack"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
