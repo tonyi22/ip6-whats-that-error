@@ -191,31 +191,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <div>
-                                <span className="ml-2">War der Status stets nachvollziehbar und korrekt?</span>
-                                <label className="flex items-center text-gray-700 dark:text-gray-300">
-                                    <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.status}</span>
-                                </label>
-                            </div>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="priorityUnderstandable" value="yes" /> Ja
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="priorityUnderstandable" value="no" /> Nein
-                                    </label>
-                                </div>
-                                <textarea
-                                    name="statusUnderstandable"
-                                    value={responses.statusUnderstandable}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, in welcher Phase war der Status nicht korrekt?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                            </div>
-                        </div>
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <div>
@@ -458,28 +434,6 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="text-gray-700 dark:text-gray-300">
-                                War das Issue relevant?
-                            </label>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="issueRelevant" value="yes" /> Ja
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="issueRelevant" value="no" /> Nein
-                                    </label>
-                                </div>
-                                <textarea
-                                    name="issueRelevant"
-                                    value={responses.issueRelevant}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, warum nicht?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                            </div>
-                        </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">

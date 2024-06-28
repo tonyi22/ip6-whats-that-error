@@ -13,7 +13,8 @@ function IssueView({ params }: { params: { id: string } }) {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None']; // Define your alert types here
     const severityTypes = ['Low', 'Medium', 'High']; // Define your alert types here
     const statusTypes = ['New', 'Open', 'Closed', 'In Progress']; // Define your alert types here
-    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power'];
+    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
+        'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security'];
     const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
 
     const [isEditMode, setEditMode] = useState(false);
