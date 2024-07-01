@@ -4,6 +4,13 @@ import { useState } from 'react';
 import { systemMonitoringIssuesArray } from '../../page';
 import { useRouter, useParams } from 'next/navigation';
 import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
+import SliderComponent from './Slider';
+import SternComponent from './Stern';
+import ThumbComponent from './Thumb';
+import TextBoxComponent from './Textbox';
+import EmojiComponent from './Emoji';
+import CheckboxComponent from './Checkbox';
+
 
 const formatDate = (date: string | number | Date) => {
     return new Date(date).toLocaleString();
@@ -13,6 +20,12 @@ const InitialFeedbackForm = () => {
     const router = useRouter();
     const { id } = useParams();
     const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(id));
+    const [sliderRating, setSliderRating] = useState(2);
+    const [starRating, setStarRating] = useState(0);
+    const [thumbsRating, setThumbsRating] = useState(0);
+    const [feedbackText, setFeedbackText] = useState('');
+    const [emojiRating, setEmojiRating] = useState(0);
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
     if (!issue) {
         return <div>Issue not found</div>;
@@ -71,72 +84,125 @@ const InitialFeedbackForm = () => {
                             <label className="text-gray-700 dark:text-gray-300">
                                 Ist die Beschreibung des Issues klar?
                             </label>
-                            <textarea
-                                name="issueClear"
-                                value={responses.issueClear}
-                                onChange={handleChange}
-                                className="min-h-16 h-24 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="whatToDo"
+                                    onChange={handleChange}
+                                    placeholder='Was war nicht klar?'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
                                 Hast du sofort verstanden, was das Problem ist?
                             </label>
-                            <textarea
-                                name="problemUnderstood"
-                                value={responses.problemUnderstood}
-                                onChange={handleChange}
-                                className="min-h-16 h-24 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="teilweise" /> Teilweise
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="whatToDo"
+                                    onChange={handleChange}
+                                    placeholder='Was hast du nicht verstanden?'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
                                 Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
                             </label>
-                            <textarea
-                                name="stepsKnown"
-                                value={responses.stepsKnown}
-                                onChange={handleChange}
-                                className="min-h-16 h-24 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="whatToDo"
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
                                 Fehlen dir wichtige Informationen?
                             </label>
-                            <textarea
-                                name="infoMissing"
-                                value={responses.infoMissing}
-                                onChange={handleChange}
-                                className="min-h-16 h-24 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="whatToDo"
+                                    onChange={handleChange}
+                                    placeholder='Was hat dir gefehlt?'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
                                 Wie würdest du die Verständlichkeit des Issues bewerten?
                             </label>
-                            <textarea
-                                name="issueClarityRating"
-                                value={responses.issueClarityRating}
-                                onChange={handleChange}
-                                className="min-h-16 h-24 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <SternComponent rating={starRating} onChange={setStarRating} />
+                                </div>
+                                <textarea
+                                    name="overallSatisfactionAISuggestions"
+                                    onChange={handleChange}
+                                    placeholder='Bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
                                 Ist die Priorität des Issues für dich nachvollziehbar?
                             </label>
-                            <textarea
-                                name="priorityUnderstandable"
-                                value={responses.priorityUnderstandable}
-                                onChange={handleChange}
-                                className="min-h-16 h-24 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
+                                </div>
+                                <textarea
+                                    name="implementationAISuggestions"
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, warum nicht?'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
                         </div>
 
                         <div className="flex justify-end space-x-4">

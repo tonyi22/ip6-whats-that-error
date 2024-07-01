@@ -347,7 +347,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         {/* <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
-                                War die Beschreibung des Issues im Verlauf klarer?
+                                Wurde die Beschreibung des Issues im Verlauf klarer?
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -370,7 +370,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Hat sich Ihr Verständnis des Problems im Verlauf geändert?
+                                Hat sich dein Verständnis des Problems im Verlauf geändert?
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -393,7 +393,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Waren die Schritte zur Lösung des Issues im Verlauf klarer?
+                                Wurden die Schritte zur Lösung des Issues im Verlauf klarer?
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -624,7 +624,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     </label>
                                 </div>
                                 <div className="flex space-x-4">
-                                    <SliderComponent value={sliderRating} onChange={setSliderRating} min={0} max={5} />
+                                    <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
                                 </div>
                                 <textarea
                                     name="implementationAISuggestions"
