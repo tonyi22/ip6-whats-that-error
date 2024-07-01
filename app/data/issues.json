@@ -13,7 +13,7 @@
         "affectedSystems": [
             "System1"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Performance",
         "priority": 1,
         "severity": "High",
@@ -38,7 +38,7 @@
         "affectedSystems": [
             "System2"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Performance",
         "priority": 2,
         "severity": "Medium",
@@ -63,7 +63,7 @@
         "affectedSystems": [
             "System3"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Data Integrity",
         "priority": 1,
         "severity": "High",
@@ -88,7 +88,7 @@
         "affectedSystems": [
             "System4"
         ],
-        "alertType": "Medium",
+        "alertType": "Warning",
         "incidentType": "Connection",
         "priority": 2,
         "severity": "Medium",
@@ -113,7 +113,7 @@
         "affectedSystems": [
             "System5"
         ],
-        "alertType": "High",
+        "alertType": "Critical",
         "incidentType": "Query",
         "priority": 1,
         "severity": "High",
