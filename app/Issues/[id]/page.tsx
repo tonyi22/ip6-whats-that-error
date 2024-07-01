@@ -1,13 +1,25 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { systemMonitoringIssuesArray } from '../page';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
 import Link from 'next/link';
 import { getAlertIcon, getSeverityColor, validateType } from '@/app/helperFunction';
+import { SystemMonitoringIssue } from '@/app/data/data';
+
+const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
+    const storedIssues = localStorage.getItem('issues');
+    if (storedIssues) {
+        return JSON.parse(storedIssues);
+    }
+    return [];
+};
+
+const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
+    localStorage.setItem('issues', JSON.stringify(issues));
+};
 
 function IssueView({ params }: { params: { id: string } }) {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None']; // Define your alert types here
@@ -18,9 +30,9 @@ function IssueView({ params }: { params: { id: string } }) {
     const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
 
     const [isEditMode, setEditMode] = useState(false);
-    const [issue, setIssue] = useState(() =>
-        systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id)));
-    const [issueCopy, setIssueCopy] = useState(null);
+    const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
+    const [issueCopy, setIssueCopy] = useState<SystemMonitoringIssue | null>(null);
+
 
     //helper function to format date
     const formatDate = (date: string | number | Date) => {
@@ -51,6 +63,16 @@ function IssueView({ params }: { params: { id: string } }) {
         });
     };
 
+    useEffect(() => {
+        const issues = loadIssuesFromLocalStorage();
+        const foundIssue = issues.find(issue => issue.id === Number(params.id));
+        if (foundIssue) {
+            setIssue(foundIssue);
+        } else {
+            console.log(`Issue with ID ${params.id} not found`);
+        }
+    }, [params.id]);
+
     const handleRemoveSystem = (index: number) => {
         setIssue(prev => {
             if (!prev) return prev;
@@ -74,6 +96,14 @@ function IssueView({ params }: { params: { id: string } }) {
     };
 
     const handleSave = () => {
+        if (issue) {
+            const issues = loadIssuesFromLocalStorage();
+            const index = issues.findIndex(i => i.id === issue.id);
+            if (index !== -1) {
+                issues[index] = issue;
+                saveIssuesToLocalStorage(issues);
+            }
+        }
         setEditMode(false);
     };
 

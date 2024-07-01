@@ -1,6 +1,5 @@
 'use client'
-import React, { useState } from 'react';
-import { systemMonitoringIssuesArray } from '../../page';
+import React, { useEffect, useState } from 'react';
 import '../detailView.css';
 import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
 import SliderComponent from './Slider';
@@ -10,6 +9,19 @@ import TextBoxComponent from './Textbox';
 import EmojiComponent from './Emoji';
 import CheckboxComponent from './Checkbox';
 import { useRouter, useParams } from 'next/navigation';
+import { SystemMonitoringIssue } from '@/app/data/data';
+
+const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
+    const storedIssues = localStorage.getItem('issues');
+    if (storedIssues) {
+        return JSON.parse(storedIssues);
+    }
+    return [];
+};
+
+const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
+    localStorage.setItem('issues', JSON.stringify(issues));
+};
 
 type RatingComponentProps = {
     onChange: (rating: number) => void;
@@ -26,7 +38,8 @@ const RatingComponent: React.FC<RatingComponentProps> = ({ onChange }) => {
 };
 
 export function Feedback({ params }: { params: { id: string } }) {
-    const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(params.id))!;
+    const router = useRouter();
+    const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [sliderRating, setSliderRating] = useState(2);
     const [starRating, setStarRating] = useState(0);
     const [thumbsRating, setThumbsRating] = useState(0);
@@ -34,7 +47,7 @@ export function Feedback({ params }: { params: { id: string } }) {
     const [emojiRating, setEmojiRating] = useState(0);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const checkboxOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
-    const router = useRouter();
+
     const [responses, setResponses] = useState({
         issueClear: '',
         problemUnderstood: '',
@@ -79,6 +92,21 @@ export function Feedback({ params }: { params: { id: string } }) {
         // Submit feedback logic
         console.log('Submitted responses:', responses);
     };
+
+    useEffect(() => {
+        const issues = loadIssuesFromLocalStorage();
+        const foundIssue = issues.find(issue => issue.id === Number(params.id));
+        if (foundIssue) { // Update state only if issue is found
+            setIssue(foundIssue);
+        } else {
+            console.log(`Issue with ID ${params.id} not found`);
+        }
+    }, [params.id]);
+
+    if (!issue) {
+        return <div>Issue not found</div>;
+    }
+
     return (
         <div className="max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
             <div className="flex space-x-8">

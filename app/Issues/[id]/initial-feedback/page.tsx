@@ -1,23 +1,25 @@
 'use client';
 
-import { useState } from 'react';
-import { systemMonitoringIssuesArray } from '../../page';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
+import { SystemMonitoringIssue } from '@/app/data/data';
 
 const formatDate = (date: string | number | Date) => {
     return new Date(date).toLocaleString();
 };
 
-const InitialFeedbackForm = () => {
-    const router = useRouter();
-    const { id } = useParams();
-    const issue = systemMonitoringIssuesArray.find(issue => issue.id === Number(id));
-
-    if (!issue) {
-        return <div>Issue not found</div>;
+const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
+    const storedIssues = localStorage.getItem('issues');
+    if (storedIssues) {
+        return JSON.parse(storedIssues);
     }
+    return [];
+};
 
+function InitialFeedbackForm({ params }: { params: { id: string } }) {
+    const router = useRouter();
+    const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [responses, setResponses] = useState({
         issueClear: '',
         problemUnderstood: '',
@@ -26,6 +28,16 @@ const InitialFeedbackForm = () => {
         issueClarityRating: '',
         priorityUnderstandable: ''
     });
+
+    useEffect(() => {
+        const issues = loadIssuesFromLocalStorage();
+        const foundIssue = issues.find(issue => issue.id === Number(params.id));
+        if (foundIssue) { // Update state only if issue is found
+            setIssue(foundIssue);
+        } else {
+            console.log(`Issue with ID ${params.id} not found`);
+        }
+    }, [params.id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -40,6 +52,14 @@ const InitialFeedbackForm = () => {
         // Submit feedback logic
         console.log('Submitted responses:', responses);
     };
+
+
+
+    if (!issue) {
+        return <div>Issue not found</div>;
+    }
+
+
 
     return (
         <div className="max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
@@ -60,8 +80,8 @@ const InitialFeedbackForm = () => {
                             <span>{issue.priority} / 10</span>
                         </div>
                     </div>
-                    <h4 className="text-xl font-semibold">{issue.title}</h4>
-                    <p style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description}</p>
+                    <h4 className="text-xl font-semibold mt-5">{issue.title}</h4>
+                    <p className="mt-5" style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description}</p>
                 </div>
 
                 <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">

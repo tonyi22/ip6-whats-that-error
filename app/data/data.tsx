@@ -11,7 +11,7 @@ export interface SystemMonitoringIssue {
     impact: string;
     affectedSystems: string[];
     alertType: 'Warning' | 'Info' | 'Critical';
-    incidentType: 'Storage' | 'Overheating' | 'Backups' | 'Power' | 'Data Integrity' | 'Connection' | 'Query' | 'Monitoring' | 'Network' | 'Authentication' | 'Resources' | 'Processes' | 'Configuration' | 'Data Export' | 'Documentation' | 'Startup' | 'Demonstration' | 'Communication' | 'Data Import' | 'Security';
+    incidentType: 'Performance' | 'Storage' | 'Overheating' | 'Backups' | 'Power' | 'Data Integrity' | 'Connection' | 'Query' | 'Monitoring' | 'Network' | 'Authentication' | 'Resources' | 'Processes' | 'Configuration' | 'Data Export' | 'Documentation' | 'Startup' | 'Demonstration' | 'Communication' | 'Data Import' | 'Security';
     priority: number;
     severity: 'Low' | 'Medium' | 'High';
     preventativeMeasures: string;

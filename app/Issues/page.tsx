@@ -1,59 +1,49 @@
 "use client";
 
-import issues from '../data/issues.json' assert { type: 'json' };
 import styles from '../issues.module.css'
 
 import { FaGreaterThan, FaLessThan } from "react-icons/fa";
 import { SystemMonitoringIssue } from '../data/data';
-import { SlOptionsVertical } from "react-icons/sl";
 import { MdOutlineFiberNew } from "react-icons/md";
-import { TfiInfoAlt } from 'react-icons/tfi';
-import { de, id } from 'date-fns/locale';
+import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getAlertIcon, getAlertIconBig, validateType } from '../helperFunction';
 import { useRouter } from 'next/navigation';
 import Example from './dropDownMenu';
-
-
-export const systemMonitoringIssuesArray: SystemMonitoringIssue[] = issues.map(issue => {
-    return {
-        ...issue,
-        status: validateType(issue.status, ['New', 'Open', 'Closed', 'In Progress'], "Open"),
-        alertType: validateType(issue.alertType, ['Warning', 'Info', 'Critical'], "Warning"),
-        incidentType: validateType(issue.incidentType, ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
-            'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security'], "Performance"),
-        severity: validateType(issue.severity, ['Low', 'Medium', 'High'], "Low"),
-        timestamp: new Date(issue.timestamp),
-        endTime: new Date(issue.endTime),
-        lastUpdated: new Date(issue.lastUpdated),
-    };
-});
-
-
+import issuesJson from '../data/issues.json' assert { type: 'json' };
 
 const formatDate = (date: string | number | Date) => {
     return format(new Date(date), 'HH:mm dd.MM.yyyy ', { locale: de });
 };
 
-/*
+const loadIssues = (): SystemMonitoringIssue[] => {
+    const storedIssues = localStorage.getItem('issues'); // Correct key
+    if (storedIssues) {
+        return JSON.parse(storedIssues);
+    } else {
+        const issues: SystemMonitoringIssue[] = issuesJson.map(issue => {
+            return {
+                ...issue,
+                status: validateType(issue.status, ['New', 'Open', 'Closed', 'In Progress'], "Open"),
+                alertType: validateType(issue.alertType, ['Warning', 'Info', 'Critical'], "Warning"),
+                incidentType: validateType(issue.incidentType, ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
+                    'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security'], "Performance"),
+                severity: validateType(issue.severity, ['Low', 'Medium', 'High'], "Low"),
+                timestamp: new Date(issue.timestamp),
+                endTime: new Date(issue.endTime),
+                lastUpdated: new Date(issue.lastUpdated),
+            };
+        });
+        localStorage.setItem('issues', JSON.stringify(issues));
+        return issues;
+    }
+};
 
-function IssueCard({ issue }: { issue: SystemMonitoringIssue }) {
-    return (
-
-        <div className="flex flex-wrap justify-between items-center p-6 bg-[#fcf4ff] m-1 border-b w-full rounded-xl shadow-lg hover:bg-[#f2ebf5]">
-            {getAlertIcon(issue.alertType)}
-            <h3 className="mx-4 text-base font-semibold flex-1 min-w-0 break-words">{issue.title}</h3>
-            <p className="mx-4 text-sm flex-1 min-w-0" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{issue.description}</p>
-            <p className="mx-4 text-sm flex-none" style={{ minWidth: '80px' }}>{issue.priority} / 10</p>
-            <p className="mx-4 text-sm flex-none" style={{ minWidth: '160px' }}>{formatDate(issue.timestamp)}</p>
-            <Example />
-
-        </div>
-    );
+const saveIssues = (issues: SystemMonitoringIssue[]) => {
+    localStorage.setItem('issues', JSON.stringify(issues)); // Correct key
 }
-    */
 
 function CardsHeader() {
     return (
@@ -70,8 +60,6 @@ function CardsHeader() {
     );
 }
 
-
-
 function List({ list }: { list: SystemMonitoringIssue[] }) {
     const router = useRouter();
 
@@ -80,7 +68,6 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
     };
 
     return (
-
         <table className="w-full table-fixed bg-white border border-gray-200">
             <CardsHeader />
             <tbody>
@@ -139,85 +126,92 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                     <p>{timestamp}</p>
                 </div>
             </div>
-
         </Link>
     );
 }
 
 export default function IssuesPage() {
-    const [openIssues, setOpenIssues] = useState<SystemMonitoringIssue[]>(systemMonitoringIssuesArray.filter(issue => issue.status !== "New").
-        sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) // Sorting by most recent
-    );
+    const router = useRouter();
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [openIssues, setOpenIssues] = useState<SystemMonitoringIssue[]>([]);
+    const [newIssues, setNewIssues] = useState<SystemMonitoringIssue[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [issues, setIssues] = useState<SystemMonitoringIssue[]>(
-        systemMonitoringIssuesArray.filter(issue => issue.status === "New").
-            sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) // Sorting by most recent
-    );
-    const [currentId, setCurrentId] = useState(issues.length > 0 ? issues[currentIndex].id : -1)
+    const [currentId, setCurrentId] = useState<number | null>(null);
 
-
-    const handleRowClick = (id: number) => {
-        router.push(`/Issues/${id}`);
-    };
     const handleNext = () => {
-        const nextIndex = (currentIndex + 1) % issues.length;
-        setCurrentId(issues[nextIndex].id)
+        const nextIndex = (currentIndex + 1) % newIssues.length;
+        setCurrentId(newIssues[nextIndex].id)
         setCurrentIndex(nextIndex);
     };
 
+    useEffect(() => {
+        const loadedIssues = loadIssues();
+        console.log("Loaded issues:", loadedIssues);
+        setOpenIssues(loadedIssues.filter(issue => issue.status !== "New").sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+        setNewIssues(loadedIssues.filter(issue => issue.status === "New").sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+        setIsLoading(false);
+    }, []); // Run only once on mount
+
+    useEffect(() => {
+        if (newIssues.length > 0) {
+            setCurrentId(newIssues[0].id);
+        }
+    }, [newIssues]);
+
     const handlePrevious = () => {
-        const prevIndex = (currentIndex - 1 + issues.length) % issues.length;
-        setCurrentId(issues[prevIndex].id)
+        const prevIndex = (currentIndex - 1 + newIssues.length) % newIssues.length;
+        setCurrentId(newIssues[prevIndex].id)
         setCurrentIndex(prevIndex);
     };
-
-    const router = useRouter();
 
     const newIssuePage = () => {
         router.push('/Issues/new')
     }
 
     const handleDismiss = () => {
+        if (newIssues.length > 0) {
+            const updatedNewIssues = newIssues.filter(issue => issue.id !== currentId);
+            const dismissedIssue = newIssues.find(issue => issue.id === currentId);
 
-        const updateIssues = issues.map(issue => {
-            if (issue.id === currentId) {
-                const newIssue = { ...issue, status: "Open" as 'Open' };
-                setOpenIssues(prev => [...prev, newIssue].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-                return newIssue;
+            if (dismissedIssue) {
+                // Update both openIssues and newIssues before saving
+                const newOpenIssue = { ...dismissedIssue, status: "Open" as 'Open' };
+                setOpenIssues(prevOpenIssues => [...prevOpenIssues, newOpenIssue].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+                setNewIssues(updatedNewIssues);
+                saveIssues([...updatedNewIssues, ...openIssues, newOpenIssue]); // Save updated issues to localStorage
             }
-            return issue;
-        });
 
-        const newFilteredIssues = updateIssues.filter(issue => issue.status === "New");
-
-        // Sorting open issues
-        setIssues(newFilteredIssues);
-
-        if (newFilteredIssues.length > 0) {
-            setCurrentIndex(0);
-            setCurrentId(newFilteredIssues[0].id);
-        } else {
-            setCurrentIndex(-1);  // No items left
-            setCurrentId(-1);  // No current ID
+            if (updatedNewIssues.length > 0) {
+                setCurrentIndex(0);
+                setCurrentId(updatedNewIssues[0].id);
+            } else {
+                setCurrentIndex(-1);
+                setCurrentId(null); // Use null instead of -1
+            }
         }
     };
 
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className={styles.app}>
-            {currentIndex !== -1 &&
+            {newIssues.length > 0 && currentId !== null &&
                 <div className="flex flex-col items-center space-y-4 w-full">
                     <Card1
-                        id={issues[currentIndex].id}
-                        className={issues.length > 1 ? styles.mainIssue : ''}
-                        heading={issues[currentIndex].title}
-                        description={issues[currentIndex].description}
-                        icon={getAlertIconBig(issues[currentIndex].alertType)}
-                        priority={issues[currentIndex].priority}
-                        timestamp={formatDate(issues[currentIndex].timestamp)}
+                        id={newIssues[currentIndex].id}
+                        className={newIssues.length > 1 ? styles.mainIssue : ''}
+                        heading={newIssues[currentIndex].title}
+                        description={newIssues[currentIndex].description}
+                        icon={getAlertIconBig(newIssues[currentIndex].alertType)}
+                        priority={newIssues[currentIndex].priority}
+                        timestamp={formatDate(newIssues[currentIndex].timestamp)}
                     />
                     <div className="flex justify-between items-center w-full max-w-lg p-10">
                         <button
-                            className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${issues.length > 1 ? '' : 'invisible'}`}
+                            className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${newIssues.length > 1 ? '' : 'invisible'}`}
                             onClick={handlePrevious}>
                             <FaLessThan />
                         </button>
@@ -227,7 +221,7 @@ export default function IssuesPage() {
                             Dismiss
                         </button>
                         <button
-                            className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${issues.length > 1 ? '' : 'invisible'}`}
+                            className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${newIssues.length > 1 ? '' : 'invisible'}`}
                             onClick={handleNext}>
                             <FaGreaterThan />
                         </button>
