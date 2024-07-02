@@ -78,8 +78,8 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                         onClick={() => handleRowClick(listIssue.id)}
                     >
                         <td className="px-4 py-2 w-40">{getAlertIcon(listIssue.alertType)}</td>
-                        <td className="px-4 py-2 text-base font-semibold truncate">{listIssue.title}</td>
-                        <td className="px-4 py-2 text-sm truncate">{listIssue.description}</td>
+                        <td className="px-4 py-2 truncate">{listIssue.title}</td>
+                        <td className="px-4 py-2  truncate">{listIssue.description}</td>
                         <td className="px-6 text-sm">{listIssue.priority}/10</td>
                         <td className=" text-sm ">{formatDate(listIssue.timestamp)}</td>
                         <td className="text-center"><Example
@@ -122,7 +122,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                     <p className="leading-8 font-normal break-words overflow-hidden line-clamp-2">{truncatedDescription}</p>
                 </div>
                 <div className='flex justify-between mt-auto'>
-                    <p>Priority: {priority}/10</p>
+                    <p>Priority: <span className='font-bold'>{priority}/10</span></p>
                     <p>{timestamp}</p>
                 </div>
             </div>
@@ -218,7 +218,7 @@ export default function IssuesPage() {
                         <button
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                             onClick={handleDismiss}>
-                            Dismiss
+                            Mark as read
                         </button>
                         <button
                             className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${newIssues.length > 1 ? '' : 'invisible'}`}

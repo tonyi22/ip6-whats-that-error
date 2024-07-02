@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 
+import { IoArrowBackOutline } from "react-icons/io5";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { TabComponent } from './TabComponent';
@@ -144,9 +145,11 @@ function IssueView({ params }: { params: { id: string } }) {
     return (
         <div className="mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
 
-            <div className='flex items-center p-2 space-x-5'>
+            <div className='flex items-center justify-between'>
                 <Link href={`/Issues`}>
-                    <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 my-1 text-3xl'>&#8592;</button>
+                    <button className="bg-github-primary dark:bg-github-dark-primary dark:text-white my-1 flex items-center font-bold text-3xl">
+                        <IoArrowBackOutline className="mr-2" />
+                    </button>
                 </Link>
 
                 {!issue.isInitialGiven && (
@@ -289,7 +292,7 @@ function IssueView({ params }: { params: { id: string } }) {
                                 ))}
                             </select>
                         ) : (
-                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
+                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2 font-semibold'>
                                 {`${issue.priority}/10`}
                             </span>
                         )}
@@ -357,20 +360,24 @@ function IssueView({ params }: { params: { id: string } }) {
                         <p className='text-gray-600 dark:text-gray-400'>Creator:</p>
                         <p className='text-right'>{issue.creator}</p>
 
-                        <p className='text-gray-600 dark:text-gray-400'>Timestamp:</p>
-                        <p className='text-right'>{formatDate(issue.timestamp)}</p>
+
 
                         <p className='text-gray-600 dark:text-gray-400'>Issue Nr.:</p>
                         <p className='text-right'>{issue.id}</p>
 
                         <p className='text-gray-600 dark:text-gray-400'>Duration:</p>
-                        <p className='text-right'>{issue.duration}</p>
+                        <p className='text-right'>{issue.duration} h</p>
+
+                        <p className='text-gray-600 dark:text-gray-400'>Timestamp:</p>
+                        <p className='text-right'>{formatDate(issue.timestamp)}</p>
+
+                        <p className='text-gray-600 dark:text-gray-400'>Last updated:</p>
+                        <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
 
                         <p className='text-gray-600 dark:text-gray-400'>End time:</p>
                         <p className='text-right'>{formatDate(issue.endTime)}</p>
 
-                        <p className='text-gray-600 dark:text-gray-400'>Last updated:</p>
-                        <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
+
                     </div>
                 </div>
 
@@ -413,12 +420,12 @@ function IssueView({ params }: { params: { id: string } }) {
 
                             </>
                         ) : (
-                            <>
-                                <button onClick={handleEdit} className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md mr-2'>Edit</button>
+                            <div className="flex justify-end space-x-4">
+                                <button onClick={handleEdit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit</button>
                                 <Link href={`/Issues/${issue.id}/feedback`}>
-                                    <button className='bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md'>Close and Feedback</button>
+                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close and Feedback</button>
                                 </Link>
-                            </>
+                            </div>
                         )}
 
                     </div>

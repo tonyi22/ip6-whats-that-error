@@ -257,11 +257,14 @@ Lösungsvorschlag:
                         {!suggestionAccepted && suggestedDescription && newIssue.description === '' && (
                             <button
                                 type="button"
-                                className="mt-2 bg-blue-500 mb-4 text-white p-2 rounded-lg shadow-md"
+                                className="text-sm text-blue-500 mb-4"
                                 onClick={acceptSuggestion}
                             >
                                 Accept Suggestion
                             </button>
+
+
+
                         )}
                         {
                             showDescriptionTemplate && (
@@ -419,9 +422,9 @@ Lösungsvorschlag:
                         />
                     </div>
 
-                    <div className="flex justify-end">
-                        <button type="button" onClick={handleCancel} className="bg-gray-500 text-white p-2 rounded-lg shadow-md mx-2">Cancel</button>
-                        <button type="submit" className="bg-github-primary dark:bg-github-dark-primary dark:text-white p-2 rounded-lg shadow-md">Create Issue</button>
+                    <div className="flex justify-end space-x-4">
+                        <button type="button" onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
+                        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Issue</button>
                     </div>
                 </form>
             </div>

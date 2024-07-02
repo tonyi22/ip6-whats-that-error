@@ -11,12 +11,12 @@ export function validateType<T>(value: any, validValues: T[], defaultValue: T): 
 export const getAlertIconBig = (alertType: string) => {
     switch (alertType) {
         case 'Warning':
-            return <IoWarningOutline size="3.5rem" className="text-[#D566FF]" />;
+            return <IoWarningOutline size="3.5rem" className="text-yellow-500" />;
         case 'Critical':
-            return < RiErrorWarningLine size="3.5rem" className="text-[#D566FF]" />;
+            return < RiErrorWarningLine size="3.5rem" className="text-red-800" />;
         case 'Info':
         default:
-            return <IoInformationCircleOutline size="3.5rem" className="text-[#D566FF]" />;
+            return <IoInformationCircleOutline size="3.5rem" className="text-blue-800" />;
     }
 };
 
@@ -25,7 +25,7 @@ export const getAlertIconBig = (alertType: string) => {
 export const getAlertIcon = (alertType: string) => {
     switch (alertType) {
         case 'Warning':
-            return <IoWarningOutline className='text-5xl text-yellow-800 dark:text-yellow-800' />;
+            return <IoWarningOutline className='text-5xl text-yellow-500 dark:text-yellow-500' />;
         case 'Critical':
             return < RiErrorWarningLine className='text-5xl text-red-800 dark:text-red-800' />;
         case 'Info':
