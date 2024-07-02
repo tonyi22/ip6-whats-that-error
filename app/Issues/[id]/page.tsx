@@ -1,9 +1,9 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect, useState, useRef } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
+import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
 import Link from 'next/link';
@@ -22,6 +22,13 @@ const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
 };
 
+const systemsList = [
+    'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
+    'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
+    'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
+    'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
+];
+
 function IssueView({ params }: { params: { id: string } }) {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None']; // Define your alert types here
     const severityTypes = ['Low', 'Medium', 'High']; // Define your alert types here
@@ -34,26 +41,29 @@ function IssueView({ params }: { params: { id: string } }) {
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [issueCopy, setIssueCopy] = useState<SystemMonitoringIssue | null>(null);
 
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     //helper function to format date
     const formatDate = (date: string | number | Date) => {
         return format(new Date(date), 'dd.MM.yyyy HH:mm:ss', { locale: de });
     };
 
-    const handleAddSystem = () => {
+    const handleAddSystem = (system: string) => {
         setIssue(prev => {
             if (!prev) return prev;
-
-            return {
-                ...prev,
-                affectedSystems: [...prev.affectedSystems, '']
-            };
+            if (!prev.affectedSystems.includes(system)) {
+                return {
+                    ...prev,
+                    affectedSystems: [...prev.affectedSystems, system]
+                };
+            }
+            return prev;
         });
     };
 
     const handleSystemChange = (index: number, value: string) => {
         setIssue(prev => {
-
             if (!prev) return prev;
             const updatedSystems = [...prev.affectedSystems];
             updatedSystems[index] = value;
@@ -63,6 +73,19 @@ function IssueView({ params }: { params: { id: string } }) {
             };
         });
     };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setDropdownOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const issues = loadIssuesFromLocalStorage();
@@ -84,6 +107,10 @@ function IssueView({ params }: { params: { id: string } }) {
                 affectedSystems: updatedSystems
             };
         });
+    };
+
+    const toggleDropdown = () => {
+        setDropdownOpen(prev => !prev);
     };
 
     const handleEdit = () => {
@@ -110,10 +137,6 @@ function IssueView({ params }: { params: { id: string } }) {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-
-
-        console.log(e.target);
-
         setIssue(prev => {
             if (!prev) return prev;
 
@@ -322,24 +345,37 @@ function IssueView({ params }: { params: { id: string } }) {
                     <div className="space-y-1">
                         {isEditMode ? (
                             <>
-                                {issue.affectedSystems.map((system, index) => (
-
-                                    <div key={index} className="flex items-center mb-2">
-                                        <input
-                                            type="text"
-                                            name={`affectedSystems-${index}`}
-                                            value={system}
-                                            onChange={(e) => handleSystemChange(index, e.target.value)}
-                                            className="editable-input flex-grow"
-                                        />
-                                        <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                                <div className="relative" ref={dropdownRef}>
+                                    <div
+                                        className="input cursor-pointer"
+                                        onClick={toggleDropdown}
+                                    >
+                                        Wähle die Systeme aus
+                                        <FaCaretDown className="absolute top-3 right-3 pointer-events-none" />
                                     </div>
-
-
-
-
-                                ))}
-                                <button type="button" onClick={handleAddSystem} className="text-blue-500">Add Affected System</button>
+                                    {dropdownOpen && (
+                                        <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 w-full z-10 max-h-60 overflow-y-auto">
+                                            {systemsList.map(system => (
+                                                <div
+                                                    key={system}
+                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex justify-between items-center"
+                                                    onClick={() => handleAddSystem(system)}
+                                                >
+                                                    <span>{system}</span>
+                                                    {issue.affectedSystems.includes(system) && <FaCheck className="text-blue-500" />}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="mt-2">
+                                    {issue.affectedSystems.map((system, index) => (
+                                        <div key={index} className="flex items-center mb-2">
+                                            <span className="flex-grow">{system}</span>
+                                            <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                                        </div>
+                                    ))}
+                                </div>
                             </>
                         ) : (
                             issue.affectedSystems.length > 0 ? (
@@ -349,8 +385,7 @@ function IssueView({ params }: { params: { id: string } }) {
                             ) : (
                                 <p>No affected systems</p> // Or leave it empty if you prefer
                             )
-                        )
-                        }
+                        )}
                     </div>
                 </div>
 
@@ -434,6 +469,5 @@ function IssueView({ params }: { params: { id: string } }) {
         </div >
     );
 }
-
 
 export default IssueView;

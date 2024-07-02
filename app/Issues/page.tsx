@@ -1,18 +1,16 @@
-"use client";
-
-import styles from '../issues.module.css'
-
+'use client';
+import React, { useEffect, useState } from 'react';
 import { FaGreaterThan, FaLessThan } from "react-icons/fa";
 import { SystemMonitoringIssue } from '../data/data';
 import { MdOutlineFiberNew } from "react-icons/md";
 import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getAlertIcon, getAlertIconBig, validateType } from '../helperFunction';
 import { useRouter } from 'next/navigation';
 import Example from './dropDownMenu';
 import issuesJson from '../data/issues.json' assert { type: 'json' };
+import styles from '../issues.module.css';
 
 const formatDate = (date: string | number | Date) => {
     return format(new Date(date), 'HH:mm dd.MM.yyyy ', { locale: de });
@@ -42,7 +40,7 @@ const loadIssues = (): SystemMonitoringIssue[] => {
 };
 
 const saveIssues = (issues: SystemMonitoringIssue[]) => {
-    localStorage.setItem('issues', JSON.stringify(issues)); // Correct key
+    localStorage.setItem('issues', JSON.stringify(issues));
 }
 
 function CardsHeader() {
@@ -74,14 +72,14 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                 {list.map(listIssue => (
                     <tr
                         key={listIssue.id}
-                        className="bg-[#fcf4ff] border-b last:border-b-0 hover:bg-[#f2ebf5] m-5 shadow-lg rounded-lg my-2 hover:cursor-pointer"
+                        className={`table-row bg-[#fcf4ff] border-b last:border-b-0 m-5 shadow-lg rounded-lg my-2 hover:cursor-pointer ${styles.tableRow}`}
                         onClick={() => handleRowClick(listIssue.id)}
                     >
                         <td className="px-4 py-2 w-40">{getAlertIcon(listIssue.alertType)}</td>
                         <td className="px-4 py-2 truncate">{listIssue.title}</td>
-                        <td className="px-4 py-2  truncate">{listIssue.description}</td>
+                        <td className="px-4 py-2 truncate">{listIssue.description}</td>
                         <td className="px-6 text-sm">{listIssue.priority}/10</td>
-                        <td className=" text-sm ">{formatDate(listIssue.timestamp)}</td>
+                        <td className="text-sm">{formatDate(listIssue.timestamp)}</td>
                         <td className="text-center"><Example
                             id={listIssue.id}
                             initialFeedback={listIssue.isInitialGiven} /></td>
@@ -93,6 +91,8 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
 }
 
 function Card1({ id, heading, description, icon, className = '', priority, timestamp }: { id: number, heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string }) {
+    const [isClicked, setIsClicked] = useState(false);
+    const router = useRouter();
 
     const extractDescription = (desc: string) => {
         const prefix = "Einleitung";
@@ -110,8 +110,18 @@ function Card1({ id, heading, description, icon, className = '', priority, times
 
     const truncatedDescription = extractDescription(description);
 
+    const handleClick = () => {
+        setIsClicked(true);
+        setTimeout(() => {
+            router.push(`/Issues/${id}`);
+        }, 300); // 300ms matches the CSS transition duration
+    };
+
     return (
-        <Link href={`/Issues/${id}`} className={`gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl relative bg-[#fcf4ff] ${className} w-1/3 h-60`}>
+        <div
+            onClick={handleClick}
+            className={`card gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl relative bg-[#fcf4ff] ${styles.card} ${className} w-1/3 h-60 transition-transform duration-300 ${isClicked ? 'transform scale-105' : ''}`}
+        >
             <div className="flex flex-col justify-between h-full space-y-2 flex-grow">
                 <MdOutlineFiberNew className="text-red-500 absolute top-0 right-0 text-2xl" style={{ top: '-15px', right: '-15px' }} />
                 <div className="space-y-2 flex-grow">
@@ -126,7 +136,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                     <p>{timestamp}</p>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }
 

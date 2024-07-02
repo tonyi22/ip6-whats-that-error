@@ -7,7 +7,6 @@
 
 .mainIssue {
     box-shadow: 30px 20px #ebe0ee;
-    /* Example with a blur radius of 30px */
 }
 
 .issueList {
@@ -21,4 +20,21 @@
     margin: 10px;
     padding: 15px;
     width: 100%;
+}
+
+.card {
+    transition: background-color 0.3s ease;
+}
+
+.card:hover {
+    background-color: #e7def0;
+    cursor: pointer;
+}
+
+.table-row {
+    transition: background-color 0.2s ease;
+}
+
+.table-row:hover {
+    background-color: #e1d5ec;
 }
