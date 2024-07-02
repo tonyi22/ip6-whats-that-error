@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { systemMonitoringIssuesArray } from '../page';
+import systemMonitoringIssuesArray from '../page';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { getAlertIcon, getSeverityColor, validateType } from '@/app/helperFunction';
@@ -182,17 +182,17 @@ Lösungsvorschlag:
         router.push('/Issues');
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        systemMonitoringIssuesArray.push(newIssue as SystemMonitoringIssue); // In a real app, this would be a POST request to the backend
-        router.push('/Issues'); // Navigate back to the issues list
-    };
+    // const handleSubmit = (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     systemMonitoringIssuesArray.push(newIssue as SystemMonitoringIssue); // In a real app, this would be a POST request to the backend
+    //     router.push('/Issues'); // Navigate back to the issues list
+    // };
 
     return (
         <div className='flex justify-center'>
             <div className="my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl">
                 <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Create New Issue</h3>
-                <form onSubmit={handleSubmit}>
+                <form>
 
 
 

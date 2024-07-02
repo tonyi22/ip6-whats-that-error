@@ -341,6 +341,30 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
+                        {/* <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                Wurde die Beschreibung des Issues im Verlauf klarer?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <label>
+                                        <input type="radio" name="descriptionClarityImproved" value="yes" /> Ja
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="descriptionClarityImproved" value="no" /> Nein
+                                    </label>
+                                </div>
+                                <textarea
+                                    name="descriptionClarityImprovedComments"
+                                    value={responses.descriptionClarityImprovedComments}
+                                    onChange={handleChange}
+                                    placeholder='Wenn nein, bitte beschreiben...'
+                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                        </div> */}
+
+
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">Waren die betroffenen Systeme korrekt?</span>
@@ -373,30 +397,12 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-                        {/* <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="text-gray-700 dark:text-gray-300">
-                                Wurde die Beschreibung des Issues im Verlauf klarer?
-                            </label>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="descriptionClarityImproved" value="yes" /> Ja
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="descriptionClarityImproved" value="no" /> Nein
-                                    </label>
-                                </div>
-                                <textarea
-                                    name="descriptionClarityImprovedComments"
-                                    value={responses.descriptionClarityImprovedComments}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, bitte beschreiben...'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                            </div>
-                        </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                        {/* mmmmmmmmmmmmmmmmmmmmmm */}
+
+
+
+                        {/* <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
                                 Hat sich dein Verständnis des Problems im Verlauf geändert?
                             </label>
@@ -510,6 +516,9 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 />
                             </div>
                         </div> */}
+
+
+                        {/* mmmmmmmmmmmmmmmmmmmmmm */}
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
