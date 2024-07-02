@@ -252,27 +252,21 @@ function IssueView({ params }: { params: { id: string } }) {
 
                 <div>
                     <p>Status:
-                        {isEditMode ? (
-                            <select
-                                name="status"
-                                value={issue.status}
-                                onChange={handleInputChange
-                                }
-                                className="input mx-2"
-                            >
-                                {statusTypes.map(type => (
-                                    <option key={type} value={type}>
-                                        {type}
-                                    </option>
-                                ))}
-                            </select>
-                        ) : (
-                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
-                                {issue.status}
-                            </span>
-                        )}
+                        <select
+                            name="status"
+                            value={issue.status}
+                            onChange={handleInputChange}
+                            className="input mx-2"
+                        >
+                            {statusTypes.map(type => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </select>
                     </p>
                 </div>
+
 
                 <div>
                     <p>Incident type:
