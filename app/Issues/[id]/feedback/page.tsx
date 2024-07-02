@@ -122,6 +122,30 @@ export function Feedback({ params }: { params: { id: string } }) {
 
     return (
         <div className="max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
+
+            <style jsx>{`
+                .custom-radio {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    display: inline-block;
+                    width: 0.75em; 
+                    height: 0.75em; 
+                    border-radius: 50%;
+                    border: 1px solid #000;
+                    cursor: pointer;
+                    position: relative;
+                    top: 0.15em;
+                    margin-right: 0.05em;
+                    background-color: white; 
+                }
+                .custom-radio:checked {
+                    background-color: #4299e1; 
+                    border-color: #000; 
+                }
+            `}</style>
+
+
             <div className="flex space-x-8">
                 {/* <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
                     <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
@@ -157,11 +181,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="alertIconUnderstandable" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="alertIconUnderstandable" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="alertIconUnderstandable" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="alertIconUnderstandable" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <select
@@ -171,13 +197,11 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 >
                                     <option value="" disabled>Wähle den richtigen Alert Type</option>
-                                    {["Warning", "Info", "Critical"]
-                                        .filter(type => type !== issue.alertType)
-                                        .map(type => (
-                                            <option key={type} value={type}>
-                                                {getAlertIcon(type)} {type}
-                                            </option>
-                                        ))}
+                                    {["Warning", "Info", "Critical"].map(type => (
+                                        <option key={type} value={type} disabled={type === issue.alertType}>
+                                            {getAlertIcon(type)} {type}
+                                        </option>
+                                    ))}
                                 </select>
                                 <textarea
                                     name="alertIconUnderstandable"
@@ -199,11 +223,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="severityCorrect" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="severityCorrect" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="severityCorrect" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="severityCorrect" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <select
@@ -213,14 +239,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 >
                                     <option value="" disabled>Wähle die richtige Severity</option>
-                                    {['Low', 'Medium', 'High', 'Critical']
-                                        .filter(severity => severity !== issue.severity)
-                                        .map(severity => (
-                                            <option key={severity} value={severity}>
-                                                {severity}
-                                            </option>
-                                        ))}
+                                    {['Low', 'Medium', 'High'].map(severity => (
+                                        <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                            {severity}
+                                        </option>
+                                    ))}
                                 </select>
+
                                 <textarea
                                     name="severityUnderstandable"
                                     value={responses.severityUnderstandable}
@@ -243,11 +268,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="incidentTypeUnderstandable" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="incidentTypeUnderstandable" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="incidentTypeUnderstandable" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="incidentTypeUnderstandable" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <select
@@ -257,12 +284,15 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 >
                                     <option value="" disabled>Wähle den richtigen Incident Type</option>
-                                    {["Performance", "Storage", "Overheating", "Backups", "Power"]
-                                        .filter(type => type !== issue.incidentType)
-                                        .map(type => (
-                                            <option key={type} value={type}>{type}</option>
-                                        ))}
+                                    {[
+                                        "Performance", "Storage", "Overheating", "Backups", "Power", "Data Integrity", "Connection", "Query", "Monitoring", "Network",
+                                        "Authentication", "Resources", "Processes", "Configuration", "Data Export", "Documentation", "Startup", "Demonstration", "Communication",
+                                        "Data Import", "Security"
+                                    ].map(type => (
+                                        <option key={type} value={type} disabled={type === issue.incidentType}>{type}</option>
+                                    ))}
                                 </select>
+
                                 <textarea
                                     name="incidentTypeUnderstandable"
                                     value={responses.incidentTypeUnderstandable}
@@ -284,11 +314,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="priorityUnderstandable" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="priorityUnderstandable" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="priorityUnderstandable" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="priorityUnderstandable" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <select
@@ -299,9 +331,10 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 >
                                     <option value="">Bitte die korrekte Priorität auswählen</option>
                                     {[...Array(10)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                        <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
                                     ))}
                                 </select>
+
                                 <textarea
                                     name="priorityUnderstandable"
                                     value={responses.priorityUnderstandable}
@@ -324,11 +357,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="descriptionUnderstandable" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="descriptionUnderstandable" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="descriptionUnderstandable" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="descriptionUnderstandable" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <textarea
@@ -380,11 +415,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="affectedSystemsUnderstandable" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="affectedSystemsUnderstandable" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="affectedSystemsUnderstandable" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="affectedSystemsUnderstandabl" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <textarea
@@ -532,11 +569,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="impactUnderstandable" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="impactUnderstandable" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="impactUnderstandable" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="impactUnderstandable" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <textarea
@@ -560,11 +599,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="preventativeMeasuresUnderstandable" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="preventativeMeasuresUnderstandable" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="preventativeMeasuresUnderstandable" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="preventativeMeasuresUnderstandable" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <textarea
@@ -583,11 +624,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="whatToDo" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="whatToDo" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="whatToDo" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="whatToDo" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <textarea
@@ -606,11 +649,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="implemented" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="implemented" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="implemented" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="implemented" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <textarea
@@ -631,12 +676,15 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="clarityAISuggestions" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="clarityAISuggestions" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="clarityAISuggestions" value="no" /> Nein
-                                    </label>                                </div>
+                                    <label className="flex items-center">
+                                        <input type="radio" name="clarityAISuggestions" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
+                                    </label>
+                                </div>
                                 <textarea
                                     name="relevanceAISuggestions"
                                     value={responses.relevanceAISuggestions}
@@ -653,11 +701,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label>
-                                        <input type="radio" name="implementationAISuggestions" value="yes" /> Ja
+                                    <label className="flex items-center">
+                                        <input type="radio" name="implementationAISuggestions" value="yes" className="custom-radio" />
+                                        <span className="ml-2">Ja</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" name="implementationAISuggestions" value="no" /> Nein
+                                    <label className="flex items-center">
+                                        <input type="radio" name="implementationAISuggestions" value="no" className="custom-radio" />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
                                 <div className="flex space-x-4">

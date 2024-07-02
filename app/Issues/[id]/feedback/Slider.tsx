@@ -16,23 +16,42 @@ const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min,
 
     return (
         <div style={{ width: '75%' }}>
+            <style jsx>{`
+                input[type='range'] {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 100%;
+                    height: 5px;
+                    border-radius: 5px;
+                    background: #ddd;
+                    outline: none;
+                    opacity: 0.7;
+                    transition: opacity .2s;
+                }
+                input[type='range']::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 50%;
+                    background: #4299e1; /* Tailwind bg-blue-500 color */
+                    border: 1px solid #000;
+                    cursor: pointer;
+                }
+                input[type='range']::-moz-range-thumb {
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 50%;
+                    background: #4299e1; /* Tailwind bg-blue-500 color */
+                    cursor: pointer;
+                }
+            `}</style>
             <input
                 type="range"
                 min={min}
                 max={max}
                 value={value}
                 onChange={(e) => onChange(Number(e.target.value))}
-                style={{
-                    width: '100%',
-                    margin: '10px 0',
-                    appearance: 'none',
-                    height: '5px',
-                    borderRadius: '5px',
-                    background: '#ddd',
-                    outline: 'none',
-                    opacity: '0.7',
-                    transition: 'opacity .2s',
-                }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 5px' }}>
                 {ticks.map(tick => (
