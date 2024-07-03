@@ -404,7 +404,9 @@ function IssueView({ params }: { params: { id: string } }) {
                         <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
 
                         <p className='text-gray-600 dark:text-gray-400'>End time:</p>
-                        <p className='text-right'>{formatDate(issue.endTime)}</p>
+                        {/* <p className='text-right'>{formatDate(issue.endTime)}</p> */}
+                        <p className='text-right'>--:--</p>
+
 
 
                     </div>

@@ -15,7 +15,7 @@ const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min,
     }
 
     return (
-        <div style={{ width: '75%' }}>
+        <div className="w-full">
             <style jsx>{`
                 input[type='range'] {
                     -webkit-appearance: none;
@@ -34,7 +34,7 @@ const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min,
                     width: 15px;
                     height: 15px;
                     border-radius: 50%;
-                    background: #4299e1; /* Tailwind bg-blue-500 color */
+                    background: #3979EC; 
                     border: 1px solid #000;
                     cursor: pointer;
                 }
@@ -42,7 +42,7 @@ const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min,
                     width: 15px;
                     height: 15px;
                     border-radius: 50%;
-                    background: #4299e1; /* Tailwind bg-blue-500 color */
+                    background: #4299e1; 
                     cursor: pointer;
                 }
             `}</style>

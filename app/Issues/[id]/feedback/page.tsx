@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import '../detailView.css';
 import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
 import SliderComponent from './Slider';
@@ -92,6 +92,16 @@ export function Feedback({ params }: { params: { id: string } }) {
         solutionStepsClarityImprovedComments: '',
     });
 
+    const systemsList = [
+        'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
+        'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
+        'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
+        'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
+    ];
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setResponses(prev => ({
@@ -99,6 +109,44 @@ export function Feedback({ params }: { params: { id: string } }) {
             [name]: value
         }));
     };
+
+    const handleAddSystem = (system: string) => {
+        setIssue(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                affectedSystems: prev.affectedSystems.includes(system) ? prev.affectedSystems : [...prev.affectedSystems, system]
+            };
+        });
+    };
+
+    const handleRemoveSystem = (index: number) => {
+        setIssue(prev => {
+            if (!prev) return prev;
+            const updatedSystems = prev.affectedSystems.filter((_, i) => i !== index);
+            return {
+                ...prev,
+                affectedSystems: updatedSystems
+            };
+        });
+    };
+
+    const handleDropdownClick = () => {
+        setDropdownOpen(!dropdownOpen);
+    };
+
+    const handleOutsideClick = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setDropdownOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleOutsideClick);
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -407,32 +455,41 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
                                         <div className="space-y-1">
                                             {issue.affectedSystems.map((system, index) => (
-                                                <p key={index}> - {system}</p>
+                                                <div key={index} className="flex items-center mb-2">
+                                                    <span className="flex-grow">{system}</span>
+                                                    <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
                                 </label>
                             </div>
                             <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input type="radio" name="affectedSystemsUnderstandable" value="yes" className="custom-radio" />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input type="radio" name="affectedSystemsUnderstandabl" value="no" className="custom-radio" />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
+                                <div className="dropdown-container">
+                                    <div
+                                        className="dropdown"
+                                        onClick={handleDropdownClick}
+                                    >
+                                        Wähle die Systeme aus
+                                    </div>
+                                    {dropdownOpen && (
+                                        <div className="dropdown-menu">
+                                            {systemsList.map(system => (
+                                                <div
+                                                    key={system}
+                                                    className={`dropdown-item ${issue.affectedSystems.includes(system) ? 'bg-gray-200' : ''}`}
+                                                    onClick={() => handleAddSystem(system)}
+                                                >
+                                                    {issue.affectedSystems.includes(system) ? '✓ ' : ''}{system}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                                <textarea
-                                    name="affectedSystemsUnderstandable"
-                                    value={responses.affectedSystemsUnderstandable}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, welche Systeme waren wirklich betroffen? Liste auf:'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+
                             </div>
                         </div>
+
 
 
                         {/* mmmmmmmmmmmmmmmmmmmmmm */}
@@ -779,4 +836,3 @@ export function Feedback({ params }: { params: { id: string } }) {
 };
 
 export default Feedback;
-

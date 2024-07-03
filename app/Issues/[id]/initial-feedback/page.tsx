@@ -227,7 +227,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
-                                Ist die Priorität des Issues für dich nachvollziehbar?
+                                Wie nachvollziehbar ist die Priorität?
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -236,7 +236,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                 <textarea
                                     name="priorityUnderstandable"
                                     onChange={handleChange}
-                                    placeholder='Wenn nein, warum nicht?'
+                                    placeholder='Begründe deine Bewertung...'
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
                             </div>
