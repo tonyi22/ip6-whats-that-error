@@ -29,21 +29,23 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
         problemUnderstood: '',
         stepsKnown: '',
         infoMissing: '',
-        issueClarityRating: '',
-        priorityUnderstandable: ''
+        issueClearDetails: '',
+        problemUnderstoodDetails: '',
+        stepsKnownDetails: '',
+        infoMissingDetails: '',
     });
 
     useEffect(() => {
         const issues = loadIssuesFromLocalStorage();
         const foundIssue = issues.find(issue => issue.id === Number(params.id));
-        if (foundIssue) { // Update state only if issue is found
+        if (foundIssue) {
             setIssue(foundIssue);
         } else {
-            console.log(`Issue with ID ${params.id} not found`);
+            console.log(`Issue mit ID ${params.id} nicht gefunden`);
         }
     }, [params.id]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setResponses(prev => ({
             ...prev,
@@ -58,7 +60,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
     };
 
     if (!issue) {
-        return <div>Issue not found</div>;
+        return <div>Issue nicht gefunden</div>;
     }
 
     return (
@@ -115,20 +117,34 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="issueClear" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="issueClear"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="issueClear" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="issueClear"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="issueClear"
-                                    onChange={handleChange}
-                                    placeholder='Was war nicht klar?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.issueClear === 'no' && (
+                                    <textarea
+                                        name="issueClearDetails"
+                                        onChange={handleChange}
+                                        placeholder='Was war nicht klar?'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -139,24 +155,44 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="problemUnderstood" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="problemUnderstood"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="problemUnderstood" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="problemUnderstood"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="problemUnderstood" value="teilweise" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="problemUnderstood"
+                                            value="teilweise"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Teilweise</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="problemUnderstood"
-                                    onChange={handleChange}
-                                    placeholder='Was hast du nicht verstanden?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {(responses.problemUnderstood === 'no' || responses.problemUnderstood === 'teilweise') && (
+                                    <textarea
+                                        name="problemUnderstoodDetails"
+                                        onChange={handleChange}
+                                        placeholder='Was hast du nicht verstanden?'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -167,20 +203,34 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="stepsKnown" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="stepsKnown"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="stepsKnown" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="stepsKnown"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="stepsKnown"
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, bitte beschreiben...'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.stepsKnown === 'no' && (
+                                    <textarea
+                                        name="stepsKnownDetails"
+                                        onChange={handleChange}
+                                        placeholder='Wenn nein, bitte beschreiben...'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -191,20 +241,34 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="infoMissing" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="infoMissing"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="infoMissing" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="infoMissing"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="infoMissing"
-                                    onChange={handleChange}
-                                    placeholder='Was hat dir gefehlt?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.infoMissing === 'yes' && (
+                                    <textarea
+                                        name="infoMissingDetails"
+                                        onChange={handleChange}
+                                        placeholder='Was hat dir gefehlt?'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -216,12 +280,6 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                 <div className="flex space-x-4">
                                     <SternComponent rating={starRating} onChange={setStarRating} />
                                 </div>
-                                <textarea
-                                    name="issueClarityRating"
-                                    onChange={handleChange}
-                                    placeholder='Bitte beschreiben...'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
                             </div>
                         </div>
 
@@ -233,12 +291,6 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                 <div className="flex space-x-4">
                                     <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
                                 </div>
-                                <textarea
-                                    name="priorityUnderstandable"
-                                    onChange={handleChange}
-                                    placeholder='Begründe deine Bewertung...'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
                             </div>
                         </div>
 
