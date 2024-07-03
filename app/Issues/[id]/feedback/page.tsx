@@ -40,7 +40,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({ onChange }) => {
 export function Feedback({ params }: { params: { id: string } }) {
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
-    const [sliderRating, setSliderRating] = useState(2);
+    const [sliderRating, setSliderRating] = useState(3);
     const [starRating, setStarRating] = useState(0);
     const [thumbsRating, setThumbsRating] = useState(0);
     const [feedbackText, setFeedbackText] = useState('');
@@ -56,40 +56,56 @@ export function Feedback({ params }: { params: { id: string } }) {
         issueClarityRating: '',
         priorityUnderstandable: '',
         alertIconUnderstandable: '',
+        bereitgestellt: '',
         severityUnderstandable: '',
         statusUnderstandable: '',
+        descriptionReason: '',
+        priorityUnderstandable2: '',
+        severityCorrect: '',
+        correctSeverity: '',
+        severityReason: '',
+        incidentTypeReason: '',
         incidentTypeUnderstandable: '',
+        correctAlertType: '',
+        moreUnderstandable: '',
+        alertIconReason: '',
         descriptionUnderstandable: '',
         affectedSystemsUnderstandable: '',
         impactUnderstandable: '',
-        preventativeMeasuresUnderstandable: '',
+        affSystems: '',
+        implementationAISuggestions: '',
+        implementationReason: '',
+        impactReason: '',
         whatToDo: '',
+        whatToDoReason: '',
         implemented: '',
+        implementedReason: '',
+        clarityAISuggestions: '',
+        relevanceAISuggestions: '',
+        preventativeMeasuresUnderstandable: '',
         issueResolved: '',
         issueRelevant: '',
-        relevanceAISuggestions: '',
-        clarityAISuggestions: '',
         easeOfUseAISuggestions: '',
-        implementationAISuggestions: '',
         improvementAISuggestions: '',
         overallSatisfactionAISuggestions: '',
         correctPriority: '',
         correctIncidentType: '',
-        correctAlertType: '',
-        correctSeverity: '',
         correctStatus: '',
         descriptionClarityImproved: '',
         descriptionClarityImprovedComments: '',
         problemUnderstandingChanged: '',
+        priorityReason: '',
         problemUnderstandingChangedComments: '',
         solutionStepsClarityImproved: '',
         priorityAdjustedCorrectlyComments: '',
         priorityAdjustedCorrectly: '',
         missingInfoProvided: '',
+        incidentTypeText: '',
         missingInfoProvidedComments: '',
         issueClarityImproved: '',
         issueClarityImprovedComments: '',
         solutionStepsClarityImprovedComments: '',
+        textfeldunderstandable: '',
     });
 
     const systemsList = [
@@ -102,7 +118,7 @@ export function Feedback({ params }: { params: { id: string } }) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement | HTMLInputElement>) => {
         const { name, value } = e.target;
         setResponses(prev => ({
             ...prev,
@@ -211,34 +227,51 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="alertIconUnderstandable" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="alertIconUnderstandable"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="alertIconUnderstandable" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="alertIconUnderstandable"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <select
-                                    name="correctAlertType"
-                                    value={responses.correctAlertType}
-                                    onChange={handleChange}
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                >
-                                    <option value="" disabled>Wähle den richtigen Alert Type</option>
-                                    {["Warning", "Info", "Critical"].map(type => (
-                                        <option key={type} value={type} disabled={type === issue.alertType}>
-                                            {getAlertIcon(type)} {type}
-                                        </option>
-                                    ))}
-                                </select>
-                                <textarea
-                                    name="alertIconUnderstandable"
-                                    value={responses.alertIconUnderstandable}
-                                    onChange={handleChange}
-                                    placeholder='Begründung für neuen Alert Type'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.alertIconUnderstandable === 'no' && (
+                                    <>
+                                        <select
+                                            name="correctAlertType"
+                                            value={responses.correctAlertType}
+                                            onChange={handleChange}
+                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            defaultValue=""
+                                        >
+                                            <option value="" disabled hidden>Wähle den richtigen Alert Type</option>
+                                            {["Warning", "Info", "Critical"].map(type => (
+                                                <option key={type} value={type} disabled={type === issue.alertType}>
+                                                    {getAlertIcon(type)} {type}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <textarea
+                                            name="alertIconReason"
+                                            value={responses.alertIconReason}
+                                            onChange={handleChange}
+                                            placeholder='Begründe den neuen Alert Type'
+                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        />
+                                    </>
+                                )}
                             </div>
                         </div>
 
@@ -253,37 +286,54 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="severityCorrect" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="severityCorrect"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="severityCorrect" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="severityCorrect"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <select
-                                    name="correctSeverity"
-                                    value={responses.correctSeverity}
-                                    onChange={handleChange}
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                >
-                                    <option value="" disabled>Wähle die richtige Severity</option>
-                                    {['Low', 'Medium', 'High'].map(severity => (
-                                        <option key={severity} value={severity} disabled={severity === issue.severity}>
-                                            {severity}
-                                        </option>
-                                    ))}
-                                </select>
-
-                                <textarea
-                                    name="severityUnderstandable"
-                                    value={responses.severityUnderstandable}
-                                    onChange={handleChange}
-                                    placeholder='Begründe die neue Severity'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.severityCorrect === 'no' && (
+                                    <>
+                                        <select
+                                            name="correctSeverity"
+                                            value={responses.correctSeverity}
+                                            onChange={handleChange}
+                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            defaultValue=""
+                                        >
+                                            <option value="" disabled hidden>Wähle die richtige Severity</option>
+                                            {['Low', 'Medium', 'High'].map(severity => (
+                                                <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                                    {severity}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <textarea
+                                            name="severityReason"
+                                            value={responses.severityReason}
+                                            onChange={handleChange}
+                                            placeholder='Begründe die neue Severity'
+                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        />
+                                    </>
+                                )}
                             </div>
                         </div>
+
 
 
 
@@ -298,80 +348,110 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="incidentTypeUnderstandable" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="incidentTypeUnderstandable"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="incidentTypeUnderstandable" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="incidentTypeUnderstandable"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <select
-                                    name="correctIncidentType"
-                                    value={responses.correctIncidentType}
-                                    onChange={handleChange}
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                >
-                                    <option value="" disabled>Wähle den richtigen Incident Type</option>
-                                    {[
-                                        "Performance", "Storage", "Overheating", "Backups", "Power", "Data Integrity", "Connection", "Query", "Monitoring", "Network",
-                                        "Authentication", "Resources", "Processes", "Configuration", "Data Export", "Documentation", "Startup", "Demonstration", "Communication",
-                                        "Data Import", "Security"
-                                    ].map(type => (
-                                        <option key={type} value={type} disabled={type === issue.incidentType}>{type}</option>
-                                    ))}
-                                </select>
-
-                                <textarea
-                                    name="incidentTypeUnderstandable"
-                                    value={responses.incidentTypeUnderstandable}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, bitte beschreiben...'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.incidentTypeUnderstandable === 'no' && (
+                                    <>
+                                        <select
+                                            name="correctIncidentType"
+                                            value={responses.correctIncidentType}
+                                            onChange={handleChange}
+                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            defaultValue=""
+                                        >
+                                            <option value="" disabled hidden>Wähle den richtigen Incident Type</option>
+                                            {[
+                                                "Performance", "Storage", "Overheating", "Backups", "Power", "Data Integrity", "Connection", "Query", "Monitoring", "Network",
+                                                "Authentication", "Resources", "Processes", "Configuration", "Data Export", "Documentation", "Startup", "Demonstration", "Communication",
+                                                "Data Import", "Security"
+                                            ].map(type => (
+                                                <option key={type} value={type} disabled={type === issue.incidentType}>{type}</option>
+                                            ))}
+                                        </select>
+                                    </>
+                                )}
                             </div>
                         </div>
 
 
                         <div> {issue.isInitialGiven ? (
                             <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                                <label className="text-gray-700 dark:text-gray-300">
-                                    Wurde die Priorität des Issues korrekt angepasst?
-                                </label>
+                                <div>
+                                    <span className="ml-2">
+                                        Wurde die Priorität des Issues korrekt angepasst?
+                                    </span>
+                                    <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                        <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.priority}/10</span>
+                                    </label>
+                                </div>
                                 <div className="flex flex-col">
                                     <div className="flex space-x-4">
                                         <label className="flex items-center">
-                                            <input type="radio" name="priorityUnderstandable2" value="yes" className="custom-radio" />
+                                            <input
+                                                type="radio"
+                                                name="priorityUnderstandable2"
+                                                value="yes"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
                                             <span className="ml-2">Ja</span>
                                         </label>
                                         <label className="flex items-center">
-                                            <input type="radio" name="priorityUnderstandable2" value="no" className="custom-radio" />
+                                            <input
+                                                type="radio"
+                                                name="priorityUnderstandable2"
+                                                value="no"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
                                             <span className="ml-2">Nein</span>
                                         </label>
                                     </div>
-                                    <select
-                                        name="correctPriority"
-                                        value={responses.correctPriority}
-                                        onChange={handleChange}
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    >
-                                        <option value="">Bitte die korrekte Priorität auswählen</option>
-                                        {[...Array(10)].map((_, i) => (
-                                            <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
-                                        ))}
-                                    </select>
-                                    <textarea
-                                        name="priorityAdjustedCorrectlyComments"
-                                        value={responses.priorityAdjustedCorrectlyComments}
-                                        onChange={handleChange}
-                                        placeholder='Wenn nein, bitte beschreiben...'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    />
+                                    {responses.priorityUnderstandable2 === 'no' && (
+                                        <>
+                                            <select
+                                                name="correctPriority"
+                                                value={responses.correctPriority}
+                                                onChange={handleChange}
+                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            >
+                                                <option value="" disabled hidden>Bitte die korrekte Priorität auswählen</option>
+                                                {[...Array(10)].map((_, i) => (
+                                                    <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
+                                                ))}
+                                            </select>
+                                            <textarea
+                                                name="priorityAdjustedCorrectlyComments"
+                                                value={responses.priorityAdjustedCorrectlyComments}
+                                                onChange={handleChange}
+                                                placeholder='Begründe die neue Priorität'
+                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                                <div>
+                                <div className="flex flex-col">
                                     <span className="ml-2">War die Priorität nachvollziehbar? Wenn nein, welche Priorität hätte das Issue haben sollen?</span>
                                     <label className="flex items-center text-gray-700 dark:text-gray-300">
                                         <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.priority}/10</span>
@@ -380,33 +460,49 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 <div className="flex flex-col">
                                     <div className="flex space-x-4">
                                         <label className="flex items-center">
-                                            <input type="radio" name="priorityUnderstandable" value="yes" className="custom-radio" />
+                                            <input
+                                                type="radio"
+                                                name="priorityUnderstandable"
+                                                value="yes"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
                                             <span className="ml-2">Ja</span>
                                         </label>
                                         <label className="flex items-center">
-                                            <input type="radio" name="priorityUnderstandable" value="no" className="custom-radio" />
+                                            <input
+                                                type="radio"
+                                                name="priorityUnderstandable"
+                                                value="no"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
                                             <span className="ml-2">Nein</span>
                                         </label>
                                     </div>
-                                    <select
-                                        name="correctPriority"
-                                        value={responses.correctPriority}
-                                        onChange={handleChange}
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    >
-                                        <option value="">Bitte die korrekte Priorität auswählen</option>
-                                        {[...Array(10)].map((_, i) => (
-                                            <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
-                                        ))}
-                                    </select>
-
-                                    <textarea
-                                        name="priorityUnderstandable"
-                                        value={responses.priorityUnderstandable}
-                                        onChange={handleChange}
-                                        placeholder='Begründung für neue Prio'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    />
+                                    {responses.priorityUnderstandable === 'no' && (
+                                        <>
+                                            <select
+                                                name="correctPriority"
+                                                value={responses.correctPriority}
+                                                onChange={handleChange}
+                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                defaultValue=""
+                                            >
+                                                <option value="" disabled>Bitte die korrekte Priorität auswählen</option>
+                                                {[...Array(10)].map((_, i) => (
+                                                    <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
+                                                ))}
+                                            </select>
+                                            <textarea
+                                                name="priorityReason"
+                                                value={responses.priorityReason}
+                                                onChange={handleChange}
+                                                placeholder='Begründung für neue Priorität'
+                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             </div>)}
                         </div>
@@ -422,24 +518,37 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <div className="flex flex-col">
                                         <div className="flex space-x-4">
                                             <label className="flex items-center">
-                                                <input type="radio" name="moreUnderstandable" value="yes" className="custom-radio" />
+                                                <input
+                                                    type="radio"
+                                                    name="moreUnderstandable"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
                                                 <span className="ml-2">Ja</span>
                                             </label>
                                             <label className="flex items-center">
-                                                <input type="radio" name="moreUnderstandable" value="no" className="custom-radio" />
+                                                <input
+                                                    type="radio"
+                                                    name="moreUnderstandable"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
                                                 <span className="ml-2">Nein</span>
                                             </label>
                                         </div>
-                                        <textarea
-                                            name="descriptionClarityImprovedComments"
-                                            value={responses.descriptionClarityImprovedComments}
-                                            onChange={handleChange}
-                                            placeholder='Wenn nein, bitte beschreiben...'
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        />
+                                        {responses.moreUnderstandable === 'no' && (
+                                            <textarea
+                                                name="descriptionClarityImprovedComments"
+                                                value={responses.descriptionClarityImprovedComments}
+                                                onChange={handleChange}
+                                                placeholder='Was war noch unklar?'
+                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            />
+                                        )}
                                     </div>
                                 </div>
-
                             ) : (
                                 <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                     <div>
@@ -453,21 +562,37 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <div className="flex flex-col">
                                         <div className="flex space-x-4">
                                             <label className="flex items-center">
-                                                <input type="radio" name="descriptionUnderstandable" value="yes" className="custom-radio" />
+                                                <input
+                                                    type="radio"
+                                                    name="descriptionUnderstandable"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
                                                 <span className="ml-2">Ja</span>
                                             </label>
                                             <label className="flex items-center">
-                                                <input type="radio" name="descriptionUnderstandable" value="no" className="custom-radio" />
+                                                <input
+                                                    type="radio"
+                                                    name="descriptionUnderstandable"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
                                                 <span className="ml-2">Nein</span>
                                             </label>
                                         </div>
-                                        <textarea
-                                            name="descriptionUnderstandable"
-                                            value={responses.descriptionUnderstandable}
-                                            onChange={handleChange}
-                                            placeholder='Wenn nein, bitte beschreiben...'
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        />
+                                        {responses.descriptionUnderstandable === 'no' && (
+                                            <>
+                                                <textarea
+                                                    name="descriptionReason"
+                                                    value={responses.descriptionReason}
+                                                    onChange={handleChange}
+                                                    placeholder='Wenn nein, was war unklar?'
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                />
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -482,28 +607,39 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <div className="flex flex-col">
                                         <div className="flex space-x-4">
                                             <label className="flex items-center">
-                                                <input type="radio" name="bereitgestellt" value="yes" className="custom-radio" />
+                                                <input
+                                                    type="radio"
+                                                    name="bereitgestellt"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
                                                 <span className="ml-2">Ja</span>
                                             </label>
                                             <label className="flex items-center">
-                                                <input type="radio" name="bereitgestellt" value="no" className="custom-radio" />
+                                                <input
+                                                    type="radio"
+                                                    name="bereitgestellt"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
                                                 <span className="ml-2">Nein</span>
                                             </label>
                                         </div>
-                                        <textarea
-                                            name="missingInfoProvidedComments"
-                                            value={responses.missingInfoProvidedComments}
-                                            onChange={handleChange}
-                                            placeholder='Wenn nein, bitte beschreiben...'
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        />
+                                        {responses.bereitgestellt === 'no' && (
+                                            <textarea
+                                                name="missingInfoProvidedComments"
+                                                value={responses.missingInfoProvidedComments}
+                                                onChange={handleChange}
+                                                placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
+                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            />
+                                        )}
                                     </div>
                                 </div>
                             ) : null}
                         </div>
-
-
-
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
@@ -523,40 +659,54 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 </label>
                             </div>
                             <div className="flex flex-col">
-                                <div className="dropdown-container">
-                                    <div className="flex space-x-4">
-                                        <label className="mb-2 flex items-center">
-                                            <input type="radio" name="affSystems" value="yes" className="custom-radio" />
-                                            <span className="ml-2">Ja</span>
-                                        </label>
-                                        <label className="mb-2 flex items-center">
-                                            <input type="radio" name="affSystems" value="no" className="custom-radio" />
-                                            <span className="ml-2">Nein</span>
-                                        </label>
-                                    </div>
-                                    <div
-                                        className="dropdown"
-                                        onClick={handleDropdownClick}
-                                    >
-                                        Wähle die Systeme aus
-                                    </div>
-                                    {dropdownOpen && (
-                                        <div className="dropdown-menu">
-                                            {systemsList.map(system => (
-                                                <div
-                                                    key={system}
-                                                    className={`dropdown-item ${issue.affectedSystems.includes(system) ? 'bg-gray-200' : ''}`}
-                                                    onClick={() => handleAddSystem(system)}
-                                                >
-                                                    {issue.affectedSystems.includes(system) ? '✓ ' : ''}{system}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
+                                <div className="flex space-x-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="affSystems"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Ja</span>
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="affSystems"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Nein</span>
+                                    </label>
                                 </div>
-
+                                {responses.affSystems === 'no' && (
+                                    <>
+                                        <div
+                                            className="dropdown"
+                                            onClick={handleDropdownClick}
+                                        >
+                                            Wähle die Systeme aus
+                                        </div>
+                                        {dropdownOpen && (
+                                            <div className="dropdown-menu">
+                                                {systemsList.map(system => (
+                                                    <div
+                                                        key={system}
+                                                        className={`dropdown-item ${issue.affectedSystems.includes(system) ? 'bg-gray-200' : ''}`}
+                                                        onClick={() => handleAddSystem(system)}
+                                                    >
+                                                        {issue.affectedSystems.includes(system) ? '✓ ' : ''}{system}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                )}
                             </div>
                         </div>
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <div>
@@ -570,53 +720,39 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="impactUnderstandable" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="impactUnderstandable"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="impactUnderstandable" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="impactUnderstandable"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="impactUnderstandable"
-                                    value={responses.impactUnderstandable}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, warum nicht?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.impactUnderstandable === 'no' && (
+                                    <textarea
+                                        name="impactReason"
+                                        value={responses.impactReason}
+                                        onChange={handleChange}
+                                        placeholder='Wenn nein, was war nicht verständilch?'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <div>
-                                <span className="ml-2">Waren die aufgelisteten vorbeugenden Massnahmen verständlich und umsetzbar?</span>
-                                <label className="flex items-center text-gray-700 dark:text-gray-300">
-                                    <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
-                                        {issue.preventativeMeasures}
-                                    </p>
-                                </label>
-                            </div>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input type="radio" name="preventativeMeasuresUnderstandable" value="yes" className="custom-radio" />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input type="radio" name="preventativeMeasuresUnderstandable" value="no" className="custom-radio" />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
-                                </div>
-                                <textarea
-                                    name="preventativeMeasuresUnderstandable"
-                                    value={responses.preventativeMeasuresUnderstandable}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, wieso und was war nicht umsetzbar?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                            </div>
-                        </div>
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
@@ -625,23 +761,38 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="whatToDo" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="whatToDo"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="whatToDo" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="whatToDo"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="whatToDo"
-                                    value={responses.whatToDo}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, bitte beschreiben...'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.whatToDo === 'no' && (
+                                    <textarea
+                                        name="whatToDoReason"
+                                        value={responses.whatToDoReason}
+                                        onChange={handleChange}
+                                        placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
@@ -650,21 +801,35 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="implemented" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="implemented"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="implemented" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="implemented"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="implemented"
-                                    value={responses.implemented}
-                                    onChange={handleChange}
-                                    placeholder='Wie hast du das Issue gelöst?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.implemented === 'no' && (
+                                    <textarea
+                                        name="implementedReason"
+                                        value={responses.implementedReason}
+                                        onChange={handleChange}
+                                        placeholder='Wie hast du das Issue gelöst?'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -673,28 +838,43 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
                                 Waren die AI-Vorschläge für das Issue relevant? Falls ja, waren die AI-Vorschläge klar und verständlich?
-
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="clarityAISuggestions" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="clarityAISuggestions"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="clarityAISuggestions" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="clarityAISuggestions"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <textarea
-                                    name="relevanceAISuggestions"
-                                    value={responses.relevanceAISuggestions}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, was war nicht verständlich?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.clarityAISuggestions === 'yes' && (
+                                    <textarea
+                                        name="relevanceAISuggestions"
+                                        value={responses.relevanceAISuggestions}
+                                        onChange={handleChange}
+                                        placeholder='Wenn ja, was war nicht verständlich?'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
+
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
@@ -703,26 +883,43 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
-                                        <input type="radio" name="implementationAISuggestions" value="yes" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="implementationAISuggestions"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Ja</span>
                                     </label>
                                     <label className="flex items-center">
-                                        <input type="radio" name="implementationAISuggestions" value="no" className="custom-radio" />
+                                        <input
+                                            type="radio"
+                                            name="implementationAISuggestions"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
                                         <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <div className="flex space-x-4">
-                                    <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
-                                </div>
-                                <textarea
-                                    name="implementationAISuggestions"
-                                    value={responses.implementationAISuggestions}
-                                    onChange={handleChange}
-                                    placeholder='Wenn nein, warum nicht?'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
+                                {responses.implementationAISuggestions === 'yes' && (
+                                    <div className="flex space-x-4">
+                                        <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
+                                    </div>
+                                )}
+                                {responses.implementationAISuggestions === 'no' && (
+                                    <textarea
+                                        name="implementationReason"
+                                        value={responses.implementationReason}
+                                        onChange={handleChange}
+                                        placeholder='Wenn nein, warum nicht?'
+                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                )}
                             </div>
                         </div>
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="text-gray-700 dark:text-gray-300">
@@ -732,7 +929,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 name="improvementAISuggestions"
                                 value={responses.improvementAISuggestions}
                                 onChange={handleChange}
-                                placeholder='Bitte beschreiben...'
+                                placeholder='Erzähl davon...'
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </div>

@@ -20,7 +20,7 @@ const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
 };
 
 function InitialFeedbackForm({ params }: { params: { id: string } }) {
-    const [sliderRating, setSliderRating] = useState(2);
+    const [sliderRating, setSliderRating] = useState(3);
     const [starRating, setStarRating] = useState(0);
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
@@ -276,12 +276,15 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             <label className="text-gray-700 dark:text-gray-300">
                                 Wie würdest du die Verständlichkeit des Issues bewerten?
                             </label>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
+                            <div className="flex flex-col justify-center">
+                                <div className="flex space-x-4 items-center">
                                     <SternComponent rating={starRating} onChange={setStarRating} />
                                 </div>
                             </div>
                         </div>
+
+
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <label className="text-gray-700 dark:text-gray-300">
