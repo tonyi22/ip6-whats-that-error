@@ -2,18 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import systemMonitoringIssuesArray from '../page';
-import { format } from 'date-fns';
-import { de } from 'date-fns/locale';
-import { getAlertIcon, getSeverityColor, validateType } from '@/app/helperFunction';
 import '../[id]/detailView.css';
-import { SystemMonitoringIssue } from '@/app/data/data';
 import { MdCancel } from "react-icons/md";
+import { compareSort } from '@/app/helperFunction';
 
 const NewIssue = () => {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None'] as const;
     const severityTypes = ['Low', 'Medium', 'High'] as const;
-    const statusTypes = ['New', 'Open', 'Closed', 'In Progress'] as const;
-    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power'] as const;
+    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network', 'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'];
     const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
 
     const [newIssue, setNewIssue] = useState({
@@ -337,22 +333,6 @@ Lösungsvorschlag:
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold mb-2" htmlFor="status">Status</label>
-                            <select
-                                name="status"
-                                value={newIssue.status}
-                                onChange={handleInputChange}
-                                className="input"
-                            >
-                                {statusTypes.map(type => (
-                                    <option key={type} value={type}>
-                                        {type}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
                             <label className="block text-sm font-bold mb-2" htmlFor="incidentType">Incident Type</label>
                             <select
                                 name="incidentType"
@@ -360,7 +340,7 @@ Lösungsvorschlag:
                                 onChange={handleInputChange}
                                 className="input"
                             >
-                                {incidentTypes.map(type => (
+                                {incidentTypes.sort(compareSort).map(type => (
                                     <option key={type} value={type}>
                                         {type}
                                     </option>

@@ -3,22 +3,38 @@ import { IoWarningOutline } from "react-icons/io5";
 // import { TfiInfoAlt } from "react-icons/tfi";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { de } from 'date-fns/locale';
+import { format } from 'date-fns';
 
 export function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
     return validValues.includes(value) ? value : defaultValue;
 }
+
+export function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(' ')
+}
+
+//helper function to format date
+export const formatDate = (date: string | number | Date) => {
+    return format(new Date(date), 'HH:mm, dd.MM.yy ', { locale: de });
+};
 
 export const getAlertIconBig = (alertType: string) => {
     switch (alertType) {
         case 'Warning':
             return <IoWarningOutline size="3.5rem" className="text-yellow-500" />;
         case 'Critical':
-            return < RiErrorWarningLine size="3.5rem" className="text-red-800" />;
+            return < RiErrorWarningLine size="3.5rem" className="text-red-700" />;
         case 'Info':
         default:
             return <IoInformationCircleOutline size="3.5rem" className="text-blue-800" />;
     }
 };
+
+export const compareSort = (a: string, b: string) => {
+    return a.localeCompare(b);
+}
+
 
 
 //function to show the correct icon depending on the alert type
@@ -27,7 +43,7 @@ export const getAlertIcon = (alertType: string) => {
         case 'Warning':
             return <IoWarningOutline className='text-5xl text-yellow-500 dark:text-yellow-500' />;
         case 'Critical':
-            return < RiErrorWarningLine className='text-5xl text-red-800 dark:text-red-800' />;
+            return < RiErrorWarningLine className='text-5xl text-red-500 dark:text-red-800' />;
         case 'Info':
         default:
             return <IoInformationCircleOutline className='text-5xl text-blue-800 dark:text-blue-800' />;

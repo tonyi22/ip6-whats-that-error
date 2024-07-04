@@ -1,26 +1,36 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useRef, useState } from 'react';
+import { classNames } from '../helperFunction';
 
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
 
-function Example({ id, initialFeedback }: { id: number, initialFeedback: boolean }) {
-    const menuRef = useRef(null);
+
+function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: boolean }) {
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+    const openMenuProgrammatically = (e: { stopPropagation: () => void; }) => {
+        e.stopPropagation();
+        buttonRef.current?.click();
+    };
+
 
     return (
-        <Menu as="div" className="relative inline-block text-left" ref={menuRef}>
+        <Menu as="div" className="relative inline-block text-left" >
             <div className="relative">
                 <MenuButton
+                    ref={buttonRef}
                     className="inline-flex w-full p-2 justify-center rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <ChevronDownIcon className="w-5 text-gray-400" aria-hidden="true" />
+                    {!initialFeedback && (
+                        <span
+                            className="absolute top-0 right-0 mt-1 mr-1 w-2.5 h-2.5 bg-blue-500 rounded-full"
+                            onClick={openMenuProgrammatically}
+                        ></span>
+                    )}
                 </MenuButton>
-                {!initialFeedback && (
-                    <span className="absolute top-0 right-0 mt-1 mr-1 w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
-                )}
+
             </div>
 
             <MenuItems
@@ -60,4 +70,4 @@ function Example({ id, initialFeedback }: { id: number, initialFeedback: boolean
     )
 }
 
-export default Example;
+export default CustomDropDown;

@@ -7,9 +7,6 @@ import { SystemMonitoringIssue } from '@/app/data/data';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
 
-const formatDate = (date: string | number | Date) => {
-    return new Date(date).toLocaleString();
-};
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -22,6 +19,10 @@ const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
 function InitialFeedbackForm({ params }: { params: { id: string } }) {
     const [sliderRating, setSliderRating] = useState(2);
     const [starRating, setStarRating] = useState(0);
+    const [thumbsRating, setThumbsRating] = useState(0);
+    const [feedbackText, setFeedbackText] = useState('');
+    const [emojiRating, setEmojiRating] = useState(0);
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [responses, setResponses] = useState({
@@ -57,33 +58,16 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
         console.log('Submitted responses:', responses);
     };
 
+
+
     if (!issue) {
         return <div>Issue not found</div>;
     }
 
+
+
     return (
         <div className="max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
-            <style jsx>{`
-                .custom-radio {
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    appearance: none;
-                    display: inline-block;
-                    width: 0.75em; 
-                    height: 0.75em; 
-                    border-radius: 50%;
-                    border: 1px solid #000;
-                    cursor: pointer;
-                    position: relative;
-                    top: 0.15em;
-                    margin-right: 0.05em;
-                    background-color: white; 
-                }
-                .custom-radio:checked {
-                    background-color: #4299e1; 
-                    border-color: #000; 
-                }
-            `}</style>
             <div className="flex space-x-8">
                 <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
                     <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
@@ -114,17 +98,15 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input type="radio" name="issueClear" value="yes" className="custom-radio" />
-                                        <span className="ml-2">Ja</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
                                     </label>
-                                    <label className="flex items-center">
-                                        <input type="radio" name="issueClear" value="no" className="custom-radio" />
-                                        <span className="ml-2">Nein</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
                                     </label>
                                 </div>
                                 <textarea
-                                    name="issueClear"
+                                    name="whatToDo"
                                     onChange={handleChange}
                                     placeholder='Was war nicht klar?'
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -138,21 +120,18 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input type="radio" name="problemUnderstood" value="yes" className="custom-radio" />
-                                        <span className="ml-2">Ja</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
                                     </label>
-                                    <label className="flex items-center">
-                                        <input type="radio" name="problemUnderstood" value="no" className="custom-radio" />
-                                        <span className="ml-2">Nein</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
                                     </label>
-                                    <label className="flex items-center">
-                                        <input type="radio" name="problemUnderstood" value="teilweise" className="custom-radio" />
-                                        <span className="ml-2">Teilweise</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="teilweise" /> Teilweise
                                     </label>
                                 </div>
                                 <textarea
-                                    name="problemUnderstood"
+                                    name="whatToDo"
                                     onChange={handleChange}
                                     placeholder='Was hast du nicht verstanden?'
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -166,17 +145,15 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input type="radio" name="stepsKnown" value="yes" className="custom-radio" />
-                                        <span className="ml-2">Ja</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
                                     </label>
-                                    <label className="flex items-center">
-                                        <input type="radio" name="stepsKnown" value="no" className="custom-radio" />
-                                        <span className="ml-2">Nein</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
                                     </label>
                                 </div>
                                 <textarea
-                                    name="stepsKnown"
+                                    name="whatToDo"
                                     onChange={handleChange}
                                     placeholder='Wenn nein, bitte beschreiben...'
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -190,17 +167,15 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input type="radio" name="infoMissing" value="yes" className="custom-radio" />
-                                        <span className="ml-2">Ja</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="yes" /> Ja
                                     </label>
-                                    <label className="flex items-center">
-                                        <input type="radio" name="infoMissing" value="no" className="custom-radio" />
-                                        <span className="ml-2">Nein</span>
+                                    <label>
+                                        <input type="radio" name="whatToDo" value="no" /> Nein
                                     </label>
                                 </div>
                                 <textarea
-                                    name="infoMissing"
+                                    name="whatToDo"
                                     onChange={handleChange}
                                     placeholder='Was hat dir gefehlt?'
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -217,7 +192,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                     <SternComponent rating={starRating} onChange={setStarRating} />
                                 </div>
                                 <textarea
-                                    name="issueClarityRating"
+                                    name="overallSatisfactionAISuggestions"
                                     onChange={handleChange}
                                     placeholder='Bitte beschreiben...'
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -234,7 +209,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                     <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
                                 </div>
                                 <textarea
-                                    name="priorityUnderstandable"
+                                    name="implementationAISuggestions"
                                     onChange={handleChange}
                                     placeholder='Wenn nein, warum nicht?'
                                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

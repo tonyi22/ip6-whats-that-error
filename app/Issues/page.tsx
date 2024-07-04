@@ -2,21 +2,23 @@
 
 import styles from '../issues.module.css'
 
-import { FaGreaterThan, FaLessThan } from "react-icons/fa";
+import { FaGreaterThan, FaLessThan, FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import { SystemMonitoringIssue } from '../data/data';
 import { MdOutlineFiberNew } from "react-icons/md";
-import { de } from 'date-fns/locale';
-import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
+import { BiSortAlt2 } from "react-icons/bi";
 import Link from 'next/link';
-import { getAlertIcon, getAlertIconBig, validateType } from '../helperFunction';
+import { classNames, formatDate, getAlertIcon, getAlertIconBig, getSeverityColor, validateType } from '../helperFunction';
 import { useRouter } from 'next/navigation';
-import Example from './dropDownMenu';
+import CustomDropDown from './dropDownMenu';
 import issuesJson from '../data/issues.json' assert { type: 'json' };
+import { Button, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 
-const formatDate = (date: string | number | Date) => {
-    return format(new Date(date), 'HH:mm dd.MM.yyyy ', { locale: de });
-};
+interface CardsHeaderProps {
+    onSort: (column: string) => void;
+    sortColumn: string;
+    sortDirection: 'asc' | 'desc';
+}
 
 const loadIssues = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues'); // Correct key
@@ -45,16 +47,43 @@ const saveIssues = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues)); // Correct key
 }
 
-function CardsHeader() {
+function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
+    const renderSortIcon = (column: string) => {
+        if (sortColumn === column) {
+            return sortDirection === 'asc' ? <FaSortUp className='hover:cursor-pointer' /> : <FaSortDown className='hover:cursor-pointer' />;
+        }
+        return <FaSort className='hover:cursor-pointer' />;
+    };
+
     return (
         <thead className="bg-gray-300">
             <tr>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-20">Alert Type</th>
-                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Title</th>
-                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Description</th>
-                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-20">Priority</th>
-                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-40">Timestamp</th>
-                <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 w-[5rem]">Option</th> {/* Add padding to the right */}
+                <th className="rounded-tl-xl rounded-bl-xl px-2 py-3 text-center text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-20"
+                    onClick={() => onSort('alertType')}>
+                    <div className='flex items-center'>Alert Type {renderSortIcon('alertType')}</div></th>
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500" onClick={() => onSort('title')}>
+                    <div className='flex items-center'>Title {renderSortIcon('title')}</div>
+                </th>
+
+                {false &&
+                    <th className="px-2 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500">Description</th>}
+
+                {true &&
+                    <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500" onClick={() => onSort('incidentType')}>
+                        <div className='flex items-center'>Incident Type {renderSortIcon('incidentType')}</div>
+                    </th>}
+                {true &&
+                    <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
+                        <div className='flex items-center'>Severity {renderSortIcon('severity')}</div>
+                    </th>}
+
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('priority')}>
+                    <div className='flex items-center'>Priority {renderSortIcon('priority')}</div>
+                </th>
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('timestamp')}>
+                    <div className='flex items-center'> Timestamp {renderSortIcon('timestamp')}</div>
+                </th>
+                <th className="rounded-tr-xl rounded-br-xl px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-[5rem]">Option</th> {/* Add padding to the right */}
             </tr>
         </thead>
     );
@@ -62,27 +91,77 @@ function CardsHeader() {
 
 function List({ list }: { list: SystemMonitoringIssue[] }) {
     const router = useRouter();
+    const [sortColumn, setSortColumn] = useState<string>('timestamp');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
     const handleRowClick = (id: number) => {
         router.push(`/Issues/${id}`);
     };
 
+    const customSortOrder = {
+        alertType: ['Critical', 'Warning', 'Info'],
+        severity: ['High', 'Medium', 'Low']
+    };
+
+    const handleSort = (column: string) => {
+        if (sortColumn === column) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(column);
+            setSortDirection('asc');
+        }
+    };
+
+    const sortedList = [...list].sort((a, b) => {
+        let aValue: any = a[sortColumn as keyof SystemMonitoringIssue];
+        let bValue: any = b[sortColumn as keyof SystemMonitoringIssue];
+
+        if (sortColumn === 'timestamp') {
+            aValue = new Date(aValue);
+            bValue = new Date(bValue);
+        } else if (sortColumn === 'alertType' || sortColumn === 'severity') {
+            aValue = customSortOrder[sortColumn].indexOf(aValue);
+            bValue = customSortOrder[sortColumn].indexOf(bValue);
+        }
+
+        if (aValue < bValue) {
+            return sortDirection === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+            return sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+    });
+
     return (
-        <table className="w-full table-fixed bg-white border border-gray-200">
-            <CardsHeader />
-            <tbody>
-                {list.map(listIssue => (
+        <table className="table-fixed rounded-xl border-separate w-full border-spacing-y-2">
+            <CardsHeader onSort={handleSort} sortColumn={sortColumn} sortDirection={sortDirection} />
+            <tbody className=''>
+                {sortedList.map(listIssue => (
                     <tr
                         key={listIssue.id}
-                        className="bg-[#fcf4ff] border-b last:border-b-0 hover:bg-[#f2ebf5] m-5 shadow-lg rounded-lg my-2 hover:cursor-pointer"
+                        className="bg-[#fcf1fa] hover:bg-[#f2ebf5] hover:cursor-pointer border border-red-500"
                         onClick={() => handleRowClick(listIssue.id)}
                     >
-                        <td className="px-4 py-2 w-40">{getAlertIcon(listIssue.alertType)}</td>
-                        <td className="px-4 py-2 truncate">{listIssue.title}</td>
-                        <td className="px-4 py-2  truncate">{listIssue.description}</td>
-                        <td className="px-6 text-sm">{listIssue.priority}/10</td>
-                        <td className=" text-sm ">{formatDate(listIssue.timestamp)}</td>
-                        <td className="text-center"><Example
+                        <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
+                        <td className="px-2 py-3 truncate">{listIssue.title}</td>
+                        {false &&
+                            <td className="px-2 py-3 truncate">{listIssue.description}</td>}
+                        {true &&
+                            <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
+                                {listIssue.incidentType}
+                            </span></td>}
+
+
+                        {true &&
+                            <td className="px-2 py-3 text-sm"><span className={`${getSeverityColor(listIssue.severity)} rounded-xl p-2`}>
+                                {listIssue.severity}</span></td>}
+
+                        <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
+                            {`${listIssue.priority}/10`}
+                        </span></td>
+                        <td className="px-2 py-3 text-sm ">{formatDate(listIssue.timestamp)}</td>
+                        <td className="text-center px-2 py-3 rounded-br-xl rounded-tr-xl"><CustomDropDown
                             id={listIssue.id}
                             initialFeedback={listIssue.isInitialGiven} /></td>
                     </tr>
@@ -115,7 +194,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
             <div className="flex flex-col justify-between h-full space-y-2 flex-grow">
                 <MdOutlineFiberNew className="text-red-500 absolute top-0 right-0 text-2xl" style={{ top: '-15px', right: '-15px' }} />
                 <div className="space-y-2 flex-grow">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between">
                         <h3 className="text-[20px] font-semibold line-clamp-2 overflow-hidden overflow-ellipsis">{heading}</h3>
                         <div className="min-w-max">{icon}</div>
                     </div>
@@ -192,6 +271,68 @@ export default function IssuesPage() {
         }
     };
 
+    type SortableColumns = 'alertType' | 'priority' | 'timestamp';
+
+    const handleSortNewIssues = (sortColumn: SortableColumns) => {
+        setNewIssues(prevNewIssues => {
+            return [...prevNewIssues].sort((a, b) => {
+                let aValue: any = a[sortColumn as keyof SystemMonitoringIssue];
+                let bValue: any = b[sortColumn as keyof SystemMonitoringIssue];
+
+                if (sortColumn === 'timestamp') {
+                    aValue = new Date(aValue);
+                    bValue = new Date(bValue);
+                    // Sort newest date on top
+                    return bValue - aValue;
+                } else if (sortColumn === 'priority') {
+                    // Sort highest priority first, then by newest date if priority is equal
+                    if (a.priority === b.priority) {
+                        aValue = new Date(a.timestamp);
+                        bValue = new Date(b.timestamp);
+                        return bValue - aValue;
+                    }
+                    return b.priority - a.priority;
+                } else if (sortColumn === 'alertType') {
+                    const customSortOrder = {
+                        alertType: ['Critical', 'Warning', 'Info'],
+                    };
+                    aValue = customSortOrder[sortColumn].indexOf(aValue);
+                    bValue = customSortOrder[sortColumn].indexOf(bValue);
+                    // Sort by custom order, then by newest date if alert type is equal
+                    if (aValue === bValue) {
+                        aValue = new Date(a.timestamp);
+                        bValue = new Date(b.timestamp);
+                        return bValue - aValue;
+                    }
+                    return aValue - bValue;
+                } else if (sortColumn === 'severity') {
+                    const customSortOrder: { [key: string]: string[] } = {
+                        alertType: ['Critical', 'Warning', 'Info'],
+                    };
+                    aValue = customSortOrder[sortColumn].indexOf(aValue);
+                    bValue = customSortOrder[sortColumn].indexOf(bValue);
+                    // Sort by custom order, then by newest date if severity is equal
+                    if (aValue === bValue) {
+                        aValue = new Date(a.timestamp);
+                        bValue = new Date(b.timestamp);
+                        return bValue - aValue;
+                    }
+                    return aValue - bValue;
+                }
+
+                if (aValue < bValue) {
+                    return -1;
+                }
+                if (aValue > bValue) {
+                    return 1;
+                }
+                return 0;
+            });
+        });
+        setCurrentIndex(0);
+        setCurrentId(newIssues[0]?.id || null);
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -199,7 +340,7 @@ export default function IssuesPage() {
     return (
         <div className={styles.app}>
             {newIssues.length > 0 && currentId !== null &&
-                <div className="flex flex-col items-center space-y-4 w-full">
+                <div className="flex flex-col items-center w-full">
                     <Card1
                         id={newIssues[currentIndex].id}
                         className={newIssues.length > 1 ? styles.mainIssue : ''}
@@ -209,7 +350,61 @@ export default function IssuesPage() {
                         priority={newIssues[currentIndex].priority}
                         timestamp={formatDate(newIssues[currentIndex].timestamp)}
                     />
-                    <div className="flex justify-between items-center w-full max-w-lg p-10">
+                    <div className='mt-5 w-full max-w-lg flex justify-between'>
+                        <div className='w-[3rem]'></div>
+                        <p>Issue {currentIndex + 1} von {newIssues.length}</p>
+
+                        <Menu as="div" className="relative inline-block text-left" >
+                            <div className="relative">
+                                <MenuButton className="inline-flex w-full justify-center gap-2 py-1.5 px-3 text-sm/6">
+                                    <BiSortAlt2 className="w-5 h-5 border-none" />
+                                </MenuButton>
+                            </div>
+
+                            <MenuItems
+                                transition
+                                className=" text-left absolute left-5 z-10 mt-2 w-32 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                            >
+                                <div className="py-1">
+                                    <MenuItem>
+                                        {({ focus }) => (
+                                            <Button
+                                                className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
+                                                onClick={() => handleSortNewIssues('alertType')}
+                                            >
+                                                Alert Type
+                                            </Button>
+                                        )}
+                                    </MenuItem>
+
+                                    <MenuItem>
+                                        {({ focus }) => (
+                                            <Button
+                                                className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
+                                                onClick={() => handleSortNewIssues('priority')}
+                                            >
+                                                Priority
+                                            </Button>
+                                        )}
+                                    </MenuItem>
+
+                                    <MenuItem>
+                                        {({ focus }) => (
+                                            <Button
+                                                className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
+                                                onClick={() => handleSortNewIssues('timestamp')}
+                                            >
+                                                Timestamp
+                                            </Button>
+                                        )}
+                                    </MenuItem>
+                                </div>
+                            </MenuItems>
+                        </Menu>
+
+                    </div>
+
+                    <div className="flex justify-between items-center w-full max-w-lg p-5">
                         <button
                             className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${newIssues.length > 1 ? '' : 'invisible'}`}
                             onClick={handlePrevious}>
@@ -240,6 +435,7 @@ export default function IssuesPage() {
                 </div>
                 <List list={openIssues} />
             </div>
-        </div>
+
+        </div >
     )
 }
