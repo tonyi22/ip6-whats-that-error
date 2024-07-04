@@ -20,7 +20,8 @@ const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
 };
 
 function InitialFeedbackForm({ params }: { params: { id: string } }) {
-    const [sliderRating, setSliderRating] = useState(3);
+    const [sliderRatingPriority, setSliderRatingPriority] = useState(3);
+    const [sliderRatingSeverity, setSliderRatingSeverity] = useState(3);
     const [starRating, setStarRating] = useState(0);
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
@@ -292,7 +293,18 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
+                                    <SliderComponent value={sliderRatingPriority} onChange={setSliderRatingPriority} min={1} max={5} />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                            <label className="text-gray-700 dark:text-gray-300">
+                                Wie nachvollziehbar ist die Severity?
+                            </label>
+                            <div className="flex flex-col">
+                                <div className="flex space-x-4">
+                                    <SliderComponent value={sliderRatingSeverity} onChange={setSliderRatingSeverity} min={1} max={5} />
                                 </div>
                             </div>
                         </div>

@@ -56,11 +56,14 @@ export function Feedback({ params }: { params: { id: string } }) {
         issueClarityRating: '',
         priorityUnderstandable: '',
         alertIconUnderstandable: '',
+        alertIconReason: '',
         bereitgestellt: '',
+        severityUnderstandable2: '',
         severityUnderstandable: '',
         statusUnderstandable: '',
         descriptionReason: '',
         priorityUnderstandable2: '',
+        severityAdjustedCorrectlyComments: '',
         severityCorrect: '',
         correctSeverity: '',
         severityReason: '',
@@ -68,7 +71,6 @@ export function Feedback({ params }: { params: { id: string } }) {
         incidentTypeUnderstandable: '',
         correctAlertType: '',
         moreUnderstandable: '',
-        alertIconReason: '',
         descriptionUnderstandable: '',
         affectedSystemsUnderstandable: '',
         impactUnderstandable: '',
@@ -276,63 +278,126 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <div>
-                                <span className="ml-2">War die Severity korrekt?</span>
-                                <label className="flex items-center text-gray-700 dark:text-gray-300">
-                                    <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
-                                </label>
-                            </div>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="severityCorrect"
-                                            value="yes"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="severityCorrect"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
+                        <div>
+                            {issue.isInitialGiven ? (
+                                <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                    <div>
+                                        <span className="ml-2">Wurde die Severity des Issues korrekt angepasst?</span>
+                                        <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                            <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
+                                        </label>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div className="flex space-x-4">
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityCorrect"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Ja</span>
+                                            </label>
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityCorrect"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Nein</span>
+                                            </label>
+                                        </div>
+                                        {responses.severityCorrect === 'no' && (
+                                            <>
+                                                <select
+                                                    name="correctSeverity"
+                                                    value={responses.correctSeverity}
+                                                    onChange={handleChange}
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    defaultValue=""
+                                                >
+                                                    <option value="" disabled hidden>Wähle die richtige Severity</option>
+                                                    {['Low', 'Medium', 'High'].map(severity => (
+                                                        <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                                            {severity}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <textarea
+                                                    name="severityReason"
+                                                    value={responses.severityReason}
+                                                    onChange={handleChange}
+                                                    placeholder='Begründe die neue Severity'
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                />
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
-                                {responses.severityCorrect === 'no' && (
-                                    <>
-                                        <select
-                                            name="correctSeverity"
-                                            value={responses.correctSeverity}
-                                            onChange={handleChange}
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            defaultValue=""
-                                        >
-                                            <option value="" disabled hidden>Wähle die richtige Severity</option>
-                                            {['Low', 'Medium', 'High'].map(severity => (
-                                                <option key={severity} value={severity} disabled={severity === issue.severity}>
-                                                    {severity}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <textarea
-                                            name="severityReason"
-                                            value={responses.severityReason}
-                                            onChange={handleChange}
-                                            placeholder='Begründe die neue Severity'
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        />
-                                    </>
-                                )}
-                            </div>
+                            ) : (
+                                <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                    <div>
+                                        <span className="ml-2 block text-left">War die Severity nachvollziehbar? Wenn nein, welche Severity hätte das Issue haben sollen?</span>
+                                        <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                            <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
+                                        </label>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div className="flex space-x-4">
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Ja</span>
+                                            </label>
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Nein</span>
+                                            </label>
+                                        </div>
+                                        {responses.severityUnderstandable === 'no' && (
+                                            <>
+                                                <select
+                                                    name="correctSeverity"
+                                                    value={responses.correctSeverity}
+                                                    onChange={handleChange}
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    defaultValue=""
+                                                >
+                                                    <option value="" disabled hidden>Wähle die richtige Severity</option>
+                                                    {['Low', 'Medium', 'High'].map(severity => (
+                                                        <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                                            {severity}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <textarea
+                                                    name="severityReason"
+                                                    value={responses.severityReason}
+                                                    onChange={handleChange}
+                                                    placeholder='Begründung für neue Severity'
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                />
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
+
 
 
 
@@ -489,7 +554,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                                 defaultValue=""
                                             >
-                                                <option value="" disabled>Bitte die korrekte Priorität auswählen</option>
+                                                <option value="" disabled hidden>Bitte die korrekte Priorität auswählen</option>
                                                 {[...Array(10)].map((_, i) => (
                                                     <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
                                                 ))}
@@ -507,11 +572,131 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>)}
                         </div>
 
+                        {/* <div>
+                            {issue.isInitialGiven ? (
+                                <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                    <div>
+                                        <span className="ml-2">
+                                            Wurde die Severity des Issues korrekt angepasst?
+                                        </span>
+                                        <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                            <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.severity}</span>
+                                        </label>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div className="flex space-x-4">
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable2"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Ja</span>
+                                            </label>
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable2"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Nein</span>
+                                            </label>
+                                        </div>
+                                        {responses.severityUnderstandable2 === 'no' && (
+                                            <>
+                                                <select
+                                                    name="correctSeverity"
+                                                    value={responses.correctSeverity}
+                                                    onChange={handleChange}
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                >
+                                                    <option value="" disabled hidden>Bitte die korrekte Severity auswählen</option>
+                                                    {['Low', 'Medium', 'High'].map((severity) => (
+                                                        <option key={severity} value={severity} disabled={severity === issue.severity}>{severity}</option>
+                                                    ))}
+                                                </select>
+                                                <textarea
+                                                    name="severityAdjustedCorrectlyComments"
+                                                    value={responses.severityAdjustedCorrectlyComments}
+                                                    onChange={handleChange}
+                                                    placeholder='Begründe die neue Severity'
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                />
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                    <div className="flex flex-col">
+                                        <span className="ml-2">
+                                            War die Severity nachvollziehbar? Wenn nein, welche Severity hätte das Issue haben sollen?
+                                        </span>
+                                        <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                            <span className={`bg-gray-200 dark:bg-gray-500 rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
+                                        </label>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div className="flex space-x-4">
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Ja</span>
+                                            </label>
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Nein</span>
+                                            </label>
+                                        </div>
+                                        {responses.severityUnderstandable === 'no' && (
+                                            <>
+                                                <select
+                                                    name="correctSeverity"
+                                                    value={responses.correctSeverity}
+                                                    onChange={handleChange}
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    defaultValue=""
+                                                >
+                                                    <option value="" disabled>Bitte die korrekte Severity auswählen</option>
+                                                    {['Low', 'Medium', 'High'].map((severity) => (
+                                                        <option key={severity} value={severity} disabled={severity === issue.severity}>{severity}</option>
+                                                    ))}
+                                                </select>
+                                                <textarea
+                                                    name="severityReason"
+                                                    value={responses.severityReason}
+                                                    onChange={handleChange}
+                                                    placeholder='Begründung für neue Severity'
+                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                />
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div> */}
+
+
 
                         <div>
                             {issue.isInitialGiven ? (
                                 <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                                    <label className="text-gray-700 dark:text-gray-300">
+                                    <label className="text-grayy-700 dark:text-gray-300">
                                         Wurde die Beschreibung des Issues im Verlauf klarer und hat sich
                                         dein Verständnis des Problems im Verlauf verbessert?
                                     </label>
