@@ -1,19 +1,37 @@
-'use client'
-import React, { useEffect, useState } from 'react';
+'use client';
+
+import React, { useEffect, useRef, useState } from 'react';
+import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import systemMonitoringIssuesArray from '../page';
 import '../[id]/detailView.css';
-import { MdCancel } from "react-icons/md";
 import { compareSort } from '@/app/helperFunction';
+import { MdCancel } from "react-icons/md";
+import '../[id]/detailView.css';
+import { SystemMonitoringIssue } from '@/app/data/data';
+import { getAlertIcon, getSeverityColor, validateType } from '@/app/helperFunction';
 
 const NewIssue = () => {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None'] as const;
     const severityTypes = ['Low', 'Medium', 'High'] as const;
-    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network', 'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'];
+    const statusTypes = ['New', 'Open', 'Closed', 'In Progress'] as const;
+    const incidentTypes = [
+        'Performance', 'Storage', 'Overheating', 'Backups', 'Power',
+        'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
+        'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export',
+        'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'
+    ];
     const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
 
+    const systemsList = [
+        'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
+        'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
+        'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
+        'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
+    ];
+
     const [newIssue, setNewIssue] = useState({
-        id: systemMonitoringIssuesArray.length + 1, // or use a more sophisticated ID generator
+        id: systemMonitoringIssuesArray.length + 1,
         title: '',
         description: '',
         alertType: 'None',
@@ -22,7 +40,7 @@ const NewIssue = () => {
         incidentType: 'Performance',
         priority: 1,
         affectedSystems: [] as string[],
-        creator: 'User 1', // This should be set to the current user in a real app
+        creator: 'User 1',
         timestamp: new Date(),
         endTime: new Date(),
         lastUpdated: new Date(),
@@ -34,15 +52,62 @@ const NewIssue = () => {
         isInitialGiven: false,
     });
 
-    const [suggestedDescription, setSuggestedDescription] = useState('');
-    const [suggestionAccepted, setSuggestionAccepted] = useState(false);
-
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
     const [showTitleTemplate, setShowTitleTemplate] = useState(false);
     const [titleTemplateDismissed, setTitleTemplateDismissed] = useState(false);
     const [showDescriptionTemplate, setShowDescriptionTemplate] = useState(false);
     const [descriptionTemplateDismissed, setDescriptionTemplateDismissed] = useState(false);
+
+    const toggleDropdown = () => {
+        setDropdownOpen(prev => !prev);
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setDropdownOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleAddSystem = (system: string) => {
+        if (!newIssue.affectedSystems.includes(system)) {
+            setNewIssue(prev => ({
+                ...prev,
+                affectedSystems: [...prev.affectedSystems, system]
+            }));
+        }
+    };
+
+    const handleRemoveSystem = (index: number) => {
+        setNewIssue(prev => {
+            const updatedSystems = prev.affectedSystems.filter((_, i) => i !== index);
+            return {
+                ...prev,
+                affectedSystems: updatedSystems
+            };
+        });
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setNewIssue(prev => ({
+            ...prev,
+            [name]: name === 'priority' ? parseInt(value, 10) : value
+        }));
+    };
+
+    const handleCancel = () => {
+        router.push('/Issues');
+    };
 
     const handleTitleFocus = () => {
         if (!titleTemplateDismissed) {
@@ -76,122 +141,11 @@ const NewIssue = () => {
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setNewIssue(prev => ({
-            ...prev,
-            [name]: name === 'priority' ? parseInt(value, 10) : value
-        }));
-
-        if (name === 'title') {
-            checkForTitleSuggestion(value);
-        } else if (name === 'description') {
-            if (suggestionAccepted && value === '') {
-                setSuggestedDescription('');
-                setSuggestionAccepted(false);
-            }
-        }
-    };
-
-    const handleAddSystem = () => {
-        setNewIssue(prev => ({
-            ...prev,
-            affectedSystems: [...prev.affectedSystems, '']
-        }));
-    };
-
-    const checkForTitleSuggestion = (title: string) => {
-        const lowerCase = title.toLowerCase();
-        if (title.toLowerCase().includes('datenbankserver') && title.toLowerCase().includes('überhitzung')) {
-            setSuggestedDescription(`Einleitung:
-Der Datenbankserver CT-10 hat unter hoher Auslastung hohe Last- und Latenzprobleme verursacht, was die Leistung mehrerer Anwendungen beeinträchtigt.
-
-Hintergrundinformationen:
-Server CT-10 hostet die Hauptdatenbank für unsere E-Commerce-Plattform. Der Server ist entscheidend für die Abwicklung von Benutzertransaktionen und die Verwaltung von Bestandsdaten. Kürzlich haben Benutzer langsame Reaktionszeiten und gelegentliche Zeitüberschreitungen gemeldet.
-
-Schritte zur Reproduktion:
-1. Melden Sie sich bei der E-Commerce-Plattform an.
-2. Versuchen Sie, einen Artikel in den Warenkorb zu legen.
-3. Gehen Sie zur Kasse.
-4. Beobachten Sie die Reaktionszeit beim Absenden der Bestellung.
-
-Erwartetes Verhalten:
-Der Server sollte diese Vorgänge innerhalb akzeptabler Reaktionszeiten (unter 2 Sekunden) abwickeln.
-
-Tatsächliches Verhalten:
-Der Server benötigt 5-10 Sekunden zum Antworten und manchmal überschreiten die Anfragen die Zeitgrenze, was zu einer Fehlermeldung führt.
-
-Zusätzliche Informationen:
-- Server CT-10 läuft auf Ubuntu 20.04 mit MySQL 8.0.
-- Das Problem trat nach einem kürzlichen Anstieg des Datenverkehrs aufgrund einer Werbekampagne auf.
-- Die CPU-Auslastung auf dem Server liegt konstant über 90 %.
-- Die Festplatten-E/A-Operationen sind erheblich höher als gewöhnlich.
-- Relevante Fehlerprotokolle sind beigefügt.
-
-Lösungsvorschlag:
-- Untersuchen Sie die Abfragen, die eine hohe CPU- und E/A-Auslastung verursachen.
-- Erwägen Sie die Optimierung der Datenbankindizes.
-- Erhöhen Sie die Serverressourcen (CPU, RAM) bei Bedarf.
-- Prüfen Sie die Möglichkeit des Lastenausgleichs, indem Sie die Datenbanklast auf mehrere Server verteilen.`);
-        } else {
-            setSuggestedDescription('');
-        }
-    };
-
-    const acceptSuggestion = () => {
-        setNewIssue(prev => ({
-            ...prev,
-            description: suggestedDescription
-        }));
-        setSuggestionAccepted(true);
-    };
-
-    useEffect(() => {
-        if (suggestionAccepted) {
-            setSuggestedDescription('');
-        }
-    }, [suggestionAccepted]);
-
-    const handleSystemChange = (index: number, value: string) => {
-        setNewIssue(prev => {
-            const updatedSystems = [...prev.affectedSystems];
-            updatedSystems[index] = value;
-            return {
-                ...prev,
-                affectedSystems: updatedSystems
-            };
-        });
-    };
-
-
-    const handleRemoveSystem = (index: number) => {
-        setNewIssue(prev => {
-            const updatedSystems = prev.affectedSystems.filter((_, i) => i !== index);
-            return {
-                ...prev,
-                affectedSystems: updatedSystems
-            };
-        });
-    };
-
-    const handleCancel = () => {
-        router.push('/Issues');
-    };
-
-    // const handleSubmit = (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     systemMonitoringIssuesArray.push(newIssue as SystemMonitoringIssue); // In a real app, this would be a POST request to the backend
-    //     router.push('/Issues'); // Navigate back to the issues list
-    // };
-
     return (
         <div className='flex justify-center'>
             <div className="my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl">
                 <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Create New Issue</h3>
                 <form>
-
-
-
                     <div>
                         <label className="block text-sm font-bold mb-2" htmlFor="title">Title</label>
                         <input
@@ -200,14 +154,14 @@ Lösungsvorschlag:
                             value={newIssue.title}
                             onChange={handleInputChange}
                             className="editable-input"
-                            onFocus={handleTitleFocus} // Show template on focus
+                            onFocus={handleTitleFocus}
                             required
                         />
                         {showTitleTemplate && (
                             <div
                                 className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
                                 style={{
-                                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Hover-like shadow
+                                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                                 }}
                             >
                                 <button
@@ -235,38 +189,21 @@ Lösungsvorschlag:
                             Show Template
                         </button>
                     )}
-
-
-
-
                     <div>
                         <label className="block text-sm font-bold mb-2" htmlFor="description">Description</label>
                         <textarea
                             name="description"
-                            value={suggestionAccepted ? newIssue.description : newIssue.description}
-                            placeholder={suggestionAccepted ? '' : suggestedDescription}
+                            value={newIssue.description}
                             onChange={handleInputChange}
                             className="editable-input"
-                            onFocus={handleDescriptionFocus} // Show template on focus
+                            onFocus={handleDescriptionFocus}
                             required
                         />
-                        {!suggestionAccepted && suggestedDescription && newIssue.description === '' && (
-                            <button
-                                type="button"
-                                className="text-sm text-blue-500 mb-4"
-                                onClick={acceptSuggestion}
-                            >
-                                Accept Suggestion
-                            </button>
-
-
-
-                        )}
                         {
                             showDescriptionTemplate && (
                                 <div className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
                                     style={{
-                                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Hover-like shadow
+                                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                                     }}>
                                     <button
                                         type="button"
@@ -306,7 +243,7 @@ Lösungsvorschlag:
                                 name="alertType"
                                 value={newIssue.alertType}
                                 onChange={handleInputChange}
-                                className="input"
+                                className="input border border-grey-800"
                             >
                                 {alertTypes.map(type => (
                                     <option key={type} value={type}>
@@ -322,7 +259,7 @@ Lösungsvorschlag:
                                 name="severity"
                                 value={newIssue.severity}
                                 onChange={handleInputChange}
-                                className="input"
+                                className="input border border-grey-800"
                             >
                                 {severityTypes.map(type => (
                                     <option key={type} value={type}>
@@ -338,7 +275,7 @@ Lösungsvorschlag:
                                 name="incidentType"
                                 value={newIssue.incidentType}
                                 onChange={handleInputChange}
-                                className="input"
+                                className="input border border-grey-800"
                             >
                                 {incidentTypes.sort(compareSort).map(type => (
                                     <option key={type} value={type}>
@@ -354,7 +291,7 @@ Lösungsvorschlag:
                                 name="priority"
                                 value={newIssue.priority}
                                 onChange={handleInputChange}
-                                className="input"
+                                className="input border border-grey-800"
                             >
                                 {priorities.map(priority => (
                                     <option key={priority} value={priority}>
@@ -367,19 +304,39 @@ Lösungsvorschlag:
 
                     <div className="mb-4">
                         <label className="block text-sm font-bold mb-2" htmlFor="affectedSystems">Affected Systems</label>
-                        {newIssue.affectedSystems.map((system, index) => (
-                            <div key={index} className="flex items-center mb-2">
-                                <input
-                                    type="text"
-                                    name={`affectedSystems-${index}`}
-                                    value={system}
-                                    onChange={(e) => handleSystemChange(index, e.target.value)}
-                                    className="editable-input flex-grow"
-                                />
-                                <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                        <div className="relative" ref={dropdownRef}>
+                            <div
+                                className="input cursor-pointer flex"
+                                onClick={toggleDropdown}
+                            >
+                                <div className="cursor-pointer flex items-center border rounded-md py-1 px-2">
+                                    Wähle die Systeme aus
+                                    <FaCaretDown className="ml-1" />
+                                </div>
                             </div>
-                        ))}
-                        <button type="button" onClick={handleAddSystem} className="text-blue-500 text-sm">Add Affected System</button>
+                            {dropdownOpen && (
+                                <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto">
+                                    {systemsList.map(system => (
+                                        <div
+                                            key={system}
+                                            className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
+                                            onClick={() => handleAddSystem(system)}
+                                        >
+                                            {system}
+                                            {newIssue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-2">
+                            {newIssue.affectedSystems.map((system, index) => (
+                                <div key={index} className="flex items-center mb-2">
+                                    <span className="flex-grow">{system}</span>
+                                    <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="mb-4">

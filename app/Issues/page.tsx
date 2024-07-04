@@ -7,6 +7,8 @@ import { SystemMonitoringIssue } from '../data/data';
 import { MdOutlineFiberNew } from "react-icons/md";
 import { useEffect, useState } from 'react';
 import { BiSortAlt2 } from "react-icons/bi";
+import { de } from 'date-fns/locale';
+import { format } from 'date-fns';
 import Link from 'next/link';
 import { classNames, formatDate, getAlertIcon, getAlertIconBig, getSeverityColor, validateType } from '../helperFunction';
 import { useRouter } from 'next/navigation';
@@ -44,7 +46,7 @@ const loadIssues = (): SystemMonitoringIssue[] => {
 };
 
 const saveIssues = (issues: SystemMonitoringIssue[]) => {
-    localStorage.setItem('issues', JSON.stringify(issues)); // Correct key
+    localStorage.setItem('issues', JSON.stringify(issues));
 }
 
 function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
@@ -172,6 +174,8 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
 }
 
 function Card1({ id, heading, description, icon, className = '', priority, timestamp }: { id: number, heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string }) {
+    const [isClicked, setIsClicked] = useState(false);
+    const router = useRouter();
 
     const extractDescription = (desc: string) => {
         const prefix = "Einleitung";
@@ -189,8 +193,18 @@ function Card1({ id, heading, description, icon, className = '', priority, times
 
     const truncatedDescription = extractDescription(description);
 
+    const handleClick = () => {
+        setIsClicked(true);
+        setTimeout(() => {
+            router.push(`/Issues/${id}`);
+        }, 300); // 300ms matches the CSS transition duration
+    };
+
     return (
-        <Link href={`/Issues/${id}`} className={`gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl relative bg-[#fcf4ff] ${className} w-1/3 h-60`}>
+        <div
+            onClick={handleClick}
+            className={`card gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl relative bg-[#fcf4ff] ${styles.card} ${className} w-1/3 h-60 transition-transform duration-300 ${isClicked ? 'transform scale-105' : ''}`}
+        >
             <div className="flex flex-col justify-between h-full space-y-2 flex-grow">
                 <MdOutlineFiberNew className="text-red-500 absolute top-0 right-0 text-2xl" style={{ top: '-15px', right: '-15px' }} />
                 <div className="space-y-2 flex-grow">
@@ -205,7 +219,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                     <p>{timestamp}</p>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }
 
