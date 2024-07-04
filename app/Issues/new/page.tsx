@@ -8,8 +8,6 @@ import '../[id]/detailView.css';
 import { compareSort } from '@/app/helperFunction';
 import { MdCancel } from "react-icons/md";
 import '../[id]/detailView.css';
-import { SystemMonitoringIssue } from '@/app/data/data';
-import { getAlertIcon, getSeverityColor, validateType } from '@/app/helperFunction';
 
 const NewIssue = () => {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None'] as const;
@@ -79,22 +77,19 @@ const NewIssue = () => {
     }, []);
 
     const handleAddSystem = (system: string) => {
-        if (!newIssue.affectedSystems.includes(system)) {
-            setNewIssue(prev => ({
-                ...prev,
-                affectedSystems: [...prev.affectedSystems, system]
-            }));
-        }
+        setNewIssue(prevState => ({
+            ...prevState,
+            affectedSystems: prevState.affectedSystems.includes(system)
+                ? prevState.affectedSystems.filter(s => s !== system)
+                : [...prevState.affectedSystems, system]
+        }));
     };
 
     const handleRemoveSystem = (index: number) => {
-        setNewIssue(prev => {
-            const updatedSystems = prev.affectedSystems.filter((_, i) => i !== index);
-            return {
-                ...prev,
-                affectedSystems: updatedSystems
-            };
-        });
+        setNewIssue(prevState => ({
+            ...prevState,
+            affectedSystems: prevState.affectedSystems.filter((_, i) => i !== index)
+        }));
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -304,38 +299,46 @@ const NewIssue = () => {
 
                     <div className="mb-4">
                         <label className="block text-sm font-bold mb-2" htmlFor="affectedSystems">Affected Systems</label>
-                        <div className="relative" ref={dropdownRef}>
-                            <div
-                                className="input cursor-pointer flex"
-                                onClick={toggleDropdown}
-                            >
-                                <div className="cursor-pointer flex items-center border rounded-md py-1 px-2">
-                                    Wähle die Systeme aus
-                                    <FaCaretDown className="ml-1" />
+
+                        <div className="flex space-x-4 h-full">
+                            <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
+                                <div
+                                    className="cursor-pointer"
+                                    onClick={toggleDropdown}
+                                >
+                                    <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
+                                        Wähle die Systeme aus
+                                        <FaCaretDown className="ml-1" />
+                                    </div>
                                 </div>
+                                {dropdownOpen && (
+                                    <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
+                                        {systemsList.map(system => (
+                                            <div
+                                                key={system}
+                                                className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
+                                                onClick={() => handleAddSystem(system)}
+                                            >
+                                                {system}
+                                                {newIssue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                            {dropdownOpen && (
-                                <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto">
-                                    {systemsList.map(system => (
-                                        <div
-                                            key={system}
-                                            className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
-                                            onClick={() => handleAddSystem(system)}
-                                        >
-                                            {system}
-                                            {newIssue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
+
+                            <div className="flex-grow border border-gray-300 rounded-md px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center">
+                                {newIssue.affectedSystems.length > 0 ? (
+                                    newIssue.affectedSystems.map((system, index) => (
+                                        <div key={index} className={`flex items-center ${index !== newIssue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
+                                            <span className="flex-grow">{system}</span>
+                                            <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
                                         </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mt-2">
-                            {newIssue.affectedSystems.map((system, index) => (
-                                <div key={index} className="flex items-center mb-2">
-                                    <span className="flex-grow">{system}</span>
-                                    <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
-                                </div>
-                            ))}
+                                    ))
+                                ) : (
+                                    <div className="text-gray-500 cursor-default">Keine Systeme ausgewählt</div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
