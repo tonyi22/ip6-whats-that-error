@@ -1,16 +1,12 @@
-'use client'
+'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
-
-
-import { format } from 'date-fns';
-import { de } from 'date-fns/locale';
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
+import Link from 'next/link';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort } from '@/app/helperFunction';
+import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
-import Link from 'next/link';
-import { compareSort, getAlertIcon, getSeverityColor, validateType, formatDate } from '@/app/helperFunction';
-import { SystemMonitoringIssue } from '@/app/data/data';
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -32,9 +28,9 @@ const systemsList = [
 ];
 
 function IssueView({ params }: { params: { id: string } }) {
-    const alertTypes = ['Critical', 'Warning', 'Info', 'None']; // Define your alert types here
-    const severityTypes = ['Low', 'Medium', 'High']; // Define your alert types here
-    const statusTypes = ['New', 'Open', 'Closed', 'In Progress']; // Define your alert types here
+    const alertTypes = ['Critical', 'Warning', 'Info', 'None'];
+    const severityTypes = ['Low', 'Medium', 'High'];
+    const statusTypes = ['New', 'Open', 'Closed', 'In Progress'];
     const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
         'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'];
     const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -46,46 +42,6 @@ function IssueView({ params }: { params: { id: string } }) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-
-
-    const handleAddSystem = (system: string) => {
-        setIssue(prev => {
-            if (!prev) return prev;
-            if (!prev.affectedSystems.includes(system)) {
-                return {
-                    ...prev,
-                    affectedSystems: [...prev.affectedSystems, system]
-                };
-            }
-            return prev;
-        });
-    };
-
-    const handleSystemChange = (index: number, value: string) => {
-        setIssue(prev => {
-            if (!prev) return prev;
-            const updatedSystems = [...prev.affectedSystems];
-            updatedSystems[index] = value;
-            return {
-                ...prev,
-                affectedSystems: updatedSystems
-            };
-        });
-    };
-
-    const handleClickOutside = (event: MouseEvent) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-            setDropdownOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
     useEffect(() => {
         const issues = loadIssuesFromLocalStorage();
         const foundIssue = issues.find(issue => issue.id === Number(params.id));
@@ -96,15 +52,42 @@ function IssueView({ params }: { params: { id: string } }) {
         }
     }, [params.id]);
 
-    const handleRemoveSystem = (index: number) => {
-        setIssue(prev => {
-            if (!prev) return prev;
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
 
-            const updatedSystems = prev.affectedSystems.filter((_, i) => i !== index);
-            return {
-                ...prev,
-                affectedSystems: updatedSystems
-            };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleAddSystem = (system: string) => {
+        setIssue(prevState => {
+            if (prevState) {
+                return {
+                    ...prevState,
+                    affectedSystems: prevState.affectedSystems.includes(system)
+                        ? prevState.affectedSystems.filter(s => s !== system)
+                        : [...prevState.affectedSystems, system]
+                };
+            }
+            return prevState;
+        });
+    };
+
+    const handleRemoveSystem = (index: number) => {
+        setIssue(prevState => {
+            if (prevState) {
+                return {
+                    ...prevState,
+                    affectedSystems: prevState.affectedSystems.filter((_, i) => i !== index)
+                };
+            }
+            return prevState;
         });
     };
 
@@ -166,7 +149,6 @@ function IssueView({ params }: { params: { id: string } }) {
 
     return (
         <div className="mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
-
             <div className='flex items-center justify-between'>
                 <Link href={`/Issues`}>
                     <button className="bg-github-primary dark:bg-github-dark-primary dark:text-white my-1 flex items-center font-bold text-3xl">
@@ -181,12 +163,11 @@ function IssueView({ params }: { params: { id: string } }) {
                         </button>
                     </Link>
                 )}
-
             </div>
 
             <div className='my-7'>
                 {isEditMode ? (
-                    <div className='w-1/2   '>
+                    <div className='w-1/2'>
                         <p className='font-bold pb-2'>Title</p>
                         <input
                             maxLength={70}
@@ -194,17 +175,16 @@ function IssueView({ params }: { params: { id: string } }) {
                             name="title"
                             value={issue.title}
                             onChange={handleInputChange}
-                            className="editable-input "
+                            className="editable-input"
                         />
                     </div>
                 ) : (
-                    <h3 className="  text-3xl font-semibold">{issue.title}</h3>
+                    <h3 className="text-3xl font-semibold">{issue.title}</h3>
                 )}
             </div>
 
             <div className="flex justify-between items-center mb-5">
-
-                <div >
+                <div>
                     {isEditMode ? (
                         <p>Alert type:
                             <select
@@ -223,7 +203,6 @@ function IssueView({ params }: { params: { id: string } }) {
                     ) : (
                         getAlertIcon(issue.alertType)
                     )}
-
                 </div>
 
                 <div>
@@ -232,8 +211,7 @@ function IssueView({ params }: { params: { id: string } }) {
                             <select
                                 name="severity"
                                 value={issue.severity}
-                                onChange={handleInputChange
-                                }
+                                onChange={handleInputChange}
                                 className="input mx-2 border border-grey-800"
                             >
                                 {severityTypes.map(type => (
@@ -242,7 +220,6 @@ function IssueView({ params }: { params: { id: string } }) {
                                     </option>
                                 ))}
                             </select>
-
                         ) : (
                             <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2 m-2`}>
                                 {issue.severity}</span>
@@ -267,7 +244,6 @@ function IssueView({ params }: { params: { id: string } }) {
                     </p>
                 </div>
 
-
                 <div>
                     <p>Incident type:
                         {isEditMode ? (
@@ -283,8 +259,6 @@ function IssueView({ params }: { params: { id: string } }) {
                                     </option>
                                 ))}
                             </select>
-
-
                         ) : (
                             <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
                                 {issue.incidentType}
@@ -298,8 +272,7 @@ function IssueView({ params }: { params: { id: string } }) {
                             <select
                                 name="priority"
                                 value={issue.priority}
-                                onChange={handleInputChange
-                                }
+                                onChange={handleInputChange}
                                 className="input mx-2 border border-grey-800"
                             >
                                 {priorities.map(priority => (
@@ -315,11 +288,9 @@ function IssueView({ params }: { params: { id: string } }) {
                         )}
                     </p>
                 </div>
-
             </div>
 
             <div className="grid grid-cols-3 grid-rows-[auto, 1fr, 1fr, 1fr] gap-4">
-
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='font-bold pb-2'>Description</p>
                     {isEditMode ? (
@@ -339,50 +310,59 @@ function IssueView({ params }: { params: { id: string } }) {
                     )}
                 </div>
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white '>
+                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='font-bold pb-2'>Affected Systems</p>
                     <div className="space-y-1">
                         {isEditMode ? (
-                            <>
-                                <div className="relative" ref={dropdownRef}>
-                                    <div
-                                        className="input cursor-pointer"
-                                        onClick={toggleDropdown}
-                                    >
-                                        Wähle die Systeme aus
-                                        <FaCaretDown className="absolute top-3 right-3 pointer-events-none" />
-                                    </div>
-                                    {dropdownOpen && (
-                                        <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 w-full z-10 max-h-60 overflow-y-auto">
-                                            {systemsList.map(system => (
-                                                <div
-                                                    key={system}
-                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex justify-between items-center"
-                                                    onClick={() => handleAddSystem(system)}
-                                                >
-                                                    <span>{system}</span>
-                                                    {issue.affectedSystems.includes(system) && <FaCheck className="text-blue-500" />}
-                                                </div>
-                                            ))}
+                            <div>
+                                <div className='flex space-x-4 h-full'>
+                                    <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
+                                        <div
+                                            className="cursor-pointer"
+                                            onClick={toggleDropdown}
+                                        >
+                                            <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
+                                                Wähle die Systeme aus
+                                                <FaCaretDown className="ml-1" />
+                                            </div>
                                         </div>
-                                    )}
+
+                                        {dropdownOpen && (
+                                            <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
+                                                {systemsList.map(system => (
+                                                    <div
+                                                        key={system}
+                                                        className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleAddSystem(system);
+                                                        }}
+                                                    >
+                                                        {system}
+                                                        {issue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                                <div className="mt-2">
+
+                                <div className={`flex-grow  py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'border border-gray-300 rounded-md' : ''}`}>
                                     {issue.affectedSystems.map((system, index) => (
-                                        <div key={index} className="flex items-center mb-2">
+                                        <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
                                             <span className="flex-grow">{system}</span>
                                             <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
                                         </div>
                                     ))}
                                 </div>
-                            </>
+                            </div>
                         ) : (
                             issue.affectedSystems.length > 0 ? (
                                 issue.affectedSystems.map((system, index) => (
                                     <p key={index} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {system}</p>
                                 ))
                             ) : (
-                                <p>No affected systems</p> // Or leave it empty if you prefer
+                                <p>No affected systems</p>
                             )
                         )}
                     </div>
@@ -393,8 +373,6 @@ function IssueView({ params }: { params: { id: string } }) {
                     <div className='grid grid-cols-2 gap-2'>
                         <p className='text-gray-600 dark:text-gray-400'>Creator:</p>
                         <p className='text-right'>{issue.creator}</p>
-
-
 
                         <p className='text-gray-600 dark:text-gray-400'>Issue Nr.:</p>
                         <p className='text-right'>{issue.id}</p>
@@ -409,11 +387,7 @@ function IssueView({ params }: { params: { id: string } }) {
                         <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
 
                         <p className='text-gray-600 dark:text-gray-400'>End time:</p>
-                        {/* <p className='text-right'>{formatDate(issue.endTime)}</p> */}
                         <p className='text-right'>--:--</p>
-
-
-
                     </div>
                 </div>
 
@@ -425,7 +399,6 @@ function IssueView({ params }: { params: { id: string } }) {
                             value={issue.impact}
                             onChange={handleInputChange}
                             className="editable-input"
-
                         />
                     ) : (
                         <p className='p-2' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.impact}</p>
@@ -454,7 +427,6 @@ function IssueView({ params }: { params: { id: string } }) {
                             <div className='space-x-4'>
                                 <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
                                 <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
-
                             </div>
                         ) : (
                             <div className="flex justify-end space-x-4">
@@ -464,11 +436,10 @@ function IssueView({ params }: { params: { id: string } }) {
                                 </Link>
                             </div>
                         )}
-
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
 
