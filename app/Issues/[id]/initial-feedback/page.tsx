@@ -55,10 +55,26 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
         }));
     };
 
+    const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
+        localStorage.setItem('issues', JSON.stringify(issues));
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Submit feedback logic
+
+        const issues = loadIssuesFromLocalStorage();
+        // Update the issue's isInitialGiven property
+        const updatedIssues = issues.map(issue => {
+            if (issue.id === Number(params.id)) {
+                return { ...issue, isInitialGiven: true, responses };
+            }
+            return issue;
+        });
+
+        // Save the updated issues array to local storage
+        saveIssuesToLocalStorage(updatedIssues);
         console.log('Submitted responses:', responses);
+        router.push('/Issues')
     };
 
 
