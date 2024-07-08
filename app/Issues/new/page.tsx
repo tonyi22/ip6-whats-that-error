@@ -59,6 +59,12 @@ const NewIssue = () => {
     const [showDescriptionTemplate, setShowDescriptionTemplate] = useState(false);
     const [descriptionTemplateDismissed, setDescriptionTemplateDismissed] = useState(false);
 
+    const titleTemplateRef = useRef<HTMLDivElement>(null);
+    const descriptionTemplateRef = useRef<HTMLDivElement>(null)
+
+    const [suggestedDescription, setSuggestedDescription] = useState('');
+    const [suggestionAccepted, setSuggestionAccepted] = useState(false);
+
     const toggleDropdown = () => {
         setDropdownOpen(prev => !prev);
     };
@@ -66,6 +72,17 @@ const NewIssue = () => {
     const handleClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setDropdownOpen(false);
+        }
+
+        if (titleTemplateRef.current && !titleTemplateRef.current.contains(event.target as Node)) {
+            setShowTitleTemplate(false);
+            setTitleTemplateDismissed(true);
+
+        }
+
+        if (descriptionTemplateRef.current && !descriptionTemplateRef.current.contains(event.target as Node)) {
+            setShowDescriptionTemplate(false);
+            setDescriptionTemplateDismissed(true);
         }
     };
 
@@ -98,7 +115,69 @@ const NewIssue = () => {
             ...prev,
             [name]: name === 'priority' ? parseInt(value, 10) : value
         }));
+
+        if (name === 'title') {
+            checkForTitleSuggestion(value);
+        } else if (name === 'description') {
+            if (suggestionAccepted && value === '') {
+                setSuggestedDescription('');
+                setSuggestionAccepted(false);
+            }
+        }
     };
+    const checkForTitleSuggestion = (title: string) => {
+        const lowerCase = title.toLowerCase();
+        if (title.toLowerCase().includes('datenbankserver') && title.toLowerCase().includes('überhitzung')) {
+            setSuggestedDescription(`Einleitung:
+Der Datenbankserver CT-10 hat unter hoher Auslastung hohe Last- und Latenzprobleme verursacht, was die Leistung mehrerer Anwendungen beeinträchtigt.
+
+Hintergrundinformationen:
+Server CT-10 hostet die Hauptdatenbank für unsere E-Commerce-Plattform. Der Server ist entscheidend für die Abwicklung von Benutzertransaktionen und die Verwaltung von Bestandsdaten. Kürzlich haben Benutzer langsame Reaktionszeiten und gelegentliche Zeitüberschreitungen gemeldet.
+
+Schritte zur Reproduktion:
+1. Melden Sie sich bei der E-Commerce-Plattform an.
+2. Versuchen Sie, einen Artikel in den Warenkorb zu legen.
+3. Gehen Sie zur Kasse.
+4. Beobachten Sie die Reaktionszeit beim Absenden der Bestellung.
+
+Erwartetes Verhalten:
+Der Server sollte diese Vorgänge innerhalb akzeptabler Reaktionszeiten (unter 2 Sekunden) abwickeln.
+
+Tatsächliches Verhalten:
+Der Server benötigt 5-10 Sekunden zum Antworten und manchmal überschreiten die Anfragen die Zeitgrenze, was zu einer Fehlermeldung führt.
+
+Zusätzliche Informationen:
+- Server CT-10 läuft auf Ubuntu 20.04 mit MySQL 8.0.
+- Das Problem trat nach einem kürzlichen Anstieg des Datenverkehrs aufgrund einer Werbekampagne auf.
+- Die CPU-Auslastung auf dem Server liegt konstant über 90 %.
+- Die Festplatten-E/A-Operationen sind erheblich höher als gewöhnlich.
+- Relevante Fehlerprotokolle sind beigefügt.
+
+Lösungsvorschlag:
+- Untersuchen Sie die Abfragen, die eine hohe CPU- und E/A-Auslastung verursachen.
+- Erwägen Sie die Optimierung der Datenbankindizes.
+- Erhöhen Sie die Serverressourcen (CPU, RAM) bei Bedarf.
+- Prüfen Sie die Möglichkeit des Lastenausgleichs, indem Sie die Datenbanklast auf mehrere Server verteilen.`);
+        } else {
+            setSuggestedDescription('');
+        }
+    };
+
+    const acceptSuggestion = () => {
+        setNewIssue(prev => ({
+            ...prev,
+            description: suggestedDescription
+        }));
+        setSuggestionAccepted(true);
+    };
+
+    useEffect(() => {
+        if (suggestionAccepted) {
+            setSuggestedDescription('');
+        }
+    }, [suggestionAccepted]);
+
+
 
     const handleCancel = () => {
         router.push('/Issues');
@@ -127,10 +206,12 @@ const NewIssue = () => {
     };
 
     const handleBlurTitle = () => {
+        setTitleTemplateDismissed(true);
         setShowTitleTemplate(false);
     }
 
     const handleBlurDescription = () => {
+        setDescriptionTemplateDismissed(true);
         setShowDescriptionTemplate(false);
     }
 
@@ -149,94 +230,112 @@ const NewIssue = () => {
             <div className="my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold mb-4 text-center">Create New Issue</h3>
                 <form>
-                    <div>
-                        <label className="block text-sm font-bold mb-2" htmlFor="title">Title</label>
-                        <input
-                            type="text"
-                            name="title"
-                            value={newIssue.title}
-                            onChange={handleInputChange}
-                            className="editable-input"
-                            onFocus={handleTitleFocus}
-                            onBlur={handleBlurTitle}
-                            required
-                        />
-                        {showTitleTemplate && (
-                            <div
-                                className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
-                                style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
-                            >
-                                <button
-                                    type="button"
-                                    className="absolute top-2 right-2"
-                                    onClick={handleCloseTitleTemplate}
+                    <div className='mb-4'>
+                        <div>
+                            <label className="block text-sm font-bold mb-2" htmlFor="title">Title</label>
+                            <input
+                                type="text"
+                                name="title"
+                                value={newIssue.title}
+                                onChange={handleInputChange}
+                                className="editable-input"
+                                onFocus={handleTitleFocus}
+                                onBlur={handleBlurTitle}
+                                required
+                            />
+                            {showTitleTemplate && (
+                                <div
+                                    ref={titleTemplateRef}
+                                    className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
+                                    style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
                                 >
-                                    <MdCancel className="w-4 h-4 text-gray-700" />
-                                </button>
-                                <h4 className="font-semibold text-sm">Title Template</h4>
-                                <div className="text-sm text-gray-700">
-                                    <span className="font-semibold">Format:</span> [Subject] [Predicate] [Object] [Conjunction] [Condition/Place/Action/Process]
-                                    <br />
-                                    <span className="font-semibold">Example:</span> Server CT-10 is overheating the system under high load.
+                                    <button
+                                        type="button"
+                                        className="absolute top-2 right-2"
+                                        onClick={handleCloseTitleTemplate}
+                                    >
+                                        <MdCancel className="w-4 h-4 text-gray-700" />
+                                    </button>
+                                    <h4 className="font-semibold text-sm">Title Template</h4>
+                                    <div className="text-sm text-gray-700">
+                                        <span className="font-semibold">Format:</span> [Subject] [Predicate] [Object] [Conjunction] [Condition/Place/Action/Process]
+                                        <br />
+                                        <span className="font-semibold">Example:</span> Server CT-10 is overheating the system under high load.
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                    {titleTemplateDismissed && !showTitleTemplate && (
-                        <button
-                            type="button"
-                            className="text-sm text-blue-500 mb-4"
-                            onClick={() => showTemplateAgain('title')}
-                        >
-                            Show Template
-                        </button>
-                    )}
-                    <div>
-                        <label className="block text-sm font-bold mb-2" htmlFor="description">Description</label>
-                        <textarea
-                            name="description"
-                            value={newIssue.description}
-                            onChange={handleInputChange}
-                            className="editable-input"
-                            onFocus={handleDescriptionFocus}
-                            onBlur={handleBlurDescription}
-                            required
-                        />
-                        {showDescriptionTemplate && (
-                            <div
-                                className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
-                                style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
-                            >
+                            )}
+
+                            {titleTemplateDismissed && !showTitleTemplate && (
                                 <button
                                     type="button"
-                                    className="absolute top-2 right-2"
-                                    onClick={handleCloseDescriptionTemplate}
+                                    className="text-sm text-blue-500"
+                                    onClick={() => showTemplateAgain('title')}
                                 >
-                                    <MdCancel className="w-4 h-4 text-gray-700" />
+                                    Show Template
                                 </button>
-                                <h4 className="font-semibold text-sm">Description Guide</h4>
-                                <ol className="text-sm text-gray-700 list-decimal list-inside">
-                                    <li>Einleitung</li>
-                                    <li>Hintergrundinformationen</li>
-                                    <li>Schritte zur Reproduktion</li>
-                                    <li>Erwartetes Verhalten</li>
-                                    <li>Tatsächliches Verhalten</li>
-                                    <li>Zusätzliche Informationen</li>
-                                    <li>Lösungsvorschlag</li>
-                                </ol>
-                            </div>
+                            )}</div>
+                    </div>
+                    <div className='mb-4'>
+                        <div >
+                            <label className="block text-sm font-bold mb-2" htmlFor="description">Description</label>
+                            <textarea
+                                name="description"
+                                value={suggestionAccepted ? newIssue.description : newIssue.description}
+                                placeholder={suggestionAccepted ? '' : suggestedDescription}
+                                onChange={handleInputChange}
+                                className="editable-input"
+                                onFocus={handleDescriptionFocus}
+                                onBlur={handleBlurDescription}
+                                required
+                            />
+
+                            {!suggestionAccepted && suggestedDescription && newIssue.description === '' && (
+                                <button
+                                    type="button"
+                                    className="mt-2 bg-blue-500 mb-4 text-white p-2 rounded-lg shadow-md"
+                                    onClick={acceptSuggestion}
+                                >
+                                    Accept Suggestion
+                                </button>
+                            )}
+
+                            {showDescriptionTemplate && (
+                                <div
+                                    ref={titleTemplateRef}
+                                    className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
+                                    style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
+                                >
+                                    <button
+                                        type="button"
+                                        className="absolute top-2 right-2"
+                                        onClick={handleCloseDescriptionTemplate}
+                                    >
+                                        <MdCancel className="w-4 h-4 text-gray-700" />
+                                    </button>
+                                    <h4 className="font-semibold text-sm">Description Guide</h4>
+                                    <ol className="text-sm text-gray-700 list-decimal list-inside">
+                                        <li>Einleitung</li>
+                                        <li>Hintergrundinformationen</li>
+                                        <li>Schritte zur Reproduktion</li>
+                                        <li>Erwartetes Verhalten</li>
+                                        <li>Tatsächliches Verhalten</li>
+                                        <li>Zusätzliche Informationen</li>
+                                        <li>Lösungsvorschlag</li>
+                                    </ol>
+                                </div>
+                            )}
+                        </div>
+
+                        {descriptionTemplateDismissed && !showDescriptionTemplate && (
+                            <button
+                                type="button"
+                                className="text-sm text-blue-500"
+                                onClick={() => showTemplateAgain('description')}
+                            >
+                                Show Template
+                            </button>
                         )}
                     </div>
-
-                    {descriptionTemplateDismissed && !showDescriptionTemplate && (
-                        <button
-                            type="button"
-                            className="text-sm text-blue-500 mb-4"
-                            onClick={() => showTemplateAgain('description')}
-                        >
-                            Show Template
-                        </button>
-                    )}
 
                     <div className="flex justify-between items-center mb-4">
                         <div>
