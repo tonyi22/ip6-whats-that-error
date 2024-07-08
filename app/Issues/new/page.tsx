@@ -126,6 +126,14 @@ const NewIssue = () => {
         setDescriptionTemplateDismissed(true);
     };
 
+    const handleBlurTitle = () => {
+        setShowTitleTemplate(false);
+    }
+
+    const handleBlurDescription = () => {
+        setShowDescriptionTemplate(false);
+    }
+
     const showTemplateAgain = (templateType: 'title' | 'description') => {
         if (templateType === 'title') {
             setShowTitleTemplate(true);
@@ -137,9 +145,9 @@ const NewIssue = () => {
     };
 
     return (
-        <div className='flex justify-center'>
-            <div className="my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl">
-                <h3 className="p-10 text-5xl font-semibold m-7 flex justify-center items-center">Create New Issue</h3>
+        <div className="flex justify-center my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
+            <div className="my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
+                <h3 className="text-2xl font-bold mb-4 text-center">Create New Issue</h3>
                 <form>
                     <div>
                         <label className="block text-sm font-bold mb-2" htmlFor="title">Title</label>
@@ -150,14 +158,13 @@ const NewIssue = () => {
                             onChange={handleInputChange}
                             className="editable-input"
                             onFocus={handleTitleFocus}
+                            onBlur={handleBlurTitle}
                             required
                         />
                         {showTitleTemplate && (
                             <div
                                 className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
-                                style={{
-                                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                                }}
+                                style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
                             >
                                 <button
                                     type="button"
@@ -192,33 +199,33 @@ const NewIssue = () => {
                             onChange={handleInputChange}
                             className="editable-input"
                             onFocus={handleDescriptionFocus}
+                            onBlur={handleBlurDescription}
                             required
                         />
-                        {
-                            showDescriptionTemplate && (
-                                <div className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
-                                    style={{
-                                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                                    }}>
-                                    <button
-                                        type="button"
-                                        className="absolute top-2 right-2"
-                                        onClick={handleCloseDescriptionTemplate}
-                                    >
-                                        <MdCancel className="w-4 h-4 text-gray-700" />
-                                    </button>
-                                    <h4 className="font-semibold text-sm">Description Guide</h4>
-                                    <ol className="text-sm text-gray-700 list-decimal list-inside">
-                                        <li>Einleitung</li>
-                                        <li>Hintergrundinformationen</li>
-                                        <li>Schritte zur Reproduktion</li>
-                                        <li>Erwartetes Verhalten</li>
-                                        <li>Tatsächliches Verhalten</li>
-                                        <li>Zusätzliche Informationen</li>
-                                        <li>Lösungsvorschlag</li>
-                                    </ol>
-                                </div>
-                            )}
+                        {showDescriptionTemplate && (
+                            <div
+                                className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
+                                style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
+                            >
+                                <button
+                                    type="button"
+                                    className="absolute top-2 right-2"
+                                    onClick={handleCloseDescriptionTemplate}
+                                >
+                                    <MdCancel className="w-4 h-4 text-gray-700" />
+                                </button>
+                                <h4 className="font-semibold text-sm">Description Guide</h4>
+                                <ol className="text-sm text-gray-700 list-decimal list-inside">
+                                    <li>Einleitung</li>
+                                    <li>Hintergrundinformationen</li>
+                                    <li>Schritte zur Reproduktion</li>
+                                    <li>Erwartetes Verhalten</li>
+                                    <li>Tatsächliches Verhalten</li>
+                                    <li>Zusätzliche Informationen</li>
+                                    <li>Lösungsvorschlag</li>
+                                </ol>
+                            </div>
+                        )}
                     </div>
 
                     {descriptionTemplateDismissed && !showDescriptionTemplate && (
@@ -302,10 +309,7 @@ const NewIssue = () => {
 
                         <div className="flex space-x-4 h-full">
                             <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
-                                <div
-                                    className="cursor-pointer"
-                                    onClick={toggleDropdown}
-                                >
+                                <div className="cursor-pointer" onClick={toggleDropdown}>
                                     <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
                                         Wähle die Systeme aus
                                         <FaCaretDown className="ml-1" />
@@ -369,6 +373,7 @@ const NewIssue = () => {
                 </form>
             </div>
         </div>
+
     );
 };
 

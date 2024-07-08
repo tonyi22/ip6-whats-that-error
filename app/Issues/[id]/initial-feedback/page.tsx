@@ -93,10 +93,10 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                 </div>
 
                 <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
-                    <h3 className="text-2xl font-bold mb-4 text-center">Initial Feedback</h3>
+                    <h3 className="text-2xl font-bold mb-4">Initial Feedback</h3>
                     <form onSubmit={handleSubmit}>
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <label className="text-gray-700 dark:text-gray-300">
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
                                 Ist die Beschreibung des Issues klar?
                             </label>
                             <div className="flex flex-col">
@@ -127,14 +127,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                         name="issueClearDetails"
                                         onChange={handleChange}
                                         placeholder='Was war nicht klar?'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        className="editable-input mt-2"
                                     />
                                 )}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <label className="text-gray-700 dark:text-gray-300">
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
                                 Hast du sofort verstanden, was das Problem ist?
                             </label>
                             <div className="flex flex-col">
@@ -175,14 +175,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                         name="problemUnderstoodDetails"
                                         onChange={handleChange}
                                         placeholder='Was hast du nicht verstanden?'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        className="editable-input mt-2"
                                     />
                                 )}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <label className="text-gray-700 dark:text-gray-300">
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
                                 Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
                             </label>
                             <div className="flex flex-col">
@@ -212,15 +212,15 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                     <textarea
                                         name="stepsKnownDetails"
                                         onChange={handleChange}
-                                        placeholder='Wenn nein, bitte beschreiben...'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        placeholder='Bitte beschreiben...'
+                                        className="editable-input mt-2"
                                     />
                                 )}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <label className="text-gray-700 dark:text-gray-300">
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
                                 Fehlen dir wichtige Informationen?
                             </label>
                             <div className="flex flex-col">
@@ -251,14 +251,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                         name="infoMissingDetails"
                                         onChange={handleChange}
                                         placeholder='Was hat dir gefehlt?'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        className="editable-input mt-2"
                                     />
                                 )}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <label className="text-gray-700 dark:text-gray-300">
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
                                 Wie würdest du die Verständlichkeit des Issues bewerten?
                             </label>
                             <div className="flex flex-col justify-center">
@@ -271,8 +271,8 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
 
 
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <label className="text-gray-700 dark:text-gray-300">
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
                                 Wie nachvollziehbar ist die Priorität?
                             </label>
                             <div className="flex flex-col">
@@ -282,8 +282,8 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <label className="text-gray-700 dark:text-gray-300">
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
                                 Wie nachvollziehbar ist die Severity?
                             </label>
                             <div className="flex flex-col">
@@ -296,7 +296,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                         <div className="flex justify-end space-x-4">
                             <button
                                 type="button"
-                                onClick={() => router.back()}
+                                onClick={() => router.push('/Issues')}
                                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             >
                                 Cancel

@@ -22,7 +22,6 @@ body {
     /* Allow only vertical resizing */
     overflow: hidden;
     overflow-y: auto;
-    margin: 2px;
 }
 
 @media (prefers-color-scheme: dark) {

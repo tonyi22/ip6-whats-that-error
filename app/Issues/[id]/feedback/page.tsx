@@ -1,15 +1,12 @@
 'use client'
 import React, { useEffect, useState, useRef } from 'react';
 import '../detailView.css';
-import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
+import { compareSort, getAlertIcon, getSeverityColor } from '@/app/helperFunction';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
-import ThumbComponent from './Thumb';
-import TextBoxComponent from './Textbox';
-import EmojiComponent from './Emoji';
-import CheckboxComponent from './Checkbox';
 import { useRouter, useParams } from 'next/navigation';
 import { SystemMonitoringIssue } from '@/app/data/data';
+import { FaCaretDown, FaCheck } from 'react-icons/fa';
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -128,13 +125,34 @@ export function Feedback({ params }: { params: { id: string } }) {
         }));
     };
 
+    const toggleDropdown = () => {
+        setDropdownOpen(prev => !prev);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const handleAddSystem = (system: string) => {
-        setIssue(prev => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                affectedSystems: prev.affectedSystems.includes(system) ? prev.affectedSystems : [...prev.affectedSystems, system]
-            };
+        setIssue(prevState => {
+            if (prevState) {
+                return {
+                    ...prevState,
+                    affectedSystems: prevState.affectedSystems.includes(system)
+                        ? prevState.affectedSystems.filter(s => s !== system)
+                        : [...prevState.affectedSystems, system]
+                };
+            }
+            return prevState;
         });
     };
 
@@ -214,14 +232,14 @@ export function Feedback({ params }: { params: { id: string } }) {
 
             <div className="flex space-x-8">
 
-                <div className="w bg-white p-6 rounded-lg shadow-lg">
+                <div className="">
                     <h3 className="text-2xl font-bold mb-4 text-center">Final Feedback</h3>
                     <form onSubmit={handleSubmit}>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="grid grid-cols-2 gap-4 mb-4 p-4 border rounded-lg">
                             <div>
-                                <span className="ml-2">War der Alert Type der richtige?</span>
-                                <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                <span className="ml-2 ">War der Alert Type der richtige?</span>
+                                <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
                                     {getAlertIcon(issue.alertType)}
                                     <span className="ml-2">{issue.alertType}</span>
                                 </label>
@@ -251,28 +269,30 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 </div>
                                 {responses.alertIconUnderstandable === 'no' && (
                                     <>
-                                        <select
-                                            name="correctAlertType"
-                                            value={responses.correctAlertType}
-                                            onChange={handleChange}
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            defaultValue=""
-                                        >
-                                            <option value="" disabled hidden>Wähle den richtigen Alert Type</option>
-                                            {["Warning", "Info", "Critical"].map(type => (
-                                                <option key={type} value={type} disabled={type === issue.alertType}>
-                                                    {getAlertIcon(type)} {type}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <p className='mt-4 mb-1 ml-1 text-sm'>Wähle den richtigen Alert Type</p>
+                                        <div className="inline-block">
+                                            <select
+                                                name="correctAlertType"
+                                                value={responses.correctAlertType === '' ? issue.alertType : responses.correctAlertType}
+                                                onChange={handleChange}
+                                                className="mt-2 input border border-grey-800 w-auto"
+                                            >
+                                                {["Warning", "Info", "Critical"].map(type => (
+                                                    <option key={type} value={type} disabled={type === issue.alertType}>
+                                                        {type}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                                         <textarea
                                             name="alertIconReason"
                                             value={responses.alertIconReason}
                                             onChange={handleChange}
                                             placeholder='Begründe den neuen Alert Type'
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            className="editable-input mt-3"
                                         />
                                     </>
+
                                 )}
                             </div>
                         </div>
@@ -283,7 +303,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                     <div>
                                         <span className="ml-2">Wurde die Severity des Issues korrekt angepasst?</span>
-                                        <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                        <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
                                             <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
                                         </label>
                                     </div>
@@ -311,27 +331,32 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             </label>
                                         </div>
                                         {responses.severityCorrect === 'no' && (
+
                                             <>
-                                                <select
-                                                    name="correctSeverity"
-                                                    value={responses.correctSeverity}
-                                                    onChange={handleChange}
-                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                    defaultValue=""
-                                                >
-                                                    <option value="" disabled hidden>Wähle die richtige Severity</option>
-                                                    {['Low', 'Medium', 'High'].map(severity => (
-                                                        <option key={severity} value={severity} disabled={severity === issue.severity}>
-                                                            {severity}
-                                                        </option>
-                                                    ))}
-                                                </select>
+
+
+                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Severity</p>
+                                                <div className="inline-block">
+                                                    <select
+                                                        name="correctSeverity"
+                                                        value={responses.correctSeverity}
+                                                        onChange={handleChange}
+                                                        className="mt-2 input border border-grey-800 w-auto"
+                                                        defaultValue=""
+                                                    >
+                                                        {['Low', 'Medium', 'High'].map(severity => (
+                                                            <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                                                {severity}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                                 <textarea
                                                     name="severityReason"
                                                     value={responses.severityReason}
                                                     onChange={handleChange}
                                                     placeholder='Begründe die neue Severity'
-                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    className="editable-input mt-3"
                                                 />
                                             </>
                                         )}
@@ -340,8 +365,8 @@ export function Feedback({ params }: { params: { id: string } }) {
                             ) : (
                                 <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                     <div>
-                                        <span className="ml-2 block text-left">War die Severity nachvollziehbar? Wenn nein, welche Severity hätte das Issue haben sollen?</span>
-                                        <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                        <span className="ml-2 block text-left">War die Severity nachvollziehbar? </span>
+                                        <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
                                             <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
                                         </label>
                                     </div>
@@ -370,26 +395,27 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         </div>
                                         {responses.severityUnderstandable === 'no' && (
                                             <>
-                                                <select
-                                                    name="correctSeverity"
-                                                    value={responses.correctSeverity}
-                                                    onChange={handleChange}
-                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                    defaultValue=""
-                                                >
-                                                    <option value="" disabled hidden>Wähle die richtige Severity</option>
-                                                    {['Low', 'Medium', 'High'].map(severity => (
-                                                        <option key={severity} value={severity} disabled={severity === issue.severity}>
-                                                            {severity}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Severity</p>
+                                                <div className="inline-block">
+                                                    <select
+                                                        name="correctSeverity"
+                                                        value={responses.correctSeverity === '' ? issue.severity : responses.correctSeverity}
+                                                        onChange={handleChange}
+                                                        className="mt-2 input border border-grey-800 w-auto"
+                                                    >
+                                                        {['Low', 'Medium', 'High'].map(severity => (
+                                                            <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                                                {severity}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                                 <textarea
                                                     name="severityReason"
                                                     value={responses.severityReason}
                                                     onChange={handleChange}
                                                     placeholder='Begründung für neue Severity'
-                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    className="editable-input mt-3"
                                                 />
                                             </>
                                         )}
@@ -406,7 +432,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">War der Incident Type der richtigen Kategorie zugeordnet?</span>
-                                <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
                                     <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.incidentType}</span>
                                 </label>
                             </div>
@@ -435,22 +461,23 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 </div>
                                 {responses.incidentTypeUnderstandable === 'no' && (
                                     <>
-                                        <select
-                                            name="correctIncidentType"
-                                            value={responses.correctIncidentType}
-                                            onChange={handleChange}
-                                            className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            defaultValue=""
-                                        >
-                                            <option value="" disabled hidden>Wähle den richtigen Incident Type</option>
-                                            {[
-                                                "Performance", "Storage", "Overheating", "Backups", "Power", "Data Integrity", "Connection", "Query", "Monitoring", "Network",
-                                                "Authentication", "Resources", "Processes", "Configuration", "Data Export", "Documentation", "Startup", "Demonstration", "Communication",
-                                                "Data Import", "Security"
-                                            ].map(type => (
-                                                <option key={type} value={type} disabled={type === issue.incidentType}>{type}</option>
-                                            ))}
-                                        </select>
+                                        <p className='mt-4 mb-1 ml-1 text-sm'>Wähle den richtigen Incident Type</p>
+                                        <div className="inline-block">
+                                            <select
+                                                name="correctIncidentType"
+                                                value={responses.correctIncidentType === '' ? issue.incidentType : responses.correctIncidentType}
+                                                onChange={handleChange}
+                                                className="mt-2 input border border-grey-800 w-auto"
+                                            >
+                                                {[
+                                                    "Performance", "Storage", "Overheating", "Backups", "Power", "Data Integrity", "Connection", "Query", "Monitoring", "Network",
+                                                    "Authentication", "Resources", "Processes", "Configuration", "Data Export", "Documentation", "Startup", "Demonstration", "Communication",
+                                                    "Data Import", "Security", "other"
+                                                ].sort(compareSort).map(type => (
+                                                    <option key={type} value={type} disabled={type === issue.incidentType}>{type}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </>
                                 )}
                             </div>
@@ -463,7 +490,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <span className="ml-2">
                                         Wurde die Priorität des Issues korrekt angepasst?
                                     </span>
-                                    <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                    <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
                                         <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.priority}/10</span>
                                     </label>
                                 </div>
@@ -492,23 +519,25 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     </div>
                                     {responses.priorityUnderstandable2 === 'no' && (
                                         <>
-                                            <select
-                                                name="correctPriority"
-                                                value={responses.correctPriority}
-                                                onChange={handleChange}
-                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            >
-                                                <option value="" disabled hidden>Bitte die korrekte Priorität auswählen</option>
-                                                {[...Array(10)].map((_, i) => (
-                                                    <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
-                                                ))}
-                                            </select>
+                                            <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Priority</p>
+                                            <div className="inline-block">
+                                                <select
+                                                    name="correctPriority"
+                                                    value={responses.correctPriority}
+                                                    onChange={handleChange}
+                                                    className="mt-2 input border border-grey-800 w-auto"
+                                                >
+                                                    {[...Array(10)].map((_, i) => (
+                                                        <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                             <textarea
                                                 name="priorityAdjustedCorrectlyComments"
                                                 value={responses.priorityAdjustedCorrectlyComments}
                                                 onChange={handleChange}
                                                 placeholder='Begründe die neue Priorität'
-                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                className="editable-input mt-3"
                                             />
                                         </>
                                     )}
@@ -517,8 +546,8 @@ export function Feedback({ params }: { params: { id: string } }) {
                         ) : (
                             <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                 <div className="flex flex-col">
-                                    <span className="ml-2">War die Priorität nachvollziehbar? Wenn nein, welche Priorität hätte das Issue haben sollen?</span>
-                                    <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                    <span className="ml-2">War die Priorität nachvollziehbar?</span>
+                                    <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
                                         <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.priority}/10</span>
                                     </label>
                                 </div>
@@ -547,24 +576,26 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     </div>
                                     {responses.priorityUnderstandable === 'no' && (
                                         <>
-                                            <select
-                                                name="correctPriority"
-                                                value={responses.correctPriority}
-                                                onChange={handleChange}
-                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                defaultValue=""
-                                            >
-                                                <option value="" disabled hidden>Bitte die korrekte Priorität auswählen</option>
-                                                {[...Array(10)].map((_, i) => (
-                                                    <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
-                                                ))}
-                                            </select>
+                                            <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die korrekte Priorität auswählen</p>
+                                            <div className="inline-block">
+                                                <select
+                                                    name="correctPriority"
+                                                    value={responses.correctPriority === '' ? issue.priority : responses.correctPriority}
+                                                    onChange={handleChange}
+                                                    className="mt-2 input border border-grey-800 w-auto"
+                                                    defaultValue=""
+                                                >
+                                                    {[...Array(10)].map((_, i) => (
+                                                        <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                             <textarea
                                                 name="priorityReason"
                                                 value={responses.priorityReason}
                                                 onChange={handleChange}
                                                 placeholder='Begründung für neue Priorität'
-                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                className="editable-input mt-3"
                                             />
                                         </>
                                     )}
@@ -608,7 +639,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 value={responses.descriptionClarityImprovedComments}
                                                 onChange={handleChange}
                                                 placeholder='Was war noch unklar?'
-                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                className="editable-input mt-3"
                                             />
                                         )}
                                     </div>
@@ -618,7 +649,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <div>
                                         <span className="ml-2">War die Beschreibung des Issues klar und verständlich?</span>
                                         <label className="flex items-center text-gray-700 dark:text-gray-300">
-                                            <p className="bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4">
+                                            <p className="bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4">
                                                 {issue.description}
                                             </p>
                                         </label>
@@ -652,8 +683,8 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     name="descriptionReason"
                                                     value={responses.descriptionReason}
                                                     onChange={handleChange}
-                                                    placeholder='Wenn nein, was war unklar?'
-                                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    placeholder='Was war unklar?'
+                                                    className="editable-input mt-3"
                                                 />
                                             </>
                                         )}
@@ -665,7 +696,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div>
                             {issue.isInitialGiven ? (
                                 <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                                    <label className="text-gray-700 dark:text-gray-300">
+                                    <label className="">
                                         Wurden die fehlenden Informationen bereitgestellt?
                                     </label>
                                     <div className="flex flex-col">
@@ -697,7 +728,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 value={responses.missingInfoProvidedComments}
                                                 onChange={handleChange}
                                                 placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
-                                                className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                className="editable-input mt-3"
                                             />
                                         )}
                                     </div>
@@ -709,18 +740,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">Waren die betroffenen Systeme korrekt?</span>
-                                <label className="flex items-center text-gray-700 dark:text-gray-300">
-                                    <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
-                                        <div className="space-y-1">
-                                            {issue.affectedSystems.map((system, index) => (
-                                                <div key={index} className="flex items-center mb-2">
-                                                    <span className="flex-grow">{system}</span>
-                                                    <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
-                                                </div>
-                                            ))}
+                                <div className={`flex-grow text-gray-700 mt-2 ml-2 py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex w-96 flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'rounded-lg shadow-md' : ''}`}>
+                                    {issue.affectedSystems.map((system, index) => (
+                                        <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
+                                            <span className="flex-grow">{system}</span>
                                         </div>
-                                    </div>
-                                </label>
+                                    ))}
+                                </div>
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -746,27 +772,34 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     </label>
                                 </div>
                                 {responses.affSystems === 'no' && (
-                                    <>
+                                    <div className="relative inline-block min-h-[45px] mt-2" ref={dropdownRef}>
                                         <div
-                                            className="dropdown"
-                                            onClick={handleDropdownClick}
+                                            className="cursor-pointer"
+                                            onClick={toggleDropdown}
                                         >
-                                            Wähle die Systeme aus
+                                            <div className="cursor-pointer inline-flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
+                                                Wähle die Systeme aus
+                                                <FaCaretDown className="ml-1" />
+                                            </div>
                                         </div>
                                         {dropdownOpen && (
-                                            <div className="dropdown-menu">
+                                            <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
                                                 {systemsList.map(system => (
                                                     <div
                                                         key={system}
-                                                        className={`dropdown-item ${issue.affectedSystems.includes(system) ? 'bg-gray-200' : ''}`}
-                                                        onClick={() => handleAddSystem(system)}
+                                                        className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleAddSystem(system);
+                                                        }}
                                                     >
-                                                        {issue.affectedSystems.includes(system) ? '✓ ' : ''}{system}
+                                                        {system}
+                                                        {issue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
                                                     </div>
                                                 ))}
                                             </div>
                                         )}
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -775,7 +808,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">War die Auswirkung verständlich?</span>
-                                <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
                                     <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
                                         {issue.impact}
                                     </p>
@@ -809,8 +842,8 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="impactReason"
                                         value={responses.impactReason}
                                         onChange={handleChange}
-                                        placeholder='Wenn nein, was war nicht verständilch?'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        placeholder='Was war nicht verständilch?'
+                                        className="editable-input mt-3"
                                     />
                                 )}
                             </div>
@@ -819,7 +852,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="text-gray-700 dark:text-gray-300">
+                            <label className="ml-2">
                                 Wusstest du, was zu tun ist, um das Issue zu lösen?
                             </label>
                             <div className="flex flex-col">
@@ -851,7 +884,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         value={responses.whatToDoReason}
                                         onChange={handleChange}
                                         placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        className="editable-input mt-3"
                                     />
                                 )}
                             </div>
@@ -859,7 +892,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="text-gray-700 dark:text-gray-300">
+                            <label className="ml-2">
                                 Hast du den Lösungsvorschlag umgesetzt? Falls nein, wie hast du das Issue tatsächlich gelöst?
                             </label>
                             <div className="flex flex-col">
@@ -891,7 +924,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         value={responses.implementedReason}
                                         onChange={handleChange}
                                         placeholder='Wie hast du das Issue gelöst?'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        className="editable-input mt-3"
                                     />
                                 )}
                             </div>
@@ -900,7 +933,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="text-gray-700 dark:text-gray-300">
+                            <label className="ml-2">
                                 Waren die AI-Vorschläge für das Issue relevant? Falls ja, waren die AI-Vorschläge klar und verständlich?
                             </label>
                             <div className="flex flex-col">
@@ -932,7 +965,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         value={responses.relevanceAISuggestions}
                                         onChange={handleChange}
                                         placeholder='Wenn ja, was war nicht verständlich?'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        className="editable-input mt-3"
                                     />
                                 )}
                             </div>
@@ -941,7 +974,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="text-gray-700 dark:text-gray-300">
+                            <label className="ml-2">
                                 Hast du die AI-Vorschläge umgesetzt? Falls ja, wie einfach war es diese umzusetzen von 0-5?
                             </label>
                             <div className="flex flex-col">
@@ -977,8 +1010,8 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="implementationReason"
                                         value={responses.implementationReason}
                                         onChange={handleChange}
-                                        placeholder='Wenn nein, warum nicht?'
-                                        className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        placeholder='Warum nicht?'
+                                        className="editable-input mt-3"
                                     />
                                 )}
                             </div>
@@ -986,7 +1019,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="text-gray-700 dark:text-gray-300">
+                            <label className="ml-2">
                                 Hast du Vorschläge zur Verbesserung der AI-Vorschläge?
                             </label>
                             <textarea
@@ -994,7 +1027,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 value={responses.improvementAISuggestions}
                                 onChange={handleChange}
                                 placeholder='Erzähl davon...'
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                className="editable-input mt-3"
                             />
                         </div>
 
@@ -1011,17 +1044,17 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     value={responses.overallSatisfactionAISuggestions}
                                     onChange={handleChange}
                                     placeholder='Bitte beschreiben...'
-                                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    className="editable-input mt-3"
                                 />
                             </div>
                         </div>
 
 
 
-                        <div className="flex justify-end space-x-4 mt-6 border p-4 rounded-lg">
+                        <div className="flex justify-end space-x-4 mt-6 p-4 rounded-lg">
                             <button
                                 type="button"
-                                onClick={() => router.back()}
+                                onClick={() => router.push('/Issues')}
                                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             >
                                 Cancel
@@ -1035,8 +1068,8 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
