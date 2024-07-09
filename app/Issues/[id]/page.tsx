@@ -371,22 +371,22 @@ function IssueView({ params }: { params: { id: string } }) {
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='font-bold pb-2'>Info</p>
                     <div className='grid grid-cols-2 gap-2'>
-                        <p className='text-gray-600 dark:text-gray-400'>Creator:</p>
+                        <p className=''>Creator:</p>
                         <p className='text-right'>{issue.creator}</p>
 
-                        <p className='text-gray-600 dark:text-gray-400'>Issue Nr.:</p>
+                        <p className=''>Issue Nr.:</p>
                         <p className='text-right'>{issue.id}</p>
 
-                        <p className='text-gray-600 dark:text-gray-400'>Duration:</p>
+                        <p className=''>Duration:</p>
                         <p className='text-right'>{issue.duration} h</p>
 
-                        <p className='text-gray-600 dark:text-gray-400'>Timestamp:</p>
+                        <p className=''>Timestamp:</p>
                         <p className='text-right'>{formatDate(issue.timestamp)}</p>
 
-                        <p className='text-gray-600 dark:text-gray-400'>Last updated:</p>
+                        <p className=''>Last updated:</p>
                         <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
 
-                        <p className='text-gray-600 dark:text-gray-400'>End time:</p>
+                        <p className=''>End time:</p>
                         <p className='text-right'>--:--</p>
                     </div>
                 </div>
