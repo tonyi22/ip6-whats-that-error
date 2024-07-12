@@ -430,7 +430,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <div>
+                            <div className="flex flex-col">
                                 <span className="ml-2">War der Incident Type der richtigen Kategorie zugeordnet?</span>
                                 <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
                                     <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.incidentType}</span>
@@ -606,7 +606,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div>
                             {issue.isInitialGiven ? (
                                 <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                                    <label className="text-grayy-700 dark:text-gray-300">
+                                    <label className="text-grayy-700 dark:text-gray-300 ml-2">
                                         Wurde die Beschreibung des Issues im Verlauf klarer und hat sich
                                         dein Verständnis des Problems im Verlauf verbessert?
                                     </label>
@@ -696,7 +696,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div>
                             {issue.isInitialGiven ? (
                                 <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                                    <label className="">
+                                    <label className="ml-2">
                                         Wurden die fehlenden Informationen bereitgestellt?
                                     </label>
                                     <div className="flex flex-col">
@@ -727,7 +727,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 name="missingInfoProvidedComments"
                                                 value={responses.missingInfoProvidedComments}
                                                 onChange={handleChange}
-                                                placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
+                                                placeholder='Wo fehlten dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
                                                 className="editable-input mt-3"
                                             />
                                         )}
@@ -893,7 +893,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
-                                Hast du den Lösungsvorschlag umgesetzt? Falls nein, wie hast du das Issue tatsächlich gelöst?
+                                Hast du den Lösungsvorschlag umgesetzt?
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -923,7 +923,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="implementedReason"
                                         value={responses.implementedReason}
                                         onChange={handleChange}
-                                        placeholder='Wie hast du das Issue gelöst?'
+                                        placeholder='Wie hast du das Issue tatsächlich gelöst?'
                                         className="editable-input mt-3"
                                     />
                                 )}
@@ -934,7 +934,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
-                                Waren die AI-Vorschläge für das Issue relevant? Falls ja, waren die AI-Vorschläge klar und verständlich?
+                                Waren die AI-Vorschläge für das Issue relevant?
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -964,7 +964,16 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="relevanceAISuggestions"
                                         value={responses.relevanceAISuggestions}
                                         onChange={handleChange}
-                                        placeholder='Wenn ja, was war nicht verständlich?'
+                                        placeholder='Waren die AI-Vorschläge klar und verständlich?'
+                                        className="editable-input mt-3"
+                                    />
+                                )}
+                                {responses.clarityAISuggestions === 'no' && (
+                                    <textarea
+                                        name="relevanceAISuggestions"
+                                        value={responses.relevanceAISuggestions}
+                                        onChange={handleChange}
+                                        placeholder='Weshalb waren die Vorschläge nicht relevant?'
                                         className="editable-input mt-3"
                                     />
                                 )}
@@ -975,7 +984,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
-                                Hast du die AI-Vorschläge umgesetzt? Falls ja, wie einfach war es diese umzusetzen von 0-5?
+                                Hast du die AI-Vorschläge umgesetzt?
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -1001,21 +1010,26 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     </label>
                                 </div>
                                 {responses.implementationAISuggestions === 'yes' && (
-                                    <div className="flex space-x-4">
-                                        <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={5} />
-                                    </div>
+                                    <>
+                                        <p className='mt-4 mb-1 ml-1 text-sm'>Wie einfach war die Umsetzung?</p>
+                                        <div className="flex space-x-4">
+                                            <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={4} />
+                                        </div>
+                                    </>
                                 )}
                                 {responses.implementationAISuggestions === 'no' && (
                                     <textarea
                                         name="implementationReason"
                                         value={responses.implementationReason}
                                         onChange={handleChange}
-                                        placeholder='Warum nicht?'
+                                        placeholder='Warum hast du die Vorschläge nicht angewendet?'
                                         className="editable-input mt-3"
                                     />
                                 )}
                             </div>
                         </div>
+
+
 
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
@@ -1026,7 +1040,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 name="improvementAISuggestions"
                                 value={responses.improvementAISuggestions}
                                 onChange={handleChange}
-                                placeholder='Erzähl davon...'
+                                placeholder='Erzähl davon'
                                 className="editable-input mt-3"
                             />
                         </div>
@@ -1043,7 +1057,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     name="overallSatisfactionAISuggestions"
                                     value={responses.overallSatisfactionAISuggestions}
                                     onChange={handleChange}
-                                    placeholder='Bitte beschreiben...'
+                                    placeholder='Bitte erkläre deine Bewertung'
                                     className="editable-input mt-3"
                                 />
                             </div>

@@ -1,4 +1,5 @@
-'use client';
+
+'use client'
 import React from 'react';
 
 type SliderComponentProps = {
@@ -46,6 +47,7 @@ const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min,
                     cursor: pointer;
                 }
             `}</style>
+
             <input
                 type="range"
                 min={min}
@@ -53,10 +55,15 @@ const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min,
                 value={value}
                 onChange={(e) => onChange(Number(e.target.value))}
             />
+
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 5px' }}>
                 {ticks.map(tick => (
                     <span key={tick} style={{ fontSize: '12px' }}>{tick}</span>
                 ))}
+            </div>
+            <div className="flex justify-between text-sm mb-1">
+                <span>wenig</span>
+                <span>sehr</span>
             </div>
         </div>
     );

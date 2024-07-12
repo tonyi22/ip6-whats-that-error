@@ -86,7 +86,33 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
 
     return (
+
+
+
         <div className="max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
+
+            <style jsx>{`
+            .custom-radio {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                display: inline-block;
+                width: 0.75em; 
+                height: 0.75em; 
+                border-radius: 50%;
+                border: 1px solid #000;
+                cursor: pointer;
+                position: relative;
+                top: 0.15em;
+                margin-right: 0.05em;
+                background-color: white; 
+            }
+            .custom-radio:checked {
+                background-color: #4299e1; 
+                border-color: #000; 
+            }
+        `}</style>
+
             <div className="flex space-x-8">
                 <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
                     <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
@@ -293,7 +319,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <SliderComponent value={sliderRatingPriority} onChange={setSliderRatingPriority} min={1} max={5} />
+                                    <SliderComponent value={sliderRatingPriority} onChange={setSliderRatingPriority} min={1} max={4} />
                                 </div>
                             </div>
                         </div>
@@ -304,7 +330,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
-                                    <SliderComponent value={sliderRatingSeverity} onChange={setSliderRatingSeverity} min={1} max={5} />
+                                    <SliderComponent value={sliderRatingSeverity} onChange={setSliderRatingSeverity} min={1} max={4} />
                                 </div>
                             </div>
                         </div>
