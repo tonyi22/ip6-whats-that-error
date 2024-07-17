@@ -9,6 +9,10 @@ import { TabComponent } from './TabComponent';
 import './detailView.css';
 import { CiEdit } from "react-icons/ci";
 import Tippy from '@tippyjs/react';
+import { AiOutlineWechatWork } from "react-icons/ai";
+import ChatBubble from './ChatBubble';
+import OpenAI from "openai";
+import Terminal from './Terminal';
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -40,6 +44,22 @@ function IssueView({ params }: { params: { id: string } }) {
     const [isEditMode, setEditMode] = useState(false);
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [issueCopy, setIssueCopy] = useState<SystemMonitoringIssue | null>(null);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
+    const chatButtonRef = useRef<HTMLButtonElement>(null);
+
+    const openChat = () => {
+        if (isChatOpen) {
+            setIsChatOpen(false);
+        } else {
+            setIsChatOpen(true);
+        }
+
+    };
+
+    const closeChat = () => {
+        setIsChatOpen(false);
+    };
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -107,6 +127,21 @@ function IssueView({ params }: { params: { id: string } }) {
         setEditMode(false);
     };
 
+    const commands = [
+        " systemctl restart monitoring",
+        " systemctl status monitoring",
+        " systemctl enable monitoring"
+    ];
+
+    const handleExecute = async (command: string): Promise<string> => {
+        // Simulate command execution delay
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(`Executed: ${command}`);
+            }, 2000);
+        });
+    };
+
     const handleSave = () => {
         if (issue) {
             const issues = loadIssuesFromLocalStorage();
@@ -159,18 +194,19 @@ function IssueView({ params }: { params: { id: string } }) {
                 </Link>
 
                 <div className='flex space-x-4'>
+                    <button ref={chatButtonRef} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline' onClick={() => setIsChatOpen(true)}>
+                        <AiOutlineWechatWork className='text-2xl' />
+                    </button>
                     {!isEditMode ? (
                         <button onClick={handleEdit} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline inline-flex items-center'>
                             <span className='flex'>Edit <CiEdit className='text-2xl' /></span>
                         </button>
-
                     ) : (
                         <div className='space-x-4'>
                             <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
                             <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
-                        </div>)}
-
-
+                        </div>
+                    )}
                     {!issue.isInitialGiven && !isEditMode && (
                         <Link href={`/Issues/${issue.id}/initial-feedback`}>
                             <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
@@ -178,11 +214,13 @@ function IssueView({ params }: { params: { id: string } }) {
                             </button>
                         </Link>
                     )}
-
-
                 </div>
             </div>
-
+            <ChatBubble isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} buttonRef={chatButtonRef}>
+                <h2 className="text-xl font-bold mb-4">Chat with ChatGPT</h2>
+                <h3>Test</h3>
+                <p>Chat interface goes here...</p>
+            </ChatBubble>
             <div className='my-7'>
                 {isEditMode ? (
                     <div className='w-1/2'>
@@ -200,7 +238,6 @@ function IssueView({ params }: { params: { id: string } }) {
                     <h3 className="text-3xl font-semibold">{issue.title}</h3>
                 )}
             </div>
-
             <div className="flex justify-between items-center mb-5">
                 <div>
                     {isEditMode ? (
@@ -224,7 +261,6 @@ function IssueView({ params }: { params: { id: string } }) {
                         </Tippy>
                     )}
                 </div>
-
                 <div>
                     <p>Severity:
                         {isEditMode ? (
@@ -246,7 +282,6 @@ function IssueView({ params }: { params: { id: string } }) {
                         )}
                     </p>
                 </div>
-
                 <div>
                     <p>Status:
                         <select
@@ -263,7 +298,6 @@ function IssueView({ params }: { params: { id: string } }) {
                         </select>
                     </p>
                 </div>
-
                 <div>
                     <p>Incident type:
                         {isEditMode ? (
@@ -297,7 +331,7 @@ function IssueView({ params }: { params: { id: string } }) {
                             >
                                 {priorities.map(priority => (
                                     <option key={priority} value={priority}>
-                                        {priority}
+                                        {priority}, {priority === 1 ? 'niedrig' : priority === 2 ? 'mittel' : priority === 3 ? 'hoch' : 'dringend'}
                                     </option>
                                 ))}
                             </select>
@@ -310,7 +344,6 @@ function IssueView({ params }: { params: { id: string } }) {
                     </p>
                 </div>
             </div>
-
             <div className="grid grid-cols-3 grid-rows-[auto, 1fr, 1fr, 1fr] gap-4">
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='font-bold pb-2'>Description</p>
@@ -330,7 +363,6 @@ function IssueView({ params }: { params: { id: string } }) {
                         </p>
                     )}
                 </div>
-
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='font-bold pb-2'>Affected Systems</p>
                     <div className="space-y-1">
@@ -347,7 +379,6 @@ function IssueView({ params }: { params: { id: string } }) {
                                                 <FaCaretDown className="ml-1" />
                                             </div>
                                         </div>
-
                                         {dropdownOpen && (
                                             <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
                                                 {systemsList.map(system => (
@@ -367,7 +398,6 @@ function IssueView({ params }: { params: { id: string } }) {
                                         )}
                                     </div>
                                 </div>
-
                                 <div className={`flex-grow  py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'border border-gray-300 rounded-md' : ''}`}>
                                     {issue.affectedSystems.map((system, index) => (
                                         <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
@@ -388,30 +418,23 @@ function IssueView({ params }: { params: { id: string } }) {
                         )}
                     </div>
                 </div>
-
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='font-bold pb-2'>Info</p>
                     <div className='grid grid-cols-2 gap-2'>
                         <p className=''>Creator:</p>
                         <p className='text-right'>{issue.creator}</p>
-
                         <p className=''>Issue Nr.:</p>
                         <p className='text-right'>{issue.id}</p>
-
                         <p className=''>Duration:</p>
                         <p className='text-right'>{issue.duration} h</p>
-
                         <p className=''>Timestamp:</p>
                         <p className='text-right'>{formatDate(issue.timestamp)}</p>
-
                         <p className=''>Last updated:</p>
                         <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
-
                         <p className=''>End time:</p>
                         <p className='text-right'>--:--</p>
                     </div>
                 </div>
-
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='pb-2 font-bold'>Impact</p>
                     {isEditMode ? (
@@ -425,7 +448,6 @@ function IssueView({ params }: { params: { id: string } }) {
                         <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.impact}</p>
                     )}
                 </div>
-
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
                     <p className='p-2 font-bold'>Preventative Measures</p>
                     {isEditMode ? (
@@ -439,9 +461,7 @@ function IssueView({ params }: { params: { id: string } }) {
                         <p className='p-1' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {issue.preventativeMeasures}</p>
                     )}
                 </div>
-
                 <TabComponent />
-
                 <div className='col-start-3 col-span-1'>
                     <div className='flex justify-end'>
                         {!isEditMode && (
@@ -453,6 +473,10 @@ function IssueView({ params }: { params: { id: string } }) {
                         )}
                     </div>
                 </div>
+            </div>
+            {/* Add the Terminal component here */}
+            <div className="flex justify-center">
+                <Terminal commands={commands} onExecute={handleExecute} />
             </div>
         </div>
     );
