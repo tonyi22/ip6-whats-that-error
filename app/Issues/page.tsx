@@ -7,20 +7,21 @@ import { SystemMonitoringIssue } from '../data/data';
 import { MdOutlineFiberNew } from "react-icons/md";
 import { useEffect, useState } from 'react';
 import { BiSortAlt2 } from "react-icons/bi";
-import { de } from 'date-fns/locale';
-import { format } from 'date-fns';
-import Link from 'next/link';
-import { classNames, formatDate, getAlertIcon, getAlertIconBig, getSeverityColor, validateType } from '../helperFunction';
+import { classNames, formatDate, getAlertIcon, getAlertIconBig, getAlertText, getPriorityText, getSeverityColor, validateType } from '../helperFunction';
 import { useRouter } from 'next/navigation';
 import CustomDropDown from './dropDownMenu';
 import issuesJson from '../data/issues.json' assert { type: 'json' };
 import { Button, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
 interface CardsHeaderProps {
     onSort: (column: string) => void;
     sortColumn: string;
     sortDirection: 'asc' | 'desc';
 }
+
+type SortableColumns = 'alertType' | 'priority' | 'timestamp';
 
 const loadIssues = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues'); // Correct key
@@ -62,7 +63,10 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
             <tr>
                 <th className="rounded-tl-xl rounded-bl-xl px-2 py-3 text-center text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-20"
                     onClick={() => onSort('alertType')}>
-                    <div className='flex items-center'>Alert Type {renderSortIcon('alertType')}</div></th>
+                    <Tippy content={<span><span className="font-bold text-blue-500">Blaues "i":</span> Informationsmeldung<br /><span className="font-bold text-red-500">Rotes "!":</span> Fehlermeldungen<br /><span className="font-bold text-yellow-500">Gelbes "!":</span> Warnmeldungen</span>}>
+                        <div className='flex items-center cursor-pointer'>Alert Type {renderSortIcon('alertType')}</div>
+                    </Tippy>
+                </th>
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500" onClick={() => onSort('title')}>
                     <div className='flex items-center'>Title {renderSortIcon('title')}</div>
                 </th>
@@ -80,7 +84,11 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                     </th>}
 
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('priority')}>
-                    <div className='flex items-center'>Priority {renderSortIcon('priority')}</div>
+                    <div className='flex items-center cursor-pointer'>
+                        <Tippy content={<span><span className="font-bold">1:</span> Niedrige Priorität<br /><span className="font-bold">2:</span> Mittlere Priorität<br /><span className="font-bold">3:</span> Hohe Priorität<br /><span className="font-bold">4:</span> Dringende Priorität</span>}>
+                            <div className='flex items-center cursor-pointer'>Priority {renderSortIcon('priority')}</div>
+                        </Tippy>
+                    </div>
                 </th>
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('timestamp')}>
                     <div className='flex items-center'> Timestamp {renderSortIcon('timestamp')}</div>
@@ -145,7 +153,10 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                         className="bg-[#fcf1fa] hover:bg-[#f2ebf5] hover:cursor-pointer border border-red-500"
                         onClick={() => handleRowClick(listIssue.id)}
                     >
-                        <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
+                        <Tippy content={<span>{getAlertText(listIssue.alertType)}</span>}>
+                            <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
+                        </Tippy>
+
                         <td className="px-2 py-3 truncate">{listIssue.title}</td>
                         {false &&
                             <td className="px-2 py-3 truncate">{listIssue.description}</td>}
@@ -159,9 +170,18 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                             <td className="px-2 py-3 text-sm"><span className={`${getSeverityColor(listIssue.severity)} rounded-xl p-2`}>
                                 {listIssue.severity}</span></td>}
 
-                        <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
-                            {`${listIssue.priority}/10`}
-                        </span></td>
+
+                        <td className="px-2 py-3 text-sm">
+
+                            {getPriorityText(listIssue.priority,
+                                <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
+                                    {`${listIssue.priority}/4`}
+                                </span>)}
+                        </td>
+
+
+
+
                         <td className="px-2 py-3 text-sm ">{formatDate(listIssue.timestamp)}</td>
                         <td className="text-center px-2 py-3 rounded-br-xl rounded-tr-xl"><CustomDropDown
                             id={listIssue.id}
@@ -173,7 +193,11 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
     );
 }
 
-function Card1({ id, heading, description, icon, className = '', priority, timestamp }: { id: number, heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string }) {
+function Card1({ id, heading, description, icon, className = '', priority, timestamp, handlePrevious, handleNext, length, currentIndex, handleDismiss, handleSortNewIssues, alertType }:
+    {
+        id: number, heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string, handlePrevious: () => void,
+        handleNext: () => void, length: number, currentIndex: number, handleDismiss: () => void, handleSortNewIssues: (sortColumn: SortableColumns) => void, alertType: string
+    }) {
     const [isClicked, setIsClicked] = useState(false);
     const router = useRouter();
 
@@ -201,25 +225,132 @@ function Card1({ id, heading, description, icon, className = '', priority, times
     };
 
     return (
-        <div
-            onClick={handleClick}
-            className={`card gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl relative bg-[#fcf4ff] ${styles.card} ${className} w-1/3 h-60 transition-transform duration-300 ${isClicked ? 'transform scale-105' : ''}`}
-        >
-            <div className="flex flex-col justify-between h-full space-y-2 flex-grow">
-                <MdOutlineFiberNew className="text-red-500 absolute top-0 right-0 text-2xl" style={{ top: '-15px', right: '-15px' }} />
-                <div className="space-y-2 flex-grow">
-                    <div className="flex justify-between">
-                        <h3 className="text-[20px] font-semibold line-clamp-2 overflow-hidden overflow-ellipsis">{heading}</h3>
-                        <div className="min-w-max">{icon}</div>
-                    </div>
-                    <p className="leading-8 font-normal break-words overflow-hidden line-clamp-2">{truncatedDescription}</p>
-                </div>
-                <div className='flex justify-between mt-auto'>
-                    <p>Priority: <span className='font-bold'>{priority}/10</span></p>
-                    <p>{timestamp}</p>
-                </div>
+        <div className="relative  rounded-xl flex flex-col items-center border-4 w-1/2 px-5" >
+            <div className="absolute top-0 right-0 -mt-6 -mr-6">
+                <MdOutlineFiberNew className="text-red-500 text-5xl" />
+
             </div>
-        </div>
+
+
+            <div className='flex space-x-8 items-center mt-12'>
+                <button
+                    className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${length > 1 ? '' : 'invisible'}`}
+                    onClick={handlePrevious}>
+
+                    <FaLessThan />
+                </button>
+
+                <div
+                    onClick={handleClick}
+                    className={`card gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl w-full relative bg-[#fcf4ff] ${styles.card} ${className}  h-60 transition-transform duration-300 ${isClicked ? 'transform scale-105' : ''}`}
+                >
+                    <div className="flex flex-col justify-between h-full space-y-2 flex-grow">
+                        <div className="space-y-2 flex-grow">
+                            <div className="flex justify-between">
+                                <h3 className="text-[20px] font-semibold line-clamp-2 overflow-hidden overflow-ellipsis">{heading}</h3>
+                                <div className="min-w-max">
+                                    <Tippy content={<span>{getAlertText(alertType)}</span>}>
+                                        <span>{icon}</span>
+                                    </Tippy>
+                                </div>
+                            </div>
+                            <p className="leading-8 font-normal break-words overflow-hidden line-clamp-2">{truncatedDescription}</p>
+                        </div>
+                        <div className='flex justify-between mt-auto'>
+                            <p>Priority: {getPriorityText(priority,
+                                <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
+                                    {`${priority}/4`}
+                                </span>)}</p>
+                            <p>{timestamp}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 z-10 ${length > 1 ? '' : 'invisible'}`}
+                    onClick={handleNext}>
+                    <FaGreaterThan />
+                </button>
+
+
+
+            </div>
+
+            <div className='mt-5 w-full max-w-lg flex justify-between'>
+                <div className='w-[3rem]'></div>
+
+
+                <p>Issue {currentIndex + 1} von {length}</p>
+
+
+
+                <Menu as="div" className="relative inline-block text-left" >
+                    <div className="relative">
+                        <MenuButton className="inline-flex w-full justify-center gap-2 py-1.5 px-3 text-sm/6">
+                            <BiSortAlt2 className="w-5 h-5 border-none" />
+                        </MenuButton>
+                    </div>
+
+                    <MenuItems
+                        transition
+                        className=" text-left absolute left-5 z-10 mt-2 w-32 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                    >
+                        <div className="py-1">
+                            <MenuItem>
+                                {({ focus }) => (
+                                    <Button
+                                        className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
+                                        onClick={() => handleSortNewIssues('alertType')}
+                                    >
+                                        Alert Type
+                                    </Button>
+                                )}
+                            </MenuItem>
+
+                            <MenuItem>
+                                {({ focus }) => (
+                                    <Button
+                                        className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
+                                        onClick={() => handleSortNewIssues('priority')}
+                                    >
+                                        Priority
+                                    </Button>
+                                )}
+                            </MenuItem>
+
+                            <MenuItem>
+                                {({ focus }) => (
+                                    <Button
+                                        className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
+                                        onClick={() => handleSortNewIssues('timestamp')}
+                                    >
+                                        Timestamp
+                                    </Button>
+                                )}
+                            </MenuItem>
+                        </div>
+                    </MenuItems>
+                </Menu>
+
+
+
+            </div>
+
+
+
+            <div className="flex w-full max-w-lg justify-center mb-4">
+                <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    onClick={handleDismiss}>
+                    Mark as read
+                </button>
+
+            </div>
+
+
+
+        </div >
+
     );
 }
 
@@ -285,7 +416,7 @@ export default function IssuesPage() {
         }
     };
 
-    type SortableColumns = 'alertType' | 'priority' | 'timestamp';
+
 
     const handleSortNewIssues = (sortColumn: SortableColumns) => {
         setNewIssues(prevNewIssues => {
@@ -363,86 +494,25 @@ export default function IssuesPage() {
                         icon={getAlertIconBig(newIssues[currentIndex].alertType)}
                         priority={newIssues[currentIndex].priority}
                         timestamp={formatDate(newIssues[currentIndex].timestamp)}
+                        handleNext={handleNext}
+                        handlePrevious={handlePrevious}
+                        length={newIssues.length}
+                        currentIndex={currentIndex}
+                        handleDismiss={handleDismiss}
+                        handleSortNewIssues={handleSortNewIssues}
+                        alertType={newIssues[currentIndex].alertType}
                     />
-                    <div className='mt-5 w-full max-w-lg flex justify-between'>
-                        <div className='w-[3rem]'></div>
-                        <p>Issue {currentIndex + 1} von {newIssues.length}</p>
 
-                        <Menu as="div" className="relative inline-block text-left" >
-                            <div className="relative">
-                                <MenuButton className="inline-flex w-full justify-center gap-2 py-1.5 px-3 text-sm/6">
-                                    <BiSortAlt2 className="w-5 h-5 border-none" />
-                                </MenuButton>
-                            </div>
 
-                            <MenuItems
-                                transition
-                                className=" text-left absolute left-5 z-10 mt-2 w-32 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                                <div className="py-1">
-                                    <MenuItem>
-                                        {({ focus }) => (
-                                            <Button
-                                                className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
-                                                onClick={() => handleSortNewIssues('alertType')}
-                                            >
-                                                Alert Type
-                                            </Button>
-                                        )}
-                                    </MenuItem>
 
-                                    <MenuItem>
-                                        {({ focus }) => (
-                                            <Button
-                                                className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
-                                                onClick={() => handleSortNewIssues('priority')}
-                                            >
-                                                Priority
-                                            </Button>
-                                        )}
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        {({ focus }) => (
-                                            <Button
-                                                className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
-                                                onClick={() => handleSortNewIssues('timestamp')}
-                                            >
-                                                Timestamp
-                                            </Button>
-                                        )}
-                                    </MenuItem>
-                                </div>
-                            </MenuItems>
-                        </Menu>
-
-                    </div>
-
-                    <div className="flex justify-between items-center w-full max-w-lg p-5">
-                        <button
-                            className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${newIssues.length > 1 ? '' : 'invisible'}`}
-                            onClick={handlePrevious}>
-                            <FaLessThan />
-                        </button>
-                        <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                            onClick={handleDismiss}>
-                            Mark as read
-                        </button>
-                        <button
-                            className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${newIssues.length > 1 ? '' : 'invisible'}`}
-                            onClick={handleNext}>
-                            <FaGreaterThan />
-                        </button>
-                    </div>
                 </div>
             }
-            <h3 className="text-5xl font-semibold mb-7">Issues</h3>
+            <h3 className="text-5xl font-semibold mt-5">Issues</h3>
 
             <div className='w-5/6'>
                 <div className="flex justify-end mb-4">
                     <button
-                        className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-blue-600"
+                        className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
                         onClick={newIssuePage}>
                         New Issue
                     </button>

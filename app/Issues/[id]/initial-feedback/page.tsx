@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getAlertIcon, getSeverityColor } from '@/app/helperFunction';
+import { getAlertIcon, getAlertText, getPriorityText, getSeverityColor } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
+import Tippy from '@tippyjs/react';
 
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
@@ -119,15 +120,21 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                     <div className='flex justify-between items-center my-2'>
                         <div className='flex items-center space-x-2'>
                             <span>Alert icon:</span>
-                            {getAlertIcon(issue.alertType)}
+                            <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
+                                <span>{getAlertIcon(issue.alertType)}</span>
+                            </Tippy>
                         </div>
                         <div className="flex items-center space-x-2">
                             <span>Severity:</span>
                             <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <span>Priority:</span>
-                            <span>{issue.priority} / 10</span>
+                            <p>Priority: {getPriorityText(issue.priority,
+                                <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
+                                    {`${issue.priority}/4`}
+                                </span>)}</p>
+
+
                         </div>
                     </div>
                     <h4 className="text-xl font-semibold mt-5">{issue.title}</h4>
@@ -335,23 +342,26 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-                        <div className="flex justify-end space-x-4">
-                            <button
-                                type="button"
-                                onClick={() => router.push('/Issues')}
-                                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
-                                Submit
-                            </button>
-                        </div>
+
                     </form>
+
                 </div>
+
+            </div>
+            <div className="flex justify-end space-x-4 mt-6">
+                <button
+                    type="button"
+                    onClick={() => router.back()}
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    Submit
+                </button>
             </div>
         </div>
     );

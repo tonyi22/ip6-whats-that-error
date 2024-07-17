@@ -10,7 +10,7 @@ import { MdCancel } from "react-icons/md";
 import '../[id]/detailView.css';
 
 const NewIssue = () => {
-    const alertTypes = ['Critical', 'Warning', 'Info', 'None'] as const;
+    const alertTypes = ['Informationsmeldung', 'Warnmeldung', 'Fehlermeldung', 'None'] as const;
     const severityTypes = ['Low', 'Medium', 'High'] as const;
     const statusTypes = ['New', 'Open', 'Closed', 'In Progress'] as const;
     const incidentTypes = [
@@ -19,7 +19,12 @@ const NewIssue = () => {
         'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export',
         'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'
     ];
-    const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
+    const priorities = [
+        { value: 1, label: "niedrig" },
+        { value: 2, label: "mittel" },
+        { value: 3, label: "hoch" },
+        { value: 4, label: "dringend" }
+    ];
 
     const systemsList = [
         'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
@@ -109,11 +114,17 @@ const NewIssue = () => {
         }));
     };
 
+    const alertTypeMapping: { [key: string]: string } = {
+        'Informationsmeldung': 'Info',
+        'Warnmeldung': 'Warning',
+        'Fehlermeldung': 'Critical'
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setNewIssue(prev => ({
             ...prev,
-            [name]: name === 'priority' ? parseInt(value, 10) : value
+            [name]: name === 'priority' ? parseInt(value, 4) : name === 'alertType' ? alertTypeMapping[value] || value : value
         }));
 
         if (name === 'title') {
@@ -232,7 +243,7 @@ Lösungsvorschlag:
                 <form>
                     <div className='mb-4'>
                         <div>
-                            <label className="block text-sm font-bold mb-2" htmlFor="title">Title</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="title">Title *</label>
                             <input
                                 type="text"
                                 name="title"
@@ -277,7 +288,7 @@ Lösungsvorschlag:
                     </div>
                     <div className='mb-4'>
                         <div >
-                            <label className="block text-sm font-bold mb-2" htmlFor="description">Description</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="description">Description *</label>
                             <textarea
                                 name="description"
                                 value={suggestionAccepted ? newIssue.description : newIssue.description}
@@ -395,8 +406,8 @@ Lösungsvorschlag:
                                 className="input border border-grey-800"
                             >
                                 {priorities.map(priority => (
-                                    <option key={priority} value={priority}>
-                                        {priority}
+                                    <option key={priority.value} value={priority.value}>
+                                        {priority.value}:   {priority.label}
                                     </option>
                                 ))}
                             </select>

@@ -5,6 +5,7 @@ import { RiErrorWarningLine } from "react-icons/ri";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
+import Tippy from "@tippyjs/react";
 
 export function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
     return validValues.includes(value) ? value : defaultValue;
@@ -36,6 +37,44 @@ export const compareSort = (a: string, b: string) => {
 }
 
 
+export const getAlertText = (alertType: string) => {
+    switch (alertType) {
+        case 'Warning':
+            return "Warnmeldung";
+        case 'Critical':
+            return "Fehlermeldunge";
+        case 'Info':
+            return "Informationsmeldung";
+        default:
+            return "Unbekannte Meldung";
+    }
+}
+
+export const getPriorityText = (prio: number, tippyContent: React.ReactNode) => {
+    let priorityText;
+
+    switch (prio) {
+        case 1:
+            priorityText = "Niedrige Priorität";
+            break;
+        case 2:
+            priorityText = "Mittlere Priorität";
+            break;
+        case 3:
+            priorityText = "Hohe Priorität";
+            break;
+        case 4:
+            priorityText = "Dringende Priorität";
+            break;
+    }
+
+    return (
+        <Tippy content={<span>{priorityText}</span>}>
+            <span>{tippyContent}</span>
+        </Tippy>
+    );
+
+}
 
 //function to show the correct icon depending on the alert type
 export const getAlertIcon = (alertType: string) => {

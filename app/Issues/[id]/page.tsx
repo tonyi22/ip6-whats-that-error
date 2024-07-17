@@ -3,10 +3,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
-import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort } from '@/app/helperFunction';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
+import { CiEdit } from "react-icons/ci";
+import Tippy from '@tippyjs/react';
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -33,7 +35,7 @@ function IssueView({ params }: { params: { id: string } }) {
     const statusTypes = ['New', 'Open', 'Closed', 'In Progress'];
     const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
         'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'];
-    const priorities = Array.from({ length: 10 }, (_, i) => i + 1);
+    const priorities = Array.from({ length: 4 }, (_, i) => i + 1);
 
     const [isEditMode, setEditMode] = useState(false);
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
@@ -125,7 +127,7 @@ function IssueView({ params }: { params: { id: string } }) {
             let newValue: any = value;
 
             if (name === 'priority') {
-                newValue = parseInt(value, 10);
+                newValue = parseInt(value, 4);
             } else if (name === 'status') {
                 newValue = validateType(value, statusTypes, prev.status);
             } else if (name === 'alertType') {
@@ -156,13 +158,29 @@ function IssueView({ params }: { params: { id: string } }) {
                     </button>
                 </Link>
 
-                {!issue.isInitialGiven && (
-                    <Link href={`/Issues/${issue.id}/initial-feedback`}>
-                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
-                            Give Initial Feedback
+                <div className='flex space-x-4'>
+                    {!isEditMode ? (
+                        <button onClick={handleEdit} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline inline-flex items-center'>
+                            <span className='flex'>Edit <CiEdit className='text-2xl' /></span>
                         </button>
-                    </Link>
-                )}
+
+                    ) : (
+                        <div className='space-x-4'>
+                            <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
+                            <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
+                        </div>)}
+
+
+                    {!issue.isInitialGiven && !isEditMode && (
+                        <Link href={`/Issues/${issue.id}/initial-feedback`}>
+                            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
+                                Give Initial Feedback
+                            </button>
+                        </Link>
+                    )}
+
+
+                </div>
             </div>
 
             <div className='my-7'>
@@ -201,7 +219,9 @@ function IssueView({ params }: { params: { id: string } }) {
                             </select>
                         </p>
                     ) : (
-                        getAlertIcon(issue.alertType)
+                        <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
+                            <span>{getAlertIcon(issue.alertType)}</span>
+                        </Tippy>
                     )}
                 </div>
 
@@ -282,9 +302,10 @@ function IssueView({ params }: { params: { id: string } }) {
                                 ))}
                             </select>
                         ) : (
-                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2 font-semibold'>
-                                {`${issue.priority}/10`}
-                            </span>
+                            getPriorityText(issue.priority,
+                                <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
+                                    {`${issue.priority}/4`}
+                                </span>)
                         )}
                     </p>
                 </div>
@@ -392,7 +413,7 @@ function IssueView({ params }: { params: { id: string } }) {
                 </div>
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
-                    <p className='p-2 font-bold'>Impact</p>
+                    <p className='pb-2 font-bold'>Impact</p>
                     {isEditMode ? (
                         <textarea
                             name="impact"
@@ -401,7 +422,7 @@ function IssueView({ params }: { params: { id: string } }) {
                             className="editable-input"
                         />
                     ) : (
-                        <p className='p-2' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.impact}</p>
+                        <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.impact}</p>
                     )}
                 </div>
 
@@ -422,17 +443,11 @@ function IssueView({ params }: { params: { id: string } }) {
                 <TabComponent />
 
                 <div className='col-start-3 col-span-1'>
-                    <div className='flex justify-end space-x-4'>
-                        {isEditMode ? (
-                            <div className='space-x-4'>
-                                <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
-                                <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
-                            </div>
-                        ) : (
+                    <div className='flex justify-end'>
+                        {!isEditMode && (
                             <div className="flex justify-end space-x-4">
-                                <button onClick={handleEdit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit</button>
                                 <Link href={`/Issues/${issue.id}/feedback`}>
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close and Feedback</button>
+                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Feedback and Close</button>
                                 </Link>
                             </div>
                         )}
