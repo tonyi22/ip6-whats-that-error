@@ -69,6 +69,54 @@ body {
     background-color: #e0e0e0;
 }
 
+.terminal-container {
+    position: fixed;
+    top: 12px;
+    /* 12px gives approximately 3 spacing in tailwind (1rem) */
+    right: 0;
+    max-height: 100vh;
+    /* Ensures the terminal doesn't go beyond the viewport */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: var(--github-secondary, #f9f9f9);
+    color: var(--github-dark-tertiary, #333);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    border-radius: 8px;
+    padding: 16px;
+    width: 600px;
+    /* Adjust the width as needed */
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, #f9f9f9, #fff);
+}
+
+.terminal {
+    background: #000;
+    color: #0f0;
+    font-family: monospace;
+    padding: 24px;
+    /* Increase padding for more y space */
+    border-radius: 8px;
+    border: 1px solid #666;
+    overflow-y: auto;
+    max-height: 80vh;
+    /* Limits the height of the terminal to ensure it fits within the container */
+}
+
+.command {
+    margin-bottom: 16px;
+}
+
+.command .prompt {
+    margin-right: 8px;
+}
+
+.command .result {
+    margin-top: 8px;
+    white-space: pre-wrap;
+    /* Ensures line breaks are respected */
+}
+
 @media (prefers-color-scheme: dark) {
     .dropdown {
         background-color: #333;

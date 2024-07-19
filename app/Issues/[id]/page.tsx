@@ -13,6 +13,8 @@ import { AiOutlineWechatWork } from "react-icons/ai";
 import ChatBubble from './ChatBubble';
 import OpenAI from "openai";
 import Terminal from './Terminal';
+import { IoTerminal } from "react-icons/io5";
+import { MdCancel } from 'react-icons/md';
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -45,20 +47,19 @@ function IssueView({ params }: { params: { id: string } }) {
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [issueCopy, setIssueCopy] = useState<SystemMonitoringIssue | null>(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
     const chatButtonRef = useRef<HTMLButtonElement>(null);
+    console.log("COMMENTS: ", issue?.comments ? issue.comments : "NO COMMENTS")
+    console.log("COMMANDS: ", issue?.commands ? issue.commands : "NO COMMANDS")
+    console.log("RESPONSES: ", issue?.commandResponses ? issue.commandResponses : "NO RESPONSES");
 
     const openChat = () => {
-        if (isChatOpen) {
-            setIsChatOpen(false);
-        } else {
-            setIsChatOpen(true);
-        }
-
+        setIsChatOpen(prevState => !prevState);
     };
 
-    const closeChat = () => {
-        setIsChatOpen(false);
+    const openTerminal = () => {
+        setIsTerminalOpen(prevState => !prevState);
     };
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -127,20 +128,22 @@ function IssueView({ params }: { params: { id: string } }) {
         setEditMode(false);
     };
 
-    const commands = [
-        " systemctl restart monitoring",
-        " systemctl status monitoring",
-        " systemctl enable monitoring"
-    ];
-
     const handleExecute = async (command: string): Promise<string> => {
-        // Simulate command execution delay
         return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(`Executed: ${command}`);
+            const responses = issue!.commandResponses[issue!.commands.indexOf(command)];
+            let responseIndex = 0;
+
+            const interval = setInterval(() => {
+                if (responseIndex < responses.length) {
+                    resolve(responses[responseIndex]);
+                    responseIndex++;
+                } else {
+                    clearInterval(interval);
+                }
             }, 2000);
         });
     };
+
 
     const handleSave = () => {
         if (issue) {
@@ -194,9 +197,23 @@ function IssueView({ params }: { params: { id: string } }) {
                 </Link>
 
                 <div className='flex space-x-4'>
-                    <button ref={chatButtonRef} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline' onClick={() => setIsChatOpen(true)}>
-                        <AiOutlineWechatWork className='text-2xl' />
-                    </button>
+                    {issue.commands.length > 0 &&
+                        <button
+                            onClick={openTerminal}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            <IoTerminal />
+                        </button>
+                    }
+
+
+                    {!isEditMode &&
+                        <button ref={chatButtonRef} className={`${isChatOpen ? 'bg-blue-700' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`} onClick={openChat}>
+                            <AiOutlineWechatWork className='text-xl' />
+                        </button>}
+
+
+
                     {!isEditMode ? (
                         <button onClick={handleEdit} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline inline-flex items-center'>
                             <span className='flex'>Edit <CiEdit className='text-2xl' /></span>
@@ -449,7 +466,7 @@ function IssueView({ params }: { params: { id: string } }) {
                     )}
                 </div>
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-gray-50 to-white'>
-                    <p className='p-2 font-bold'>Preventative Measures</p>
+                    <p className='pb-2 font-bold'>Preventative Measures</p>
                     {isEditMode ? (
                         <textarea
                             name="preventativeMeasures"
@@ -458,7 +475,7 @@ function IssueView({ params }: { params: { id: string } }) {
                             className="editable-input"
                         />
                     ) : (
-                        <p className='p-1' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {issue.preventativeMeasures}</p>
+                        <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.preventativeMeasures}</p>
                     )}
                 </div>
                 <TabComponent />
@@ -474,12 +491,37 @@ function IssueView({ params }: { params: { id: string } }) {
                     </div>
                 </div>
             </div>
-            {/* Add the Terminal component here */}
             <div className="flex justify-center">
-                <Terminal commands={commands} onExecute={handleExecute} />
+
+                {isTerminalOpen && issue.commands.length > 0 && (
+                    <div className='terminal-container'>
+                        <div className="flex items-center justify-between mb-4">
+                            <h1 className="text-2xl font-bold text-black dark:text-white">Terminal</h1>
+                            <button
+                                type="button"
+                                className="text-black dark:text-white self-center" /* Add self-center to the button */
+                                onClick={openTerminal}
+                            >
+                                <MdCancel className="text-gray-700 transform scale-150" />
+                            </button>
+                        </div>
+
+
+                        <p className="text-black dark:text-gray-300 mb-4">Hier sind die empfohlenen Befehle, um Ihr Problem zu lösen:</p>
+                        <ul className="list-disc pl-5 mb-4 text-black dark:text-gray-300">
+                            <li className="mb-2">Den PRTG Core Server-Dienst neu starten</li>
+                            <li className="mb-2">Den Status des PRTG Core Server-Dienstes überprüfen</li>
+                            <li className="mb-2">Den PRTG Core Server-Dienst beim Booten aktivieren</li>
+                        </ul>
+                        <Terminal commands={issue.commands} onExecute={handleExecute} commandResponses={issue.commandResponses} />
+                    </div>
+
+                )}
+
             </div>
         </div>
     );
 }
 
 export default IssueView;
+

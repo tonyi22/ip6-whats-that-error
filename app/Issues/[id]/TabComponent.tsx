@@ -10,7 +10,7 @@ export function TabComponent() {
 
     return (
         <div className='mt-8 bg-github-secondary dark:bg-github-dark-tertiary dark:border-github-primary rounded-lg shadow-xl min-h-[200px] col-span-3 row-span-2 relative'>
-            <div className='p-1 absolute top-0 left-1 transform -translate-y-full bg-gray-100 dark:bg-github-dark-secondary border rounded-t-lg'>
+            <div className='p-1 absolute top-0 left-0 transform -translate-y-full bg-gray-100 dark:bg-github-dark-secondary border rounded-t-lg'>
                 <button
                     className={`rounded-lg px-3 py-2 text-xs font-semibold ${activeTab === 'comments' ? 'bg-teal-500 text-white' : 'dark:bg-gray-600 text-dark dark:text-github-secondary'}`}
                     onClick={() => setActiveTab('comments')}

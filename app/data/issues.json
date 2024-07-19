@@ -11,7 +11,7 @@
         "lastUpdated": "2024-03-01T14:05:00.000Z",
         "impact": "Netzwerkverbindung",
         "affectedSystems": [
-            "System1"
+            "BackupServer-01"
         ],
         "alertType": "Critical",
         "incidentType": "Performance",
@@ -22,7 +22,9 @@
             ""
         ],
         "comments": [],
-        "isInitialGiven": true
+        "isInitialGiven": true,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Fehlermeldung 503 tritt auf bei Zugriff auf Webserver unter hoher Last",
@@ -36,7 +38,7 @@
         "lastUpdated": "2024-03-01T14:15:00.000Z",
         "impact": "Webserver-Verfügbarkeit",
         "affectedSystems": [
-            "System2"
+            "FileServer-01"
         ],
         "alertType": "Warning",
         "incidentType": "Performance",
@@ -47,7 +49,9 @@
             ""
         ],
         "comments": [],
-        "isInitialGiven": true
+        "isInitialGiven": true,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Speicherkomponente zeigt Fehlverhalten beim Schreiben großer Dateien",
@@ -61,7 +65,7 @@
         "lastUpdated": "2024-03-01T14:25:00.000Z",
         "impact": "Datenspeicherung",
         "affectedSystems": [
-            "System3"
+            "ProxyServer-01"
         ],
         "alertType": "Critical",
         "incidentType": "Data Integrity",
@@ -72,7 +76,9 @@
             ""
         ],
         "comments": [],
-        "isInitialGiven": false
+        "isInitialGiven": false,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Datenbankmodul verursacht Verbindungsfehler bei mehreren gleichzeitigen Zugriffen",
@@ -86,7 +92,7 @@
         "lastUpdated": "2024-03-01T14:35:00.000Z",
         "impact": "Datenbankverfügbarkeit",
         "affectedSystems": [
-            "System4"
+            "ApplicationServer-01"
         ],
         "alertType": "Warning",
         "incidentType": "Connection",
@@ -97,7 +103,9 @@
             ""
         ],
         "comments": [],
-        "isInitialGiven": true
+        "isInitialGiven": true,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Fehlermeldung 500 tritt auf bei Datenabfrage in Berichtssystem",
@@ -111,7 +119,7 @@
         "lastUpdated": "2024-03-01T14:45:00.000Z",
         "impact": "Berichtserstellung",
         "affectedSystems": [
-            "System5"
+            "LoadBalancer-01"
         ],
         "alertType": "Critical",
         "incidentType": "Query",
@@ -122,7 +130,9 @@
             ""
         ],
         "comments": [],
-        "isInitialGiven": true
+        "isInitialGiven": true,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Backup-Modul reagiert nicht auf Fehler bei Speicherplatzmangel",
@@ -136,7 +146,7 @@
         "lastUpdated": "2024-03-01T14:55:00.000Z",
         "impact": "Datensicherung",
         "affectedSystems": [
-            "System6"
+            "DevelopmentServer-01"
         ],
         "alertType": "Critical",
         "incidentType": "Backup",
@@ -147,7 +157,9 @@
             ""
         ],
         "comments": [],
-        "isInitialGiven": false
+        "isInitialGiven": false,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Überwachungssystem zeigt falsche Alarme unter Lastbedingungen",
@@ -161,7 +173,7 @@
         "lastUpdated": "2024-03-01T15:05:00.000Z",
         "impact": "Systemüberwachung",
         "affectedSystems": [
-            "System7"
+            "ProxyServer-01"
         ],
         "alertType": "Info",
         "incidentType": "Monitoring",
@@ -172,7 +184,9 @@
             ""
         ],
         "comments": [],
-        "isInitialGiven": false
+        "isInitialGiven": false,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Speicherplatzverwaltung verursacht inkonsistente Daten unter hoher Last",
@@ -186,12 +200,12 @@
         "lastUpdated": "2024-02-25T10:43:48.048651",
         "impact": "Hohe Auswirkung auf Datenkonsistenz",
         "affectedSystems": [
-            "Speichersystem",
-            "Datenbanksystem"
+            "Firewall-01",
+            "ProxyServer-01"
         ],
         "alertType": "Critical",
         "incidentType": "Storage",
-        "priority": 10,
+        "priority": 4,
         "severity": "Medium",
         "preventativeMeasures": "Implementierung eines Queue-Mechanismus für Schreiboperationen",
         "attachments": [
@@ -202,7 +216,9 @@
             "Optimierung der Speicherplatzverwaltung erforderlich",
             "Weitere Untersuchungen zur Ursache der Dateninkonsistenz notwendig"
         ],
-        "isInitialGiven": false
+        "isInitialGiven": false,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Speicherplatzverwaltung Problem",
@@ -216,11 +232,11 @@
         "lastUpdated": "2024-02-25T10:43:48.048651",
         "impact": "Es gibt eine Auswirkung auf die Daten.",
         "affectedSystems": [
-            "System"
+            "Firewall-01"
         ],
         "alertType": "Critical",
         "incidentType": "Storage",
-        "priority": 10,
+        "priority": 4,
         "severity": "Medium",
         "preventativeMeasures": "Man sollte was machen, damit das Problem nicht wieder passiert.",
         "attachments": [
@@ -230,7 +246,9 @@
             "Muss überprüft werden.",
             "Das ist wichtig."
         ],
-        "isInitialGiven": true
+        "isInitialGiven": true,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "Component PRTG Core Server not in CURIX",
@@ -244,7 +262,7 @@
         "lastUpdated": "2024-03-01T14:05:00.000Z",
         "impact": "Low impact",
         "affectedSystems": [
-            "System1"
+            "StorageSystem-01"
         ],
         "alertType": "Low",
         "incidentType": "Configuration",
@@ -258,7 +276,9 @@
             "User couldn't find the PRTG Core Server",
             "Need to check CURIX configuration"
         ],
-        "isInitialGiven": true
+        "isInitialGiven": true,
+        "commands": [],
+        "commandResponses": []
     },
     {
         "title": "PRTG Core Server wird in CURIX nicht angezeigt",
@@ -272,9 +292,8 @@
         "lastUpdated": "2024-03-01T14:05:00.000Z",
         "impact": "Systemüberwachungsberichte können nicht generiert werden, was zu einem Mangel an Überwachung der Netzwerkperformance führt",
         "affectedSystems": [
-            "PRTG Core Server",
-            "Network Switch A",
-            "Storage Server 3"
+            "DevelopmentServer-01",
+            "ERPSystem-01"
         ],
         "alertType": "Low",
         "incidentType": "Configuration",
@@ -288,6 +307,25 @@
             "Benutzer konnte den PRTG Core Server nicht finden",
             "CURIX-Konfiguration überprüfen"
         ],
-        "isInitialGiven": false
+        "isInitialGiven": false,
+        "commands": [
+            "sudo systemctl restart prtg",
+            "sudo systemctl status prtg",
+            "sudo systemctl enable prtg"
+        ],
+        "commandResponses": [
+            [
+                "Restarting PRTG Core Server service...",
+                "PRTG Core Server service restarted successfully."
+            ],
+            [
+                "Fetching status of PRTG Core Server service...",
+                "PRTG Core Server service is active and running."
+            ],
+            [
+                "Enabling PRTG Core Server service...",
+                "PRTG Core Server service enabled to start at boot."
+            ]
+        ]
     }
 ]

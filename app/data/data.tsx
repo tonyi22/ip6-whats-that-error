@@ -23,4 +23,7 @@ export interface SystemMonitoringIssue {
     attachments: string[];
     comments: string[];
     isInitialGiven: boolean;
+    commands: string[];
+    commandResponses: string[][];
+
 }

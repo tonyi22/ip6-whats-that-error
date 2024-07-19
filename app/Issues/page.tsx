@@ -24,11 +24,16 @@ interface CardsHeaderProps {
 type SortableColumns = 'alertType' | 'priority' | 'timestamp';
 
 const loadIssues = (): SystemMonitoringIssue[] => {
-    const storedIssues = localStorage.getItem('issues'); // Correct key
+    const storedIssues = localStorage.getItem('issues');
     if (storedIssues) {
         return JSON.parse(storedIssues);
     } else {
         const issues: SystemMonitoringIssue[] = issuesJson.map(issue => {
+            // Ensure commandResponses is initialized as an array of arrays
+            const commandResponses: string[][] = issue.commandResponses && issue.commandResponses.length > 0
+                ? issue.commandResponses
+                : issue.commands.map(() => []);
+
             return {
                 ...issue,
                 status: validateType(issue.status, ['New', 'Open', 'Closed', 'In Progress'], "Open"),
@@ -39,12 +44,19 @@ const loadIssues = (): SystemMonitoringIssue[] => {
                 timestamp: new Date(issue.timestamp),
                 endTime: new Date(issue.endTime),
                 lastUpdated: new Date(issue.lastUpdated),
+                commandResponses: commandResponses
             };
         });
         localStorage.setItem('issues', JSON.stringify(issues));
         return issues;
     }
 };
+
+
+
+
+
+
 
 const saveIssues = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
