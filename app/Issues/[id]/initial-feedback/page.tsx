@@ -90,7 +90,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
 
 
-        <div className="max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
+        <div className="bg-gradient-to-b from-gray-50 to-white max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
 
             <style jsx>{`
             .custom-radio {
@@ -114,7 +114,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
             }
         `}</style>
 
-            <div className="flex space-x-8">
+            <div className="flex space-x-8 ">
                 <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
                     <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
                     <div className='flex justify-between items-center my-2'>

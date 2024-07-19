@@ -59,6 +59,13 @@ const NewIssue = () => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
+    const titleInputRef = useRef<HTMLInputElement>(null); // Correct ref type for input
+    const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
+
+    const titleShowTempRef = useRef<HTMLButtonElement>(null); // Separate ref for title show template button
+    const descriptionShowTempRef = useRef<HTMLButtonElement>(null); // Separate ref for description show template button
+
+
     const [showTitleTemplate, setShowTitleTemplate] = useState(false);
     const [titleTemplateDismissed, setTitleTemplateDismissed] = useState(false);
     const [showDescriptionTemplate, setShowDescriptionTemplate] = useState(false);
@@ -79,17 +86,33 @@ const NewIssue = () => {
             setDropdownOpen(false);
         }
 
-        if (titleTemplateRef.current && !titleTemplateRef.current.contains(event.target as Node)) {
+
+        if (titleTemplateRef.current && !titleTemplateRef.current.contains(event.target as Node) &&
+            titleInputRef.current && !titleInputRef.current.contains(event.target as Node) &&
+            titleShowTempRef.current && !titleShowTempRef.current.contains(event.target as Node)) {
             setShowTitleTemplate(false);
             setTitleTemplateDismissed(true);
-
         }
 
-        if (descriptionTemplateRef.current && !descriptionTemplateRef.current.contains(event.target as Node)) {
+        if (descriptionTemplateRef.current && !descriptionTemplateRef.current.contains(event.target as Node) &&
+            descriptionInputRef.current && !descriptionInputRef.current.contains(event.target as Node) &&
+            descriptionShowTempRef.current && !descriptionShowTempRef.current.contains(event.target as Node)) {
             setShowDescriptionTemplate(false);
             setDescriptionTemplateDismissed(true);
         }
     };
+
+    const handleTitleTemplateButtonClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        showTemplateAgain('title');
+    };
+
+    const handleDescriptionTemplateButtonClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        showTemplateAgain('description');
+    };
+
+
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
@@ -138,7 +161,7 @@ const NewIssue = () => {
     };
     const checkForTitleSuggestion = (title: string) => {
         const lowerCase = title.toLowerCase();
-        if (title.toLowerCase().includes('datenbankserver') && title.toLowerCase().includes('überhitzung')) {
+        if (lowerCase.includes('datenbankserver') && lowerCase.includes('überhitzung')) {
             setSuggestedDescription(`Einleitung:
 Der Datenbankserver CT-10 hat unter hoher Auslastung hohe Last- und Latenzprobleme verursacht, was die Leistung mehrerer Anwendungen beeinträchtigt.
 
@@ -238,7 +261,7 @@ Lösungsvorschlag:
 
     return (
         <div className="flex justify-center my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
-            <div className="my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
+            <div className=" bg-gradient-to-b from-gray-50 to-white  my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold mb-4 text-center">Create New Issue</h3>
                 <form>
                     <div className='mb-4'>
@@ -252,6 +275,7 @@ Lösungsvorschlag:
                                 className="editable-input"
                                 onFocus={handleTitleFocus}
                                 onBlur={handleBlurTitle}
+                                ref={titleInputRef}
                                 required
                             />
                             {showTitleTemplate && (
@@ -278,9 +302,10 @@ Lösungsvorschlag:
 
                             {titleTemplateDismissed && !showTitleTemplate && (
                                 <button
+                                    ref={titleShowTempRef}
                                     type="button"
                                     className="text-sm text-blue-500"
-                                    onClick={() => showTemplateAgain('title')}
+                                    onClick={handleTitleTemplateButtonClick}
                                 >
                                     Show Template
                                 </button>
@@ -297,6 +322,7 @@ Lösungsvorschlag:
                                 className="editable-input"
                                 onFocus={handleDescriptionFocus}
                                 onBlur={handleBlurDescription}
+                                ref={descriptionInputRef}
                                 required
                             />
 
@@ -312,7 +338,7 @@ Lösungsvorschlag:
 
                             {showDescriptionTemplate && (
                                 <div
-                                    ref={titleTemplateRef}
+                                    ref={descriptionTemplateRef}
                                     className="relative mt-2 p-2 mb-4 bg-gray-50 border border-gray-300 rounded-lg shadow-md"
                                     style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
                                 >
@@ -339,9 +365,10 @@ Lösungsvorschlag:
 
                         {descriptionTemplateDismissed && !showDescriptionTemplate && (
                             <button
+                                ref={descriptionShowTempRef}
                                 type="button"
                                 className="text-sm text-blue-500"
-                                onClick={() => showTemplateAgain('description')}
+                                onClick={handleDescriptionTemplateButtonClick}
                             >
                                 Show Template
                             </button>

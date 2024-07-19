@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { MdCancel } from "react-icons/md";
 import { FaSpinner } from "react-icons/fa"; // Import a spinner icon from react-icons
 
 interface CommandState {

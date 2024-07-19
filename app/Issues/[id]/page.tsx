@@ -197,7 +197,7 @@ function IssueView({ params }: { params: { id: string } }) {
                 </Link>
 
                 <div className='flex space-x-4'>
-                    {issue.commands.length > 0 &&
+                    {issue.commands.length > 0 && !isEditMode &&
                         <button
                             onClick={openTerminal}
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

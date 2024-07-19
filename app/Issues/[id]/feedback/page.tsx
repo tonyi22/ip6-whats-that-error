@@ -206,7 +206,7 @@ export function Feedback({ params }: { params: { id: string } }) {
     }
 
     return (
-        <div className="max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
+        <div className="bg-gradient-to-b from-gray-50 to-white max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
 
             <style jsx>{`
                 .custom-radio {
@@ -653,7 +653,9 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <div>
                                         <span className="ml-2">War die Beschreibung des Issues klar und verständlich?</span>
                                         <label className="flex items-center text-gray-700 dark:text-gray-300">
-                                            <p className="bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4">
+                                            <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
+                                                style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
+                                            >
                                                 {issue.description}
                                             </p>
                                         </label>
