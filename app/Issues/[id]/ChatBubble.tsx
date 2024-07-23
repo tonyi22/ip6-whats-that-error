@@ -4,18 +4,14 @@ import { MdCancel } from 'react-icons/md';
 interface ChatBubbleProps {
     isOpen: boolean;
     onClose: () => void;
-    children: ReactNode;
     buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, children, buttonRef }) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, buttonRef }) => {
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState<{ msg: string, isUser: boolean }[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const chatLogRef = useRef<HTMLDivElement>(null);
-
-    const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
-    console.log("API Key: ", apiKey);
 
     const handleSend = async () => {
         if (message.trim() === '') return;
@@ -39,14 +35,9 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, children, butt
                 const data = await response.json();
                 setChatLog(prevLog => [...prevLog, { msg: `${data.reply}`, isUser: false }]);
             } else {
-
-                setChatLog(prevLog => [...prevLog, { msg: `Parallele Lesezugriffe beziehen sich auf das gleichzeitige Lesen von Daten durch mehrere Prozesse oder Threads aus einem gemeinsamen Speicherbereich.`, isUser: false }]);
-
+                setChatLog(prevLog => [...prevLog, { msg: `Something went wrong: ${response.status.toString()}`, isUser: false }]);
+                //setChatLog(prevLog => [...prevLog, { msg: `Parallele Lesezugriffe beziehen sich auf das gleichzeitige Lesen von Daten durch mehrere Prozesse oder Threads aus einem gemeinsamen Speicherbereich.`, isUser: false }]);
             }
-
-
-
-
             //setChatLog(prevLog => [...prevLog, { msg: data.reply, isUser: false }]);
         } catch (error) {
             if (error instanceof Error) {

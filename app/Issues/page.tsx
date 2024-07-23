@@ -1,6 +1,7 @@
 "use client";
 
 import styles from '../issues.module.css'
+import '../tippystyle.css'
 
 import { FaGreaterThan, FaLessThan, FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import { SystemMonitoringIssue } from '../data/data';
@@ -14,6 +15,7 @@ import issuesJson from '../data/issues.json' assert { type: 'json' };
 import { Button, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
+
 
 interface CardsHeaderProps {
     onSort: (column: string) => void;
@@ -53,11 +55,6 @@ const loadIssues = (): SystemMonitoringIssue[] => {
 };
 
 
-
-
-
-
-
 const saveIssues = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
 }
@@ -75,7 +72,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
             <tr>
                 <th className="rounded-tl-xl rounded-bl-xl px-2 py-3 text-center text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-20"
                     onClick={() => onSort('alertType')}>
-                    <Tippy content={<span><span className="font-bold text-blue-500">Blaues "i":</span> Informationsmeldung<br /><span className="font-bold text-red-500">Rotes "!":</span> Fehlermeldungen<br /><span className="font-bold text-yellow-500">Gelbes "!":</span> Warnmeldungen</span>}>
+                    <Tippy theme="tomato-theme" content={<span><span className="font-bold text-blue-500">Blaues "i":</span> Informationsmeldung<br /><span className="font-bold text-red-500">Rotes "!":</span> Fehlermeldungen<br /><span className="font-bold text-yellow-500">Gelbes "!":</span> Warnmeldungen</span>}>
                         <div className='flex items-center cursor-pointer'>Alert Type {renderSortIcon('alertType')}</div>
                     </Tippy>
                 </th>
@@ -92,12 +89,16 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                     </th>}
                 {true &&
                     <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
-                        <div className='flex items-center'>Severity {renderSortIcon('severity')}</div>
+                        <div className='flex items-center cursor-pointer'>
+                            <Tippy theme="tomato-theme" content={<span><span className="font-bold" >Schweregrad<br /></span><span className="font-bold text-green-500">Low:</span> Niedrig<br /><span className="font-bold text-yellow-500">Medium:</span> Mittel<br /><span className="font-bold text-red-500">Rot:</span> High</span>}>
+                                <div className='flex items-center'>Severity {renderSortIcon('severity')}</div>
+                            </Tippy>
+                        </div>
                     </th>}
 
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('priority')}>
                     <div className='flex items-center cursor-pointer'>
-                        <Tippy content={<span><span className="font-bold">1:</span> Niedrige Priorität<br /><span className="font-bold">2:</span> Mittlere Priorität<br /><span className="font-bold">3:</span> Hohe Priorität<br /><span className="font-bold">4:</span> Dringende Priorität</span>}>
+                        <Tippy theme="tomato-theme" content={<span><span className="font-bold">1:</span> Niedrige Priorität<br /><span className="font-bold">2:</span> Mittlere Priorität<br /><span className="font-bold">3:</span> Hohe Priorität<br /><span className="font-bold">4:</span> Dringende Priorität</span>}>
                             <div className='flex items-center cursor-pointer'>Priority {renderSortIcon('priority')}</div>
                         </Tippy>
                     </div>
@@ -107,7 +108,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                 </th>
                 <th className="rounded-tr-xl rounded-br-xl px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-[5rem]">Option</th> {/* Add padding to the right */}
             </tr>
-        </thead>
+        </thead >
     );
 }
 
@@ -165,7 +166,7 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                         className="bg-[#fcf1fa] hover:bg-[#f2ebf5] hover:cursor-pointer border border-red-500"
                         onClick={() => handleRowClick(listIssue.id)}
                     >
-                        <Tippy content={<span>{getAlertText(listIssue.alertType)}</span>}>
+                        <Tippy theme="tomato-theme" content={<span>{getAlertText(listIssue.alertType)}</span>}>
                             <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
                         </Tippy>
 
@@ -261,7 +262,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                             <div className="flex justify-between">
                                 <h3 className="text-[20px] font-semibold line-clamp-2 overflow-hidden overflow-ellipsis">{heading}</h3>
                                 <div className="min-w-max">
-                                    <Tippy content={<span>{getAlertText(alertType)}</span>}>
+                                    <Tippy theme="tomato-theme" content={<span>{getAlertText(alertType)}</span>}>
                                         <span>{icon}</span>
                                     </Tippy>
                                 </div>
@@ -352,7 +353,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
 
             <div className="flex w-full max-w-lg justify-center mb-4">
                 <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className="bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-600"
                     onClick={handleDismiss}>
                     Mark as read
                 </button>
@@ -514,9 +515,6 @@ export default function IssuesPage() {
                         handleSortNewIssues={handleSortNewIssues}
                         alertType={newIssues[currentIndex].alertType}
                     />
-
-
-
                 </div>
             }
             <h3 className="text-5xl font-semibold mt-5">Issues</h3>
@@ -524,7 +522,7 @@ export default function IssuesPage() {
             <div className='w-5/6'>
                 <div className="flex justify-end mb-4">
                     <button
-                        className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+                        className="bg-gray-200 text-black px-4 py-3 rounded hover:bg-gray-300"
                         onClick={newIssuePage}>
                         New Issue
                     </button>

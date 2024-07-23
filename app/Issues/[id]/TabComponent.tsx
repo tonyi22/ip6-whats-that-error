@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 export function TabComponent() {
     const [activeTab, setActiveTab] = useState('comments'); // 'comments' or 'attachments'
     const [comments, setComments] = useState('');
@@ -9,8 +10,8 @@ export function TabComponent() {
     };
 
     return (
-        <div className='mt-8 bg-github-secondary dark:bg-github-dark-tertiary dark:border-github-primary rounded-lg shadow-xl min-h-[200px] col-span-3 row-span-2 relative'>
-            <div className='p-1 absolute top-0 left-0 transform -translate-y-full bg-gray-100 dark:bg-github-dark-secondary border rounded-t-lg'>
+        <div className='bg-github-secondary dark:bg-github-dark-tertiary dark:border-github-primary rounded-lg shadow-l col-span-2 row-span-1 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
+            <div className='p-1  bg-gray-100 dark:bg-github-dark-secondary rounded-t-lg'>
                 <button
                     className={`rounded-lg px-3 py-2 text-xs font-semibold ${activeTab === 'comments' ? 'bg-teal-500 text-white' : 'dark:bg-gray-600 text-dark dark:text-github-secondary'}`}
                     onClick={() => setActiveTab('comments')}
