@@ -9,6 +9,7 @@ export interface SystemMonitoringIssue {
     endTime: Date;
     lastUpdated: Date;
     impact: string;
+    loesungsvorschlag: string;
     affectedSystems: string[];
     // affectedSystems: 'WebServer-01' | 'DatabaseServer-01' | 'StorageSystem-01' | 'NetworkSwitch-01' | 'LoadBalancer-01' |
     // 'BackupServer-01' | 'MonitoringSystem-01' | 'AuthenticationServer-01' | 'APIGateway-01' | 'Firewall-01' |

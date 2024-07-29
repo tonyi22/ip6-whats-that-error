@@ -357,7 +357,6 @@ Lösungsvorschlag:
                                         <li>Erwartetes Verhalten</li>
                                         <li>Tatsächliches Verhalten</li>
                                         <li>Zusätzliche Informationen</li>
-                                        <li>Lösungsvorschlag</li>
                                     </ol>
                                 </div>
                             )}

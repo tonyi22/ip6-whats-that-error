@@ -84,12 +84,41 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                     <th className="px-2 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500">Description</th>}
 
                 {true &&
-                    <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500" onClick={() => onSort('incidentType')}>
-                        <div className='flex items-center'>Incident Type {renderSortIcon('incidentType')}</div>
+
+                    <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 w-52 uppercase dark:text-neutral-500" onClick={() => onSort('incidentType')}>
+                        <div className='flex items-center'>
+                            <Tippy theme="tomato-theme" content={<span>
+                                <span className="font-bold">Performance:</span> Leistung der Anwendung<br />
+                                <span className="font-bold">Storage:</span> Speicherprobleme<br />
+                                <span className="font-bold">Overheating:</span> Überhitzung<br />
+                                <span className="font-bold">Backups:</span> Backup-Probleme<br />
+                                <span className="font-bold">Power:</span> Stromversorgung<br />
+                                <span className="font-bold">Data Integrity:</span> Datenintegrität<br />
+                                <span className="font-bold">Connection:</span> Verbindungsprobleme<br />
+                                <span className="font-bold">Query:</span> Abfrageprobleme<br />
+                                <span className="font-bold">Monitoring:</span> Überwachung<br />
+                                <span className="font-bold">Network:</span> Netzwerkprobleme<br />
+                                <span className="font-bold">Authentication:</span> Authentifizierungsprobleme<br />
+                                <span className="font-bold">Resources:</span> Ressourcenprobleme<br />
+                                <span className="font-bold">Processes:</span> Prozessprobleme<br />
+                                <span className="font-bold">Configuration:</span> Konfigurationsprobleme<br />
+                                <span className="font-bold">Data Export:</span> Datenexportprobleme<br />
+                                <span className="font-bold">Documentation:</span> Dokumentationsprobleme<br />
+                                <span className="font-bold">Startup:</span> Startprobleme<br />
+                                <span className="font-bold">Demonstration:</span> Demonstrationsprobleme<br />
+                                <span className="font-bold">Communication:</span> Kommunikationsprobleme<br />
+                                <span className="font-bold">Data Import:</span> Datenimportprobleme<br />
+                                <span className="font-bold">Security:</span> Sicherheitsprobleme
+                            </span>}
+                            >
+                                <div className='flex items-center'>Incident Type {renderSortIcon('incidentType')}</div>
+                            </Tippy>
+                        </div>
                     </th>}
+
                 {true &&
                     <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
-                        <div className='flex items-center cursor-pointer'>
+                        <div className='flex items-center'>
                             <Tippy theme="tomato-theme" content={<span><span className="font-bold" >Schweregrad<br /></span><span className="font-bold text-green-500">Low:</span> Niedrig<br /><span className="font-bold text-yellow-500">Medium:</span> Mittel<br /><span className="font-bold text-red-500">Rot:</span> High</span>}>
                                 <div className='flex items-center'>Severity {renderSortIcon('severity')}</div>
                             </Tippy>
@@ -97,9 +126,9 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                     </th>}
 
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('priority')}>
-                    <div className='flex items-center cursor-pointer'>
+                    <div className='flex items-center'>
                         <Tippy theme="tomato-theme" content={<span><span className="font-bold">1:</span> Niedrige Priorität<br /><span className="font-bold">2:</span> Mittlere Priorität<br /><span className="font-bold">3:</span> Hohe Priorität<br /><span className="font-bold">4:</span> Dringende Priorität</span>}>
-                            <div className='flex items-center cursor-pointer'>Priority {renderSortIcon('priority')}</div>
+                            <div className='flex items-center'>Priority {renderSortIcon('priority')}</div>
                         </Tippy>
                     </div>
                 </th>
@@ -118,7 +147,11 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
     const handleRowClick = (id: number) => {
-        router.push(`/Issues/${id}`);
+        if (true) {
+            router.push(`/Issues/${id}/wizard`);
+        } else {
+            router.push(`/Issues/${id}`);
+        }
     };
 
     const customSortOrder = {
@@ -170,9 +203,11 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                             <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
                         </Tippy>
 
-                        <td className="px-2 py-3 truncate">{listIssue.title}</td>
+                        <td className="pl-2 pr-6 py-3 truncate">{listIssue.title}</td>
+
                         {false &&
                             <td className="px-2 py-3 truncate">{listIssue.description}</td>}
+
                         {true &&
                             <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
                                 {listIssue.incidentType}
@@ -257,15 +292,16 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                     onClick={handleClick}
                     className={`card gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl w-full relative bg-[#fcf4ff] ${styles.card} ${className}  h-60 transition-transform duration-300 ${isClicked ? 'transform scale-105' : ''}`}
                 >
-                    <div className="flex flex-col justify-between h-full space-y-2 flex-grow">
-                        <div className="space-y-2 flex-grow">
-                            <div className="flex justify-between">
-                                <h3 className="text-[20px] font-semibold line-clamp-2 overflow-hidden overflow-ellipsis">{heading}</h3>
+                    <div className="flex flex-col h-full space-y-2 flex-grow">
+                        <div className="space-y-2 flex-grow space">
+                            <div className="flex space-x-6">
                                 <div className="min-w-max">
                                     <Tippy theme="tomato-theme" content={<span>{getAlertText(alertType)}</span>}>
                                         <span>{icon}</span>
                                     </Tippy>
                                 </div>
+                                <h3 className="text-[20px] font-semibold line-clamp-2 overflow-hidden overflow-ellipsis">{heading}</h3>
+
                             </div>
                             <p className="leading-8 font-normal break-words overflow-hidden line-clamp-2">{truncatedDescription}</p>
                         </div>

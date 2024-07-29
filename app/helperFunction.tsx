@@ -23,12 +23,12 @@ export const formatDate = (date: string | number | Date) => {
 export const getAlertIconBig = (alertType: string) => {
     switch (alertType) {
         case 'Warning':
-            return <IoWarningOutline size="3.5rem" className="text-yellow-500" />;
+            return <IoWarningOutline size={60} className="text-yellow-500" />;
         case 'Critical':
-            return < RiErrorWarningLine size="3.5rem" className="text-red-700" />;
+            return < RiErrorWarningLine size={60} className="text-red-700" />;
         case 'Info':
         default:
-            return <IoInformationCircleOutline size="3.5rem" className="text-blue-800" />;
+            return <IoInformationCircleOutline size={60} className="text-blue-800" />;
     }
 };
 

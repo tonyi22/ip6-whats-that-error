@@ -11,10 +11,10 @@ import { CiEdit } from "react-icons/ci";
 import Tippy from '@tippyjs/react';
 import { AiOutlineWechatWork } from "react-icons/ai";
 import ChatBubble from './ChatBubble';
-import Terminal from './Terminal';
 import { IoTerminal } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import { IoIosHelpCircle } from "react-icons/io";
+import Terminal from './Terminal';
 
 const labels = (label: string, help: string) => {
 
@@ -45,8 +45,7 @@ const systemsList = [
     'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
     'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
 ];
-
-function IssueView({ params }: { params: { id: string } }) {
+function IssueDetail({ params }: { params: { id: string } }) {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None'];
     const severityTypes = ['Low', 'Medium', 'High'];
     const statusTypes = ['New', 'Open', 'Closed', 'In Progress'];
@@ -194,6 +193,8 @@ function IssueView({ params }: { params: { id: string } }) {
         return <div className="mx-10 my-10 text-black dark:text-github-dark-text">Issue not found</div>;
     }
 
+
+
     return (
         <div className={`mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text`}>
             <div className='flex items-center justify-between mb-4'>
@@ -227,7 +228,8 @@ function IssueView({ params }: { params: { id: string } }) {
                     )}
                     {!issue.isInitialGiven && !isEditMode && (
                         <Link href={`/Issues/${issue.id}/initial-feedback`}>
-                            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline'>
+                            <button
+                                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline'>
                                 Give Initial Feedback
                             </button>
                         </Link>
@@ -239,6 +241,7 @@ function IssueView({ params }: { params: { id: string } }) {
                 isOpen={isChatOpen}
                 onClose={() => setIsChatOpen(false)}
                 buttonRef={chatButtonRef}
+                activeStepRef={undefined}
             />
 
             <div className="mb-5 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] rounded-lg shadow-md p-4 ">
@@ -300,10 +303,8 @@ function IssueView({ params }: { params: { id: string } }) {
                                     ))}
                                 </select>
                             ) : (
-                                <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
-                                    <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2 m-2`}>
-                                        {issue.severity}</span>
-                                </Tippy>
+                                <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2 m-2`}>
+                                    {issue.severity}</span>
                             )}
                         </p>
                     </div>
@@ -441,27 +442,23 @@ function IssueView({ params }: { params: { id: string } }) {
                                     <p key={index} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {system}</p>
                                 ))
                             ) : (
-                                <p>No affected systems</p>
+                                <></>
                             )
                         )}
                     </div>
                 </div>
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
                     {labels("Lösungsvorschlag", "Empfohlene Schritte zur Behebung des Problems, basierend auf der Analyse und Diagnose der Störung.")}
-                    <div className='grid grid-cols-2 gap-2'>
-                        <p className=''>Creator:</p>
-                        <p className='text-right'>{issue.creator}</p>
-                        <p className=''>Issue Nr.:</p>
-                        <p className='text-right'>{issue.id}</p>
-                        <p className=''>Duration:</p>
-                        <p className='text-right'>{issue.duration} h</p>
-                        <p className=''>Timestamp:</p>
-                        <p className='text-right'>{formatDate(issue.timestamp)}</p>
-                        <p className=''>Last updated:</p>
-                        <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
-                        <p className=''>End time:</p>
-                        <p className='text-right'>--:--</p>
-                    </div>
+                    {isEditMode ? (
+                        <textarea
+                            name="loesungsvorschlag"
+                            value={issue.loesungsvorschlag}
+                            onChange={handleInputChange}
+                            className="editable-input"
+                        />
+                    ) : (
+                        <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.loesungsvorschlag}</p>
+                    )}
                 </div>
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
                     {labels("Impact", "Zeigt die Auswirkungen des Issues auf das System oder die betroffenen Benutzer an.")}
@@ -542,9 +539,10 @@ function IssueView({ params }: { params: { id: string } }) {
                         <Terminal commands={issue.commands} onExecute={handleExecute} commandResponses={issue.commandResponses} />
                     </div>
                 )}
+
             </div>
         </div >
     );
 }
 
-export default IssueView;
+export default IssueDetail;

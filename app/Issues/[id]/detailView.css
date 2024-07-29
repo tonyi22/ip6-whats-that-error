@@ -69,13 +69,223 @@ body {
     background-color: #e0e0e0;
 }
 
+
+
+.command {
+    margin-bottom: 16px;
+}
+
+.command .prompt {
+    margin-right: 8px;
+}
+
+.command .result {
+    margin-top: 8px;
+    white-space: pre-wrap;
+    /* Ensures line breaks are respected */
+}
+
+/* detailView.css */
+
+.active-step {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.3s ease;
+    z-index: 20;
+}
+
+.blacked-out {
+    opacity: 0.01;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.stepper {
+    align-items: center;
+    position: fixed;
+    /* Make the stepper fixed */
+    top: 10px;
+    /* Adjust top position as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    /* Ensure it is above other elements */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Optional: slightly transparent background */
+    padding: 10px;
+    /* Optional: padding for better visibility */
+    border-radius: 5px;
+    /* Optional: rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional: shadow for better visibility */
+}
+
+.steps {
+    display: flex;
+    justify-content: center;
+}
+
+.step {
+    padding: 5px 10px;
+    margin: 0 4px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #ddd;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.step:hover {
+    background-color: #bbb;
+}
+
+.step.active {
+    background-color: #007bff;
+    color: white;
+
+}
+
+.step.active:hover {
+    background-color: rgb(29 78 216);
+}
+
+.text-bubble-text {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 100px;
+    border-color: #0f0;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.navigation-buttons button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.navigation-buttons .fertig-button {
+    background-color: #239623;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navigation-buttons .fertig-button:hover {
+    background-color: #156915;
+}
+
+.navigation-buttons button:disabled {
+    background-color: #bbb;
+    cursor: not-allowed;
+}
+
+
+.navigation-buttons button:hover {
+    background-color: rgb(29 78 216);
+}
+
+.terminal-container {
+    position: relative;
+    z-index: 10;
+}
+
+/* Dark mask overlay */
+.dark-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.95;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Text bubble */
+
+.text-bubble-bottom,
+.text-bubble-top {
+    position: fixed;
+    left: 50%;
+    max-width: 1000px;
+    width: 90%;
+    z-index: 30;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to bottom, #f9f9f9, #e0e0e0);
+    /* Use a blue border to make it stand out */
+}
+
+.text-bubble-bottom {
+    bottom: 5px;
+}
+
+.text-bubble-top {
+    top: 5px;
+}
+
+.circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #fff;
+    /* White by default */
+    /* Blue border */
+    transition: background-color 0.3s ease;
+}
+
+.circle.completed {
+    background-color: #007bff;
+    /* Blue when completed */
+}
+
+
+@media (prefers-color-scheme: dark) {
+    .dropdown {
+        background-color: #333;
+        border-color: #555;
+        color: #c9d1d9;
+    }
+
+    .dropdown-menu {
+        background-color: #1e1e1e;
+        border-color: #555;
+    }
+
+    .dropdown-item {
+        color: #c9d1d9;
+    }
+
+    .dropdown-item:hover {
+        background-color: #444;
+    }
+}
+
 .terminal-container {
     position: fixed;
-    top: 12px;
-    /* 12px gives approximately 3 spacing in tailwind (1rem) */
-    right: 0;
-    max-height: 100vh;
-    /* Ensures the terminal doesn't go beyond the viewport */
+    /* Change from relative to fixed */
+    top: 103px;
+    /* Adjust the top position to be underneath the button */
+    right: 20px;
+    /* Adjust the right position if necessary */
+    max-height: 80vh;
+    /* Ensure the terminal doesn't go beyond the viewport */
     overflow-y: auto;
     border: 1px solid #ccc;
     background-color: var(--github-secondary, #f9f9f9);
@@ -101,39 +311,4 @@ body {
     overflow-y: auto;
     max-height: 80vh;
     /* Limits the height of the terminal to ensure it fits within the container */
-}
-
-.command {
-    margin-bottom: 16px;
-}
-
-.command .prompt {
-    margin-right: 8px;
-}
-
-.command .result {
-    margin-top: 8px;
-    white-space: pre-wrap;
-    /* Ensures line breaks are respected */
-}
-
-@media (prefers-color-scheme: dark) {
-    .dropdown {
-        background-color: #333;
-        border-color: #555;
-        color: #c9d1d9;
-    }
-
-    .dropdown-menu {
-        background-color: #1e1e1e;
-        border-color: #555;
-    }
-
-    .dropdown-item {
-        color: #c9d1d9;
-    }
-
-    .dropdown-item:hover {
-        background-color: #444;
-    }
 }

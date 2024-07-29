@@ -157,21 +157,6 @@ export function Feedback({ params }: { params: { id: string } }) {
         });
     };
 
-    const handleRemoveSystem = (index: number) => {
-        setIssue(prev => {
-            if (!prev) return prev;
-            const updatedSystems = prev.affectedSystems.filter((_, i) => i !== index);
-            return {
-                ...prev,
-                affectedSystems: updatedSystems
-            };
-        });
-    };
-
-    const handleDropdownClick = () => {
-        setDropdownOpen(!dropdownOpen);
-    };
-
     const handleOutsideClick = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setDropdownOpen(false);
@@ -188,6 +173,16 @@ export function Feedback({ params }: { params: { id: string } }) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Submit feedback logic
+        if (issue) {
+            const updatedIssue = { ...issue, status: 'Closed' as const }; // Update the status to 'done'
+            setIssue(updatedIssue); // Update the issue state
+            const issues = loadIssuesFromLocalStorage();
+            const index = issues.findIndex(i => i.id === issue.id);
+            if (index !== -1) {
+                issues[index] = updatedIssue;
+                saveIssuesToLocalStorage(issues);
+            }
+        }
         console.log('Submitted responses:', responses);
     };
 
@@ -1080,7 +1075,12 @@ export function Feedback({ params }: { params: { id: string } }) {
                         <div className="flex justify-end space-x-4 mt-6 p-4 rounded-lg">
                             <button
                                 type="button"
-                                onClick={() => router.push('/Issues')}
+                                onClick={() => {
+
+                                    router.push('/Issues')
+                                }
+
+                                }
                                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
                             >
                                 Cancel
