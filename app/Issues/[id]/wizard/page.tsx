@@ -16,6 +16,7 @@ import Stepper from './Stepper';
 import { useRouter } from 'next/navigation';
 import { log } from 'console';
 import Terminal from '../Terminal';
+import FeedbackModal from './FeedbackModal';
 
 // Load and save issues from/to localStorage
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
@@ -25,8 +26,6 @@ const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     }
     return [];
 };
-
-
 
 const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
@@ -54,7 +53,9 @@ function IssueJourney({ params }: { params: { id: string } }) {
     const [issueCopy, setIssueCopy] = useState<SystemMonitoringIssue | null>(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-    const [currentStep, setCurrentStep] = useState(0); // State to manage current step
+    const [currentStep, setCurrentStep] = useState(0); // State to manage current steip
+    const [introStep, setIntroStep] = useState(0);
+    const [introFlag, setIntroFlag] = useState(true);
 
     const [showPromptDescription, setShowPromptDescription] = useState(true);
     const [showPromptLoesungsvorschlag, setshowPromptLoesungsvorschlag] = useState(true);
@@ -62,11 +63,13 @@ function IssueJourney({ params }: { params: { id: string } }) {
     const [showPromptPreventativeMeasures, setShowPromptPreventativeMeasures] = useState(true);
     const [showPromptAffectedSystems, setShowPromptAffectedSystems] = useState(true);
 
-
-
     const chatButtonRef = useRef<HTMLButtonElement>(null);
     const activeStepRef = useRef<HTMLDivElement>(null);
     const textBubbleRef = useRef<HTMLDivElement>(null);
+    // ref for intro
+    const introContainerRef = useRef<HTMLDivElement>(null);
+
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
     const [textBubbleContent, setTextBubbleContent] = useState([
         "Diese Ansicht enthält wichtige Informationen zum Issue, einschließlich Titel, Alarmtyp, Schweregrad, Status, Incident-Typ und Priorität.",
@@ -79,8 +82,16 @@ function IssueJourney({ params }: { params: { id: string } }) {
         "Zusätzliche Informationen zur Problemmeldung, wie Ersteller, Priorität, Zeitstempel und Dauer des Ereignisses."
     ]);
 
+    const [wizardTextIntro, setWizardTextInstro] = useState([
+        "Willkommen beim Wizard! Hier werden Ihnen schrittweise die einzelnen Bereiche des Issues erklärt. Jeder Bereich wird nacheinander angezeigt und erläutert.",
+        "Hier sehen Sie den spezifischen Bereich des Issues, der gerade erklärt wird.",
+        "Dieser Abschnitt erklärt, welche Informationen im Issue enthalten sind und deren Bedeutung.",
+        "Mit diesem Knopf können Sie Fragen an die KI stellen, falls Sie Hilfe benötigen. Nun beginnt die Tour."
+    ]);
+
     const handleClick = () => {
-        router.push(`/Issues/${params.id}`);
+        setCurrentStep(currentStep + 1);
+        setShowFeedbackModal(true)
     };
 
     const openChat = () => {
@@ -93,6 +104,25 @@ function IssueJourney({ params }: { params: { id: string } }) {
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(() => {
+        const updateIntroContainerPosition = () => {
+            if (textBubbleRef.current && introContainerRef.current) {
+                const textBubbleRect = textBubbleRef.current.getBoundingClientRect();
+                introContainerRef.current.style.top = `${textBubbleRect.top}px`; // Align top with textBubble
+                introContainerRef.current.style.left = `${textBubbleRect.right + 10}px`; // Align horizontally with textBubble
+            }
+        };
+
+        updateIntroContainerPosition();
+        window.addEventListener('resize', updateIntroContainerPosition);
+        window.addEventListener('scroll', updateIntroContainerPosition);
+
+        return () => {
+            window.removeEventListener('resize', updateIntroContainerPosition);
+            window.removeEventListener('scroll', updateIntroContainerPosition);
+        };
+    }, [currentStep]);
 
     useEffect(() => {
         const issues = loadIssuesFromLocalStorage();
@@ -142,9 +172,6 @@ function IssueJourney({ params }: { params: { id: string } }) {
         };
     }, [currentStep]); // Dependency array
 
-
-
-
     useEffect(() => {
         const updateTextBubblePosition = () => {
             if (activeStepRef.current && textBubbleRef.current) {
@@ -175,7 +202,6 @@ function IssueJourney({ params }: { params: { id: string } }) {
             window.removeEventListener('scroll', updateTextBubblePosition);
         };
     }, [currentStep]);
-
 
     const handleAddSystem = (system: string) => {
         setIssue(prevState => {
@@ -310,6 +336,13 @@ function IssueJourney({ params }: { params: { id: string } }) {
         return <div className="mx-10 my-10 text-black dark:text-github-dark-text">Issue not found</div>;
     }
 
+    function handleIntroNext() {
+        if (introStep === 3) {
+            setIntroFlag(false);
+        }
+        setIntroStep(introStep + 1);
+    }
+
     return (
         <div className={`mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text relative`}>
             <div className='flex items-center justify-between mb-4 z-20'>
@@ -358,15 +391,16 @@ function IssueJourney({ params }: { params: { id: string } }) {
                 activeStepRef={activeStepRef}
                 textBubbleRef={textBubbleRef} // Pass textBubbleRef to ChatBubble
             />
-
-            <Stepper
-                steps={steps}
-                currentStep={currentStep}
-                onStepClick={goToStep} // Add onStepClick for clickable steps
-            />
-
+            {!introFlag && currentStep < 8 &&
+                <Stepper
+                    steps={steps}
+                    currentStep={currentStep}
+                    onStepClick={goToStep} // Add onStepClick for clickable steps
+                />
+            }
             <div className="grid grid-cols-3 grid-rows-[auto, 1fr, 1fr, 1fr] gap-4 relative z-10">
-                <div ref={currentStep === 0 ? activeStepRef : null} className={`mb-5 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] rounded-lg shadow-md p-4 col-span-3 ${currentStep === 0 ? 'active-step' : 'blacked-out'}`}>
+                <div ref={currentStep === 0 ? activeStepRef : null} className={`mb-5 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] rounded-lg shadow-md p-4 col-span-3 ${introFlag ? introStep === 1 ? 'active-step' : 'blacked-out-intro' : currentStep === 0 ? 'active-step' : 'blacked-out'}`}>
+
                     <div className='mb-4'>
                         {isEditMode ? (
                             <div className='w-1/2'>
@@ -384,6 +418,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             <h3 className="text-3xl font-semibold">{issue.title}</h3>
                         )}
                     </div>
+
 
                     <div className='flex justify-between items-center'>
                         <div className='flex items-center'>
@@ -487,7 +522,22 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             </p>
                         </div>
                     </div>
+
                 </div>
+                {introFlag && (introStep === 0 || introStep === 1) && (
+                    <div className="intro-container">
+                        <div className="comment">
+                            {introFlag ? wizardTextIntro[introStep] : ""}
+                        </div>
+                        <button
+                            onClick={handleIntroNext}
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Weiter
+                        </button>
+                    </div>
+                )}
+
+
 
                 <div ref={currentStep === 1 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 1 ? 'active-step' : 'blacked-out'}`}>
                     <p className='font-bold pb-2'>Description</p>
@@ -715,43 +765,85 @@ function IssueJourney({ params }: { params: { id: string } }) {
             <div className="fixed inset-0 bg-black opacity-80 z-0 pointer-events-none"></div>
 
             {/* Text bubble */}
-            <div ref={textBubbleRef} className={`${currentStep === 6 || currentStep === 7 ? 'text-bubble-top' : 'text-bubble-bottom'}`}>
-                <div className="text-bubble-text">
-                    <p style={{ whiteSpace: 'pre-line', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
-                        {textBubbleContent[currentStep]}
-                    </p>
+            {currentStep < 8 &&
+                <div ref={textBubbleRef} className={`${currentStep === 6 || currentStep === 7 ? 'text-bubble-top' : 'text-bubble-bottom'} ${introFlag ? (introStep === 2 || introStep === 3) ? '' : 'blacked-out-intro' : ''}`}>
+                    <div className="text-bubble-text">
+                        <p style={{ whiteSpace: 'pre-line', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                            {textBubbleContent[currentStep]}
+                        </p>
 
-                    <div className='flex justify-end mt-[10px]'>
-                        <button ref={chatButtonRef} className={`${isChatOpen ? 'bg-blue-700' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`} onClick={openChat}>
-                            <AiOutlineWechatWork className='text-xl' />
+                        <div className='flex justify-end mt-[10px]'>
+                            <button ref={chatButtonRef} className={`
+                            ${introFlag ?
+                                    introStep === 3 ?
+                                        'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline border-2 border-red-300' :
+                                        'ai-button font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline' :
+                                    isChatOpen ?
+                                        'bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline' : 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'}`}
+                                onClick={openChat}>
+                                <AiOutlineWechatWork className='text-xl' />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="navigation-buttons items-center">
+                        <button onClick={prevStep}
+                            disabled={currentStep === 0}
+                            style={{
+                                visibility: currentStep === 0 ? 'hidden' : 'visible'
+                            }}>
+                            Previous
+                        </button>
+
+                        <div className='flex space-x-2'>
+                            {steps.map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={`circle ${currentStep >= index ? 'completed' : ''}`}
+                                />
+                            ))}
+                        </div>
+                        <button
+                            onClick={currentStep !== steps.length - 1 ? nextStep : handleClick}
+                            className={`${introFlag ? "intro-button" : currentStep !== steps.length - 1 ? "" : "fertig-button"}`}>
+                            {currentStep !== steps.length - 1 ? "Next" : "Fertig"}
                         </button>
                     </div>
                 </div>
+            }
 
-                <div className="navigation-buttons items-center">
-                    <button onClick={prevStep}
-                        disabled={currentStep === 0}
-                        style={{
-                            visibility: currentStep === 0 ? 'hidden' : 'visible'
-                        }}>
-                        Previous
-                    </button>
-
-                    <div className='flex space-x-2'>
-                        {steps.map((_, index) => (
-                            <div
-                                key={index}
-                                className={`circle ${currentStep >= index ? 'completed' : ''}`}
-                            />
-                        ))}
+            {/* Conditionally render the intro container for introStep === 1 */}
+            {(introFlag && introStep === 2 || introStep === 3) && (
+                <div ref={introContainerRef} className="intro-container-2">
+                    <div className="comment">
+                        {wizardTextIntro[introStep]}
                     </div>
                     <button
-                        onClick={currentStep !== steps.length - 1 ? nextStep : handleClick}
-                        className={`${currentStep !== steps.length - 1 ? "" : "fertig-button"}`}>
-                        {currentStep !== steps.length - 1 ? "Next" : "Fertig"}
+                        onClick={handleIntroNext}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
+                        {introStep === 3 ? "Start" : "Weiter"}
                     </button>
                 </div>
-            </div>
+            )}
+
+            {showFeedbackModal && (
+                <FeedbackModal
+                    onSubmit={() => {
+                        const issues = loadIssuesFromLocalStorage();
+                        const updatedIssues = issues.map(issue => {
+                            if (issue.id === Number(params.id)) {
+                                return { ...issue, wizardFeedback: true };
+                            }
+                            return issue;
+                        });
+                        saveIssuesToLocalStorage(updatedIssues);
+                        router.push(`/Issues/${params.id}`)
+                    }}
+                    onClose={
+                        () => setShowFeedbackModal(false)
+                    }
+                />
+            )}
         </div >
     );
 }

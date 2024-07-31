@@ -26,5 +26,6 @@ export interface SystemMonitoringIssue {
     isInitialGiven: boolean;
     commands: string[];
     commandResponses: string[][];
+    wizardFeedback: boolean;
 
 }

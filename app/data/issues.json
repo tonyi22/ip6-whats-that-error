@@ -25,7 +25,8 @@
         "comments": [],
         "isInitialGiven": true,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Fehlermeldung 503 tritt auf bei Zugriff auf Webserver unter hoher Last",
@@ -51,7 +52,8 @@
         "comments": [],
         "isInitialGiven": true,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Speicherkomponente zeigt Fehlverhalten beim Schreiben grosser Dateien",
@@ -79,7 +81,8 @@
         "comments": [],
         "isInitialGiven": false,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Datenbankmodul verursacht Verbindungsfehler bei mehreren gleichzeitigen Zugriffen",
@@ -107,7 +110,8 @@
         "comments": [],
         "isInitialGiven": true,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Fehlermeldung 500 tritt auf bei Datenabfrage in Berichtssystem",
@@ -135,7 +139,8 @@
         "comments": [],
         "isInitialGiven": true,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Backup-Modul reagiert nicht auf Fehler bei Speicherplatzmangel",
@@ -163,7 +168,8 @@
         "comments": [],
         "isInitialGiven": false,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Überwachungssystem zeigt falsche Alarme unter Lastbedingungen",
@@ -191,7 +197,8 @@
         "comments": [],
         "isInitialGiven": false,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Speicherplatzverwaltung verursacht inkonsistente Daten unter hoher Last",
@@ -224,7 +231,8 @@
         ],
         "isInitialGiven": false,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Speicherplatzverwaltung Problem",
@@ -255,7 +263,8 @@
         ],
         "isInitialGiven": true,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "Component PRTG Core Server not in CURIX",
@@ -286,7 +295,8 @@
         ],
         "isInitialGiven": true,
         "commands": [],
-        "commandResponses": []
+        "commandResponses": [],
+        "wizardFeedback": false
     },
     {
         "title": "PRTG Core Server wird in CURIX nicht angezeigt",
@@ -335,6 +345,7 @@
                 "Enabling PRTG Core Server service...",
                 "PRTG Core Server service enabled to start at boot."
             ]
-        ]
+        ],
+        "wizardFeedback": false
     }
 ]

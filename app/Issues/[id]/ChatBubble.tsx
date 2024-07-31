@@ -99,7 +99,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, buttonRef, act
     if (!isOpen) return null;
 
     return (
-        <div ref={chatBubbleRef} style={{ position: 'absolute', zIndex: 1000 }} className="dark:bg-gray-800 p-6 rounded-lg shadow-md w-96 border border-gray-300 bg-gradient-to-b from-gray-50 to-white">
+        <div ref={chatBubbleRef} style={{ position: activeStepRef?.current ? 'absolute' : 'fixed', zIndex: 1000 }} className="dark:bg-gray-800 p-6 rounded-lg shadow-md w-96 border border-gray-300 bg-gradient-to-b from-gray-50 to-white">
             <button type="button" className="absolute top-0 right-0 m-4 text-black dark:text-white" onClick={onClose}>
                 <MdCancel className="w-4 h-4 text-gray-700" />
             </button>

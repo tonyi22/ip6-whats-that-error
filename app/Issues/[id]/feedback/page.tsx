@@ -201,7 +201,7 @@ export function Feedback({ params }: { params: { id: string } }) {
     }
 
     return (
-        <div className="bg-gradient-to-b from-gray-50 to-white max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
+        <div className="bg-gradient-to-b from-[#fcf1fa] to-[#fefcff] max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
 
             <style jsx>{`
                 .custom-radio {
@@ -232,7 +232,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                     <h3 className="text-2xl font-bold mb-4 text-center">Final Feedback</h3>
                     <form onSubmit={handleSubmit}>
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 p-4 border rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 p-4 border rounded-lg">
                             <div>
                                 <span className="ml-2 ">War der Alert Type der richtige?</span>
                                 <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
@@ -297,7 +297,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div>
                             {issue.isInitialGiven ? (
-                                <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                                <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <div>
                                         <span className="ml-2">Wurde die Severity des Issues korrekt angepasst?</span>
                                         <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
@@ -360,7 +360,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                                <div className=" bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <div>
                                         <span className="ml-2 block text-left">War die Severity nachvollziehbar? </span>
                                         <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
@@ -426,7 +426,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div className="flex flex-col">
                                 <span className="ml-2">War der Incident Type der richtigen Kategorie zugeordnet?</span>
                                 <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
@@ -482,7 +482,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
                         <div> {issue.isInitialGiven ? (
-                            <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                            <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                 <div>
                                     <span className="ml-2">
                                         Wurde die Priorität des Issues korrekt angepasst?
@@ -543,7 +543,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 </div>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                            <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                 <div className="flex flex-col">
                                     <span className="ml-2">War die Priorität nachvollziehbar?</span>
                                     <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
@@ -604,7 +604,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div>
                             {issue.isInitialGiven ? (
-                                <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                                <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <label className="text-grayy-700 dark:text-gray-300 ml-2">
                                         Wurde die Beschreibung des Issues im Verlauf klarer und hat sich
                                         dein Verständnis des Problems im Verlauf verbessert?
@@ -644,7 +644,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                                <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <div>
                                         <span className="ml-2">War die Beschreibung des Issues klar und verständlich?</span>
                                         <label className="flex items-center text-gray-700 dark:text-gray-300">
@@ -696,7 +696,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div>
                             {issue.isInitialGiven ? (
-                                <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                                <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <label className="ml-2">
                                         Wurden die fehlenden Informationen bereitgestellt?
                                     </label>
@@ -738,7 +738,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">Waren die betroffenen Systeme korrekt?</span>
                                 <div className={`flex-grow text-gray-700 mt-2 ml-2 py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex w-96 flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'rounded-lg shadow-md' : ''}`}>
@@ -806,7 +806,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">War die Auswirkung verständlich?</span>
                                 <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
@@ -852,7 +852,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
                                 Wusstest du, was zu tun ist, um das Issue zu lösen?
                             </label>
@@ -892,7 +892,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
                                 Hast du den Lösungsvorschlag umgesetzt?
                             </label>
@@ -933,7 +933,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
                                 Waren die AI-Vorschläge für das Issue relevant?
                             </label>
@@ -983,7 +983,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
 
-                        <div className="grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
                                 Hast du die AI-Vorschläge umgesetzt?
                             </label>
@@ -1033,7 +1033,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
 
 
-                        <div className="grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg">
+                        <div className="bg-white grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg">
                             <div className="ml-2">
                                 <label >
                                     Hast du Vorschläge zur Verbesserung der AI-Vorschläge?
@@ -1050,7 +1050,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg ">
+                        <div className="bg-white grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg ">
                             <div className='ml-2'>
                                 <label>
                                     Wie zufrieden bist du insgesamt mit den AI-Vorschlägen?

@@ -14,7 +14,7 @@ body {
     /* Allow height to adjust based on content */
     /* Optional: set a minimum height */
     box-sizing: border-box;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border: 1px solid #ccc;
     padding: 0.5rem;
     border-radius: 4px;
@@ -183,6 +183,21 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.navigation-buttons .intro-button {
+    background-color: #767575;
+    /* Gray out the button */
+    color: #2c2b2b;
+    /* Light gray text */
+    cursor: not-allowed;
+    /* Change cursor to indicate disabled */
+}
+
+.navigation-buttons .intro-button:hover {
+    background-color: #767575;
+    color: #2c2b2b;
+
+}
+
 .navigation-buttons .fertig-button:hover {
     background-color: #156915;
 }
@@ -311,4 +326,81 @@ body {
     overflow-y: auto;
     max-height: 80vh;
     /* Limits the height of the terminal to ensure it fits within the container */
+}
+
+/* Add this to your detailView.css */
+.blacked-out-intro {
+    opacity: 0.04;
+    pointer-events: none;
+}
+
+.intro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -185%);
+    z-index: 101;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: rgba(227,
+            192,
+            108, 1);
+    /* Ensure it's above other elements */
+    opacity: 1 !important;
+}
+
+.comment {
+    align-items: center;
+    background-color: rgb(247, 228, 186);
+    color: black;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 15px 0;
+    opacity: 1 !important;
+    /* Ensure it's fully opaque */
+    z-index: 101;
+    /* Ensure it's above other elements */
+}
+
+.intro-container-2 {
+    position: fixed;
+    /* Make it fixed to the viewport */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 31;
+    /* Ensure it's above other elements */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: rgba(227,
+            192,
+            108, 1);
+    /* Solid background */
+    transition: top 0.3s ease, left 0.3s ease;
+    /* Smooth transition for position updates */
+    right: 40px;
+    /* Add margin to the right */
+}
+
+.ai-button {
+    background-color: #767575;
+    /* Gray out the button */
+    color: #2c2b2b;
+    /* Light gray text */
+    cursor: not-allowed;
+}
+
+.ai-button:hover {
+    background-color: #767575;
+    color: #2c2b2b;
+
 }

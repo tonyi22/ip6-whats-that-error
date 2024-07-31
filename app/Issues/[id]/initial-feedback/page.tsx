@@ -90,7 +90,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
 
 
-        <div className="bg-gradient-to-b from-gray-50 to-white max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
+        <div className="bg-gradient-to-b from-[#fcf1fa] to-[#fefcff] max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
 
             <style jsx>{`
             .custom-radio {
@@ -144,129 +144,130 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                 <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
                     <h3 className="text-2xl font-bold mb-4">Initial Feedback</h3>
                     <form onSubmit={handleSubmit}>
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="">
-                                Ist die Beschreibung des Issues klar?
-                            </label>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="issueClear"
-                                            value="yes"
-                                            className="custom-radio"
+                        {!issue.wizardFeedback &&
+                            <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                <label className="">
+                                    Ist die Beschreibung des Issues klar?
+                                </label>
+                                <div className="flex flex-col">
+                                    <div className="flex space-x-4">
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="issueClear"
+                                                value="yes"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Ja</span>
+                                        </label>
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="issueClear"
+                                                value="no"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Nein</span>
+                                        </label>
+                                    </div>
+                                    {responses.issueClear === 'no' && (
+                                        <textarea
+                                            name="issueClearDetails"
                                             onChange={handleChange}
+                                            placeholder='Was war nicht klar?'
+                                            className="editable-input mt-2"
                                         />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="issueClear"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
+                                    )}
                                 </div>
-                                {responses.issueClear === 'no' && (
-                                    <textarea
-                                        name="issueClearDetails"
-                                        onChange={handleChange}
-                                        placeholder='Was war nicht klar?'
-                                        className="editable-input mt-2"
-                                    />
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="">
-                                Hast du sofort verstanden, was das Problem ist?
-                            </label>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="problemUnderstood"
-                                            value="yes"
-                                            className="custom-radio"
+                            </div>}
+                        {!issue.wizardFeedback &&
+                            <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                <label className="">
+                                    Hast du sofort verstanden, was das Problem ist?
+                                </label>
+                                <div className="flex flex-col">
+                                    <div className="flex space-x-4">
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="problemUnderstood"
+                                                value="yes"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Ja</span>
+                                        </label>
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="problemUnderstood"
+                                                value="no"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Nein</span>
+                                        </label>
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="problemUnderstood"
+                                                value="teilweise"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Teilweise</span>
+                                        </label>
+                                    </div>
+                                    {(responses.problemUnderstood === 'no' || responses.problemUnderstood === 'teilweise') && (
+                                        <textarea
+                                            name="problemUnderstoodDetails"
                                             onChange={handleChange}
+                                            placeholder='Was hast du nicht verstanden?'
+                                            className="editable-input mt-2"
                                         />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="problemUnderstood"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="problemUnderstood"
-                                            value="teilweise"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Teilweise</span>
-                                    </label>
+                                    )}
                                 </div>
-                                {(responses.problemUnderstood === 'no' || responses.problemUnderstood === 'teilweise') && (
-                                    <textarea
-                                        name="problemUnderstoodDetails"
-                                        onChange={handleChange}
-                                        placeholder='Was hast du nicht verstanden?'
-                                        className="editable-input mt-2"
-                                    />
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="">
-                                Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
-                            </label>
-                            <div className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="stepsKnown"
-                                            value="yes"
-                                            className="custom-radio"
+                            </div>}
+                        {!issue.wizardFeedback &&
+                            <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                <label className="">
+                                    Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
+                                </label>
+                                <div className="flex flex-col">
+                                    <div className="flex space-x-4">
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="stepsKnown"
+                                                value="yes"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Ja</span>
+                                        </label>
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="stepsKnown"
+                                                value="no"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Nein</span>
+                                        </label>
+                                    </div>
+                                    {responses.stepsKnown === 'no' && (
+                                        <textarea
+                                            name="stepsKnownDetails"
                                             onChange={handleChange}
+                                            placeholder='Bitte beschreiben...'
+                                            className="editable-input mt-2"
                                         />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="stepsKnown"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
+                                    )}
                                 </div>
-                                {responses.stepsKnown === 'no' && (
-                                    <textarea
-                                        name="stepsKnownDetails"
-                                        onChange={handleChange}
-                                        placeholder='Bitte beschreiben...'
-                                        className="editable-input mt-2"
-                                    />
-                                )}
-                            </div>
-                        </div>
+                            </div>}
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">

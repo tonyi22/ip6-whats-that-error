@@ -261,7 +261,7 @@ Lösungsvorschlag:
 
     return (
         <div className="flex justify-center my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
-            <div className=" bg-gradient-to-b from-gray-50 to-white  my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
+            <div className="bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold mb-4 text-center">Create New Issue</h3>
                 <form>
                     <div className='mb-4'>
@@ -467,7 +467,7 @@ Lösungsvorschlag:
                                 )}
                             </div>
 
-                            <div className="flex-grow border border-gray-300 rounded-md px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center">
+                            <div className="flex-grow border bg-white border-gray-300 rounded-md px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center">
                                 {newIssue.affectedSystems.length > 0 ? (
                                     newIssue.affectedSystems.map((system, index) => (
                                         <div key={index} className={`flex items-center ${index !== newIssue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
