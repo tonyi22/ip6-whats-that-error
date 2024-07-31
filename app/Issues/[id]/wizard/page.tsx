@@ -86,7 +86,8 @@ function IssueJourney({ params }: { params: { id: string } }) {
         "Willkommen beim Wizard! Hier werden Ihnen schrittweise die einzelnen Bereiche des Issues erklärt. Jeder Bereich wird nacheinander angezeigt und erläutert.",
         "Hier sehen Sie den spezifischen Bereich des Issues, der gerade erklärt wird.",
         "Dieser Abschnitt erklärt, welche Informationen im Issue enthalten sind und deren Bedeutung.",
-        "Mit diesem Knopf können Sie Fragen an die KI stellen, falls Sie Hilfe benötigen. Nun beginnt die Tour."
+        "Mit diesem Knopf können Sie Fragen an die KI stellen, falls Sie Hilfe benötigen.",
+        "Nun beginnt die Tour."
     ]);
 
     const handleClick = () => {
@@ -108,9 +109,15 @@ function IssueJourney({ params }: { params: { id: string } }) {
     useLayoutEffect(() => {
         const updateIntroContainerPosition = () => {
             if (textBubbleRef.current && introContainerRef.current) {
-                const textBubbleRect = textBubbleRef.current.getBoundingClientRect();
-                introContainerRef.current.style.top = `${textBubbleRect.top}px`; // Align top with textBubble
-                introContainerRef.current.style.left = `${textBubbleRect.right + 10}px`; // Align horizontally with textBubble
+                if (introStep === 4) {
+                    introContainerRef.current.style.top = '50%';
+                    introContainerRef.current.style.left = '50%';
+                    introContainerRef.current.style.transform = 'translate(-50%, -50%)';
+                } else {
+                    const textBubbleRect = textBubbleRef.current.getBoundingClientRect();
+                    introContainerRef.current.style.top = `${textBubbleRect.top}px`; // Align top with textBubble
+                    introContainerRef.current.style.left = `${textBubbleRect.right + 10}px`; // Align horizontally with textBubble
+                }
             }
         };
 
@@ -122,7 +129,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
             window.removeEventListener('resize', updateIntroContainerPosition);
             window.removeEventListener('scroll', updateIntroContainerPosition);
         };
-    }, [currentStep]);
+    }, [currentStep, introStep]);
 
     useEffect(() => {
         const issues = loadIssuesFromLocalStorage();
@@ -337,7 +344,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
     }
 
     function handleIntroNext() {
-        if (introStep === 3) {
+        if (introStep === 4) {
             setIntroFlag(false);
         }
         setIntroStep(introStep + 1);
@@ -813,15 +820,18 @@ function IssueJourney({ params }: { params: { id: string } }) {
             }
 
             {/* Conditionally render the intro container for introStep === 1 */}
-            {(introFlag && introStep === 2 || introStep === 3) && (
-                <div ref={introContainerRef} className="intro-container-2">
+            {(introFlag && introStep === 2 || introStep === 3 || introStep === 4) && (
+                <div ref={introContainerRef} className={`${introStep === 4 ? "intro-container-2" : "intro-container-2 intro-container-2-tour"}`}>
                     <div className="comment">
-                        {wizardTextIntro[introStep]}
+                        <p
+                            style={{ overflowWrap: 'break-word' }} >
+                            {wizardTextIntro[introStep]}
+                        </p>
                     </div>
                     <button
                         onClick={handleIntroNext}
                         className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
-                        {introStep === 3 ? "Start" : "Weiter"}
+                        {introStep === 4 ? "Start" : "Weiter"}
                     </button>
                 </div>
             )}

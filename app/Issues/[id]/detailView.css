@@ -387,8 +387,12 @@ body {
     /* Solid background */
     transition: top 0.3s ease, left 0.3s ease;
     /* Smooth transition for position updates */
+    /* Ensure it doesn't exceed the viewport minus margin */
+    /* Minimum margin to the right */
+}
+
+.intro-container-2-tour {
     right: 40px;
-    /* Add margin to the right */
 }
 
 .ai-button {
