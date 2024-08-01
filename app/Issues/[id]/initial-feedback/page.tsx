@@ -230,44 +230,6 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                     )}
                                 </div>
                             </div>}
-                        {!issue.wizardFeedback &&
-                            <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                                <label className="">
-                                    Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
-                                </label>
-                                <div className="flex flex-col">
-                                    <div className="flex space-x-4">
-                                        <label className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                name="stepsKnown"
-                                                value="yes"
-                                                className="custom-radio"
-                                                onChange={handleChange}
-                                            />
-                                            <span className="ml-2">Ja</span>
-                                        </label>
-                                        <label className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                name="stepsKnown"
-                                                value="no"
-                                                className="custom-radio"
-                                                onChange={handleChange}
-                                            />
-                                            <span className="ml-2">Nein</span>
-                                        </label>
-                                    </div>
-                                    {responses.stepsKnown === 'no' && (
-                                        <textarea
-                                            name="stepsKnownDetails"
-                                            onChange={handleChange}
-                                            placeholder='Bitte beschreiben...'
-                                            className="editable-input mt-2"
-                                        />
-                                    )}
-                                </div>
-                            </div>}
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">
@@ -306,7 +268,6 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                 )}
                             </div>
                         </div>
-
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">
                                 Wie würdest du die Verständlichkeit des Issues bewerten?
@@ -317,6 +278,50 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                 </div>
                             </div>
                         </div>
+                        {!issue.wizardFeedback &&
+
+
+                            <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                                <label className="">
+                                    Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
+                                </label>
+                                <div className="flex flex-col">
+                                    <div className="flex space-x-4">
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="stepsKnown"
+                                                value="yes"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Ja</span>
+                                        </label>
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="stepsKnown"
+                                                value="no"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Nein</span>
+                                        </label>
+                                    </div>
+                                    {responses.stepsKnown === 'no' && (
+                                        <textarea
+                                            name="stepsKnownDetails"
+                                            onChange={handleChange}
+                                            placeholder='Bitte beschreiben...'
+                                            className="editable-input mt-2"
+                                        />
+                                    )}
+                                </div>
+                            </div>}
+
+
+
+
 
 
 
