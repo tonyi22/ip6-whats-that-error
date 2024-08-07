@@ -799,7 +799,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             style={{
                                 visibility: currentStep === 0 ? 'hidden' : 'visible'
                             }}>
-                            Previous
+                            Zurück
                         </button>
 
                         <div className='flex space-x-2'>
@@ -813,7 +813,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                         <button
                             onClick={currentStep !== steps.length - 1 ? nextStep : handleClick}
                             className={`${introFlag ? "intro-button" : currentStep !== steps.length - 1 ? "" : "fertig-button"}`}>
-                            {currentStep !== steps.length - 1 ? "Next" : "Fertig"}
+                            {currentStep !== steps.length - 1 ? "Weiter" : "Fertig"}
                         </button>
                     </div>
                 </div>
@@ -847,7 +847,9 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             return issue;
                         });
                         saveIssuesToLocalStorage(updatedIssues);
-                        router.push(`/Issues/${params.id}`)
+                        // Typecasting to any
+                        router.push(`/Issues/${params.id}?from=wizard`);
+
                     }}
                     onClose={
                         () => setShowFeedbackModal(false)

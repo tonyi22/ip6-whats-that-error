@@ -67,7 +67,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
         // Update the issue's isInitialGiven property
         const updatedIssues = issues.map(issue => {
             if (issue.id === Number(params.id)) {
-                return { ...issue, isInitialGiven: true, responses };
+                return { ...issue, isInitialGiven: true, status: 'In Progress' as const, responses };
             }
             return issue;
         });
@@ -114,36 +114,37 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
             }
         `}</style>
 
-            <div className="flex space-x-8 ">
-                <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
-                    <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
-                    <div className='flex justify-between items-center my-2'>
-                        <div className='flex items-center space-x-2'>
-                            <span>Alert icon:</span>
-                            <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
-                                <span>{getAlertIcon(issue.alertType)}</span>
-                            </Tippy>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span>Severity:</span>
-                            <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <p>Priority: {getPriorityText(issue.priority,
-                                <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
-                                    {`${issue.priority}/4`}
-                                </span>)}</p>
+            <form onSubmit={handleSubmit}>
+                <div className="flex space-x-8 ">
+                    <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                        <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
+                        <div className='flex justify-between items-center my-2'>
+                            <div className='flex items-center space-x-2'>
+                                <span>Alert icon:</span>
+                                <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
+                                    <span>{getAlertIcon(issue.alertType)}</span>
+                                </Tippy>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <span>Severity:</span>
+                                <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <p>Priority: {getPriorityText(issue.priority,
+                                    <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
+                                        {`${issue.priority}/4`}
+                                    </span>)}</p>
 
 
+                            </div>
                         </div>
+                        <h4 className="text-xl font-semibold mt-5">{issue.title}</h4>
+                        <p className="mt-5" style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description}</p>
                     </div>
-                    <h4 className="text-xl font-semibold mt-5">{issue.title}</h4>
-                    <p className="mt-5" style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description}</p>
-                </div>
 
-                <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
-                    <h3 className="text-2xl font-bold mb-4">Initial Feedback</h3>
-                    <form onSubmit={handleSubmit}>
+                    <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                        <h3 className="text-2xl font-bold mb-4">Initial Feedback</h3>
+
                         {!issue.wizardFeedback &&
                             <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                 <label className="">
@@ -349,27 +350,28 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                         </div>
 
 
-                    </form>
+
+
+                    </div>
 
                 </div>
-
-            </div>
-            <div className="flex justify-end space-x-4 mt-6">
-                <button
-                    type="button"
-                    onClick={() => router.back()}
-                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                    Cancel
-                </button>
-                <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                    Submit
-                </button>
-            </div>
-        </div>
+                <div className="flex justify-end space-x-4 mt-6">
+                    <button
+                        type="button"
+                        onClick={() => router.back()}
+                        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div >
     );
 };
 

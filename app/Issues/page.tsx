@@ -119,7 +119,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                 {true &&
                     <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
                         <div className='flex items-center'>
-                            <Tippy theme="tomato-theme" content={<span><span className="font-bold" >Schweregrad<br /></span><span className="font-bold text-green-500">Low:</span> Niedrig<br /><span className="font-bold text-yellow-500">Medium:</span> Mittel<br /><span className="font-bold text-red-500">Rot:</span> Hoch</span>}>
+                            <Tippy theme="tomato-theme" content={<span><span className="font-bold" >Schweregrad<br /></span><span className="font-bold text-green-500">Low:</span> Niedrig<br /><span className="font-bold text-yellow-500">Medium:</span> Mittel<br /><span className="font-bold text-red-500">High:</span> Hoch</span>}>
                                 <div className='flex items-center'>Severity {renderSortIcon('severity')}</div>
                             </Tippy>
                         </div>

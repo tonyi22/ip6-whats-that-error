@@ -66,7 +66,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                 }
             `}</style>
             <div className="bg-gradient-to-b from-[#fcf1fa] to-[#fefcff] p-8 rounded-lg shadow-md w-full max-w-lg">
-                <h3 className="text-2xl font-bold mb-4">Feedback Form</h3>
+                <h3 className="text-2xl font-bold mb-4">Wizard Feedback</h3>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 gap-4 mb-4 border p-4 rounded-lg bg-white">
                         <label>Ist die Beschreibung des Issues klar?</label>

@@ -60,6 +60,7 @@ export function Feedback({ params }: { params: { id: string } }) {
         severityUnderstandable: '',
         statusUnderstandable: '',
         descriptionReason: '',
+        titleReason: '',
         priorityUnderstandable2: '',
         severityAdjustedCorrectlyComments: '',
         severityCorrect: '',
@@ -70,6 +71,7 @@ export function Feedback({ params }: { params: { id: string } }) {
         correctAlertType: '',
         moreUnderstandable: '',
         descriptionUnderstandable: '',
+        titleUnderstandable: '',
         affectedSystemsUnderstandable: '',
         impactUnderstandable: '',
         affSystems: '',
@@ -231,6 +233,111 @@ export function Feedback({ params }: { params: { id: string } }) {
                 <div className="">
                     <h3 className="text-2xl font-bold mb-4 text-center">Final Feedback</h3>
                     <form onSubmit={handleSubmit}>
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                            <div>
+                                <span className="ml-2">War der Titel des Issues klar und verständlich?</span>
+                                <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                    <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
+                                        style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
+                                    >
+                                        {issue.title}
+                                    </p>
+                                </label>
+                            </div>
+                            <div className="flex flex-col pr-4">
+                                <div className="flex space-x-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="titleUnderstandable"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Ja</span>
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="titleUnderstandable"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Nein</span>
+                                    </label>
+                                </div>
+                                {responses.titleUnderstandable === 'no' && (
+                                    <>
+                                        <textarea
+                                            name="titleReason"
+                                            value={responses.titleReason}
+                                            onChange={handleChange}
+                                            placeholder='Was war unklar?'
+                                            className="editable-input mt-3"
+                                        />
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div> {issue.isInitialGiven ?
+
+
+
+
+
+                            null : <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                                <div>
+                                    <span className="ml-2">War die Beschreibung des Issues klar und verständlich?</span>
+                                    <label className="flex items-center text-gray-700 dark:text-gray-300">
+                                        <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
+                                            style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
+                                        >
+                                            {issue.description}
+                                        </p>
+                                    </label>
+                                </div>
+                                <div className="flex flex-col pr-4">
+                                    <div className="flex space-x-4">
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="descriptionUnderstandable"
+                                                value="yes"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Ja</span>
+                                        </label>
+                                        <label className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="descriptionUnderstandable"
+                                                value="no"
+                                                className="custom-radio"
+                                                onChange={handleChange}
+                                            />
+                                            <span className="ml-2">Nein</span>
+                                        </label>
+                                    </div>
+                                    {responses.descriptionUnderstandable === 'no' && (
+                                        <>
+                                            <textarea
+                                                name="descriptionReason"
+                                                value={responses.descriptionReason}
+                                                onChange={handleChange}
+                                                placeholder='Was war unklar?'
+                                                className="editable-input mt-3"
+                                            />
+                                        </>
+                                    )}
+                                </div>
+                            </div>}
+
+                        </div>
+
+
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 p-4 border rounded-lg">
                             <div>
@@ -294,138 +401,6 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-
-                        <div>
-                            {issue.isInitialGiven ? (
-                                <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                                    <div>
-                                        <span className="ml-2">Wurde die Severity des Issues korrekt angepasst?</span>
-                                        <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
-                                            <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
-                                        </label>
-                                    </div>
-                                    <div className="flex flex-col pr-4">
-                                        <div className="flex space-x-4 ">
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="severityCorrect"
-                                                    value="yes"
-                                                    className="custom-radio"
-                                                    onChange={handleChange}
-                                                />
-                                                <span className="ml-2">Ja</span>
-                                            </label>
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="severityCorrect"
-                                                    value="no"
-                                                    className="custom-radio"
-                                                    onChange={handleChange}
-                                                />
-                                                <span className="ml-2">Nein</span>
-                                            </label>
-                                        </div>
-                                        {responses.severityCorrect === 'no' && (
-
-                                            <>
-
-
-                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Severity</p>
-                                                <div className="inline-block">
-                                                    <select
-                                                        name="correctSeverity"
-                                                        value={responses.correctSeverity}
-                                                        onChange={handleChange}
-                                                        className="mt-2 input border border-grey-800 w-auto"
-                                                        defaultValue=""
-                                                    >
-                                                        {['Low', 'Medium', 'High'].map(severity => (
-                                                            <option key={severity} value={severity} disabled={severity === issue.severity}>
-                                                                {severity}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <textarea
-                                                    name="severityReason"
-                                                    value={responses.severityReason}
-                                                    onChange={handleChange}
-                                                    placeholder='Begründe die neue Severity'
-                                                    className="editable-input mt-3"
-                                                />
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className=" bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                                    <div>
-                                        <span className="ml-2 block text-left">War die Severity nachvollziehbar? </span>
-                                        <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
-                                            <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
-                                        </label>
-                                    </div>
-                                    <div className="flex flex-col pr-4">
-                                        <div className="flex space-x-4">
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="severityUnderstandable"
-                                                    value="yes"
-                                                    className="custom-radio"
-                                                    onChange={handleChange}
-                                                />
-                                                <span className="ml-2">Ja</span>
-                                            </label>
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="severityUnderstandable"
-                                                    value="no"
-                                                    className="custom-radio"
-                                                    onChange={handleChange}
-                                                />
-                                                <span className="ml-2">Nein</span>
-                                            </label>
-                                        </div>
-                                        {responses.severityUnderstandable === 'no' && (
-                                            <>
-                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Severity</p>
-                                                <div className="inline-block">
-                                                    <select
-                                                        name="correctSeverity"
-                                                        value={responses.correctSeverity === '' ? issue.severity : responses.correctSeverity}
-                                                        onChange={handleChange}
-                                                        className="mt-2 input border border-grey-800 w-auto"
-                                                    >
-                                                        {['Low', 'Medium', 'High'].map(severity => (
-                                                            <option key={severity} value={severity} disabled={severity === issue.severity}>
-                                                                {severity}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <textarea
-                                                    name="severityReason"
-                                                    value={responses.severityReason}
-                                                    onChange={handleChange}
-                                                    placeholder='Begründung für neue Severity'
-                                                    className="editable-input mt-3"
-                                                />
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-
-
-
-
-
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div className="flex flex-col">
                                 <span className="ml-2">War der Incident Type der richtigen Kategorie zugeordnet?</span>
@@ -480,141 +455,65 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-
-                        <div> {issue.isInitialGiven ? (
-                            <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                                <div>
-                                    <span className="ml-2">
-                                        Wurde die Priorität des Issues korrekt angepasst?
-                                    </span>
-                                    <p className='ml-2 mt-2'>
-                                        {getPriorityText(issue.priority,
-                                            <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
-                                                {`${issue.priority}/4`}
-                                            </span>)}</p>
-                                </div>
-                                <div className="flex flex-col pr-4">
-                                    <div className="flex space-x-4">
-                                        <label className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                name="priorityUnderstandable2"
-                                                value="yes"
-                                                className="custom-radio"
-                                                onChange={handleChange}
-                                            />
-                                            <span className="ml-2">Ja</span>
-                                        </label>
-                                        <label className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                name="priorityUnderstandable2"
-                                                value="no"
-                                                className="custom-radio"
-                                                onChange={handleChange}
-                                            />
-                                            <span className="ml-2">Nein</span>
-                                        </label>
-                                    </div>
-                                    {responses.priorityUnderstandable2 === 'no' && (
-                                        <>
-                                            <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Priority</p>
-                                            <div className="inline-block">
-                                                <select
-                                                    name="correctPriority"
-                                                    value={responses.correctPriority === '' ? issue.priority : responses.correctPriority}
-                                                    onChange={handleChange}
-                                                    className="mt-2 input border border-grey-800 w-auto"
-                                                >
-                                                    {[...Array(4)].map((_, i) => (
-                                                        <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                            <textarea
-                                                name="priorityAdjustedCorrectlyComments"
-                                                value={responses.priorityAdjustedCorrectlyComments}
-                                                onChange={handleChange}
-                                                placeholder='Begründe die neue Priorität'
-                                                className="editable-input mt-3"
-                                            />
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                                <div className="flex flex-col">
-                                    <span className="ml-2">War die Priorität nachvollziehbar?</span>
-                                    <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
-                                        <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.priority}/4</span>
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="ml-2">
+                                War der KI-Lösungsvorschlag für das Issue relevant?
+                            </label>
+                            <div className="flex flex-col pr-4">
+                                <div className="flex space-x-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="clarityAISuggestions"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Ja</span>
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="clarityAISuggestions"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Nein</span>
                                     </label>
                                 </div>
-                                <div className="flex flex-col pr-4">
-                                    <div className="flex space-x-4">
-                                        <label className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                name="priorityUnderstandable"
-                                                value="yes"
-                                                className="custom-radio"
-                                                onChange={handleChange}
-                                            />
-                                            <span className="ml-2">Ja</span>
-                                        </label>
-                                        <label className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                name="priorityUnderstandable"
-                                                value="no"
-                                                className="custom-radio"
-                                                onChange={handleChange}
-                                            />
-                                            <span className="ml-2">Nein</span>
-                                        </label>
-                                    </div>
-                                    {responses.priorityUnderstandable === 'no' && (
-                                        <>
-                                            <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die korrekte Priorität auswählen</p>
-                                            <div className="inline-block">
-                                                <select
-                                                    name="correctPriority"
-                                                    value={responses.correctPriority === '' ? issue.priority : responses.correctPriority}
-                                                    onChange={handleChange}
-                                                    className="mt-2 input border border-grey-800 w-auto"
-                                                    defaultValue=""
-                                                >
-                                                    {[...Array(4)].map((_, i) => (
-                                                        <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                            <textarea
-                                                name="priorityReason"
-                                                value={responses.priorityReason}
-                                                onChange={handleChange}
-                                                placeholder='Begründung für neue Priorität'
-                                                className="editable-input mt-3"
-                                            />
-                                        </>
-                                    )}
-                                </div>
-                            </div>)}
+                                {responses.clarityAISuggestions === 'yes' && (
+                                    <textarea
+                                        name="relevanceAISuggestions"
+                                        value={responses.relevanceAISuggestions}
+                                        onChange={handleChange}
+                                        placeholder='Waren die AI-Vorschläge klar und verständlich?'
+                                        className="editable-input mt-3"
+                                    />
+                                )}
+                                {responses.clarityAISuggestions === 'no' && (
+                                    <textarea
+                                        name="relevanceAISuggestions"
+                                        value={responses.relevanceAISuggestions}
+                                        onChange={handleChange}
+                                        placeholder='Weshalb waren die Vorschläge nicht relevant?'
+                                        className="editable-input mt-3"
+                                    />
+                                )}
+                            </div>
                         </div>
-
                         <div>
-                            {issue.isInitialGiven ? (
+                            {issue.isInitialGiven ? null :
                                 <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                                    <label className="text-grayy-700 dark:text-gray-300 ml-2">
-                                        Wurde die Beschreibung des Issues im Verlauf klarer und hat sich
-                                        dein Verständnis des Problems im Verlauf verbessert?
+                                    <label className="ml-2">
+                                        Wusstest du, was zu tun ist, um das Issue zu lösen?
                                     </label>
                                     <div className="flex flex-col pr-4">
                                         <div className="flex space-x-4">
                                             <label className="flex items-center">
                                                 <input
                                                     type="radio"
-                                                    name="moreUnderstandable"
+                                                    name="whatToDo"
                                                     value="yes"
                                                     className="custom-radio"
                                                     onChange={handleChange}
@@ -624,7 +523,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             <label className="flex items-center">
                                                 <input
                                                     type="radio"
-                                                    name="moreUnderstandable"
+                                                    name="whatToDo"
                                                     value="no"
                                                     className="custom-radio"
                                                     onChange={handleChange}
@@ -632,27 +531,71 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 <span className="ml-2">Nein</span>
                                             </label>
                                         </div>
-                                        {responses.moreUnderstandable === 'no' && (
+                                        {responses.whatToDo === 'no' && (
                                             <textarea
-                                                name="descriptionClarityImprovedComments"
-                                                value={responses.descriptionClarityImprovedComments}
+                                                name="whatToDoReason"
+                                                value={responses.whatToDoReason}
                                                 onChange={handleChange}
-                                                placeholder='Was war noch unklar?'
+                                                placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
                                                 className="editable-input mt-3"
                                             />
                                         )}
                                     </div>
                                 </div>
-                            ) : (
+                            }
+                        </div>
+
+
+                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                            <div>
+                                <span className="ml-2">War der Impact verständlich?</span>
+                                <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
+                                    <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
+                                        {issue.impact}
+                                    </p>
+                                </label>
+                            </div>
+                            <div className="flex flex-col pr-4">
+                                <div className="flex space-x-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="impactUnderstandable"
+                                            value="yes"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Ja</span>
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="impactUnderstandable"
+                                            value="no"
+                                            className="custom-radio"
+                                            onChange={handleChange}
+                                        />
+                                        <span className="ml-2">Nein</span>
+                                    </label>
+                                </div>
+                                {responses.impactUnderstandable === 'no' && (
+                                    <textarea
+                                        name="impactReason"
+                                        value={responses.impactReason}
+                                        onChange={handleChange}
+                                        placeholder='Was war nicht verständilch?'
+                                        className="editable-input mt-3"
+                                    />
+                                )}
+                            </div>
+                        </div>
+                        <div>
+                            {issue.isInitialGiven ? null :
                                 <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                                    <div>
-                                        <span className="ml-2">War die Beschreibung des Issues klar und verständlich?</span>
-                                        <label className="flex items-center text-gray-700 dark:text-gray-300">
-                                            <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
-                                                style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
-                                            >
-                                                {issue.description}
-                                            </p>
+                                    <div className="flex flex-col">
+                                        <span className="ml-2">War die Priorität nachvollziehbar?</span>
+                                        <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
+                                            <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.priority}/4</span>
                                         </label>
                                     </div>
                                     <div className="flex flex-col pr-4">
@@ -660,7 +603,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             <label className="flex items-center">
                                                 <input
                                                     type="radio"
-                                                    name="descriptionUnderstandable"
+                                                    name="priorityUnderstandable"
                                                     value="yes"
                                                     className="custom-radio"
                                                     onChange={handleChange}
@@ -670,7 +613,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             <label className="flex items-center">
                                                 <input
                                                     type="radio"
-                                                    name="descriptionUnderstandable"
+                                                    name="priorityUnderstandable"
                                                     value="no"
                                                     className="custom-radio"
                                                     onChange={handleChange}
@@ -678,64 +621,35 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 <span className="ml-2">Nein</span>
                                             </label>
                                         </div>
-                                        {responses.descriptionUnderstandable === 'no' && (
+                                        {responses.priorityUnderstandable === 'no' && (
                                             <>
+                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die korrekte Priorität auswählen</p>
+                                                <div className="inline-block">
+                                                    <select
+                                                        name="correctPriority"
+                                                        value={responses.correctPriority === '' ? issue.priority : responses.correctPriority}
+                                                        onChange={handleChange}
+                                                        className="mt-2 input border border-grey-800 w-auto"
+                                                        defaultValue=""
+                                                    >
+                                                        {[...Array(4)].map((_, i) => (
+                                                            <option key={i + 1} value={i + 1} disabled={i + 1 === issue.priority}>{i + 1}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                                 <textarea
-                                                    name="descriptionReason"
-                                                    value={responses.descriptionReason}
+                                                    name="priorityReason"
+                                                    value={responses.priorityReason}
                                                     onChange={handleChange}
-                                                    placeholder='Was war unklar?'
+                                                    placeholder='Begründung für neue Priorität'
                                                     className="editable-input mt-3"
                                                 />
                                             </>
                                         )}
                                     </div>
-                                </div>
-                            )}
+                                </div>}
                         </div>
 
-                        <div>
-                            {issue.isInitialGiven ? (
-                                <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                                    <label className="ml-2">
-                                        Wurden die fehlenden Informationen bereitgestellt?
-                                    </label>
-                                    <div className="flex flex-col pr-4">
-                                        <div className="flex space-x-4 ">
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="bereitgestellt"
-                                                    value="yes"
-                                                    className="custom-radio"
-                                                    onChange={handleChange}
-                                                />
-                                                <span className="ml-2">Ja</span>
-                                            </label>
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="bereitgestellt"
-                                                    value="no"
-                                                    className="custom-radio"
-                                                    onChange={handleChange}
-                                                />
-                                                <span className="ml-2">Nein</span>
-                                            </label>
-                                        </div>
-                                        {responses.bereitgestellt === 'no' && (
-                                            <textarea
-                                                name="missingInfoProvidedComments"
-                                                value={responses.missingInfoProvidedComments}
-                                                onChange={handleChange}
-                                                placeholder='Wo fehlten dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
-                                                className="editable-input mt-3"
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                            ) : null}
-                        </div>
 
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
@@ -806,95 +720,77 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                            <div>
-                                <span className="ml-2">War die Auswirkung verständlich?</span>
-                                <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
-                                    <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
-                                        {issue.impact}
-                                    </p>
-                                </label>
-                            </div>
-                            <div className="flex flex-col pr-4">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="impactUnderstandable"
-                                            value="yes"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="impactUnderstandable"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
+                        <div>
+                            {issue.isInitialGiven ? null :
+                                <div className=" bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
+                                    <div>
+                                        <span className="ml-2 block text-left">War die Severity nachvollziehbar? </span>
+                                        <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
+                                            <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
+                                        </label>
+                                    </div>
+                                    <div className="flex flex-col pr-4">
+                                        <div className="flex space-x-4">
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable"
+                                                    value="yes"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Ja</span>
+                                            </label>
+                                            <label className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    name="severityUnderstandable"
+                                                    value="no"
+                                                    className="custom-radio"
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="ml-2">Nein</span>
+                                            </label>
+                                        </div>
+                                        {responses.severityUnderstandable === 'no' && (
+                                            <>
+                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Severity</p>
+                                                <div className="inline-block">
+                                                    <select
+                                                        name="correctSeverity"
+                                                        value={responses.correctSeverity === '' ? issue.severity : responses.correctSeverity}
+                                                        onChange={handleChange}
+                                                        className="mt-2 input border border-grey-800 w-auto"
+                                                    >
+                                                        {['Low', 'Medium', 'High'].map(severity => (
+                                                            <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                                                {severity}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <textarea
+                                                    name="severityReason"
+                                                    value={responses.severityReason}
+                                                    onChange={handleChange}
+                                                    placeholder='Begründung für neue Severity'
+                                                    className="editable-input mt-3"
+                                                />
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
-                                {responses.impactUnderstandable === 'no' && (
-                                    <textarea
-                                        name="impactReason"
-                                        value={responses.impactReason}
-                                        onChange={handleChange}
-                                        placeholder='Was war nicht verständilch?'
-                                        className="editable-input mt-3"
-                                    />
-                                )}
-                            </div>
+                            }
                         </div>
+
+
+
 
 
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
-                                Wusstest du, was zu tun ist, um das Issue zu lösen?
-                            </label>
-                            <div className="flex flex-col pr-4">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="whatToDo"
-                                            value="yes"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="whatToDo"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
-                                </div>
-                                {responses.whatToDo === 'no' && (
-                                    <textarea
-                                        name="whatToDoReason"
-                                        value={responses.whatToDoReason}
-                                        onChange={handleChange}
-                                        placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
-                                        className="editable-input mt-3"
-                                    />
-                                )}
-                            </div>
-                        </div>
-
-
-                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="ml-2">
-                                Hast du den Lösungsvorschlag umgesetzt?
+                                Hast du den Lösungsvorschlag tatsächlich umgesetzt?
                             </label>
                             <div className="flex flex-col pr-4">
                                 <div className="flex space-x-4">
@@ -931,61 +827,9 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-
-
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
-                                Waren die AI-Vorschläge für das Issue relevant?
-                            </label>
-                            <div className="flex flex-col pr-4">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="clarityAISuggestions"
-                                            value="yes"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="clarityAISuggestions"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
-                                </div>
-                                {responses.clarityAISuggestions === 'yes' && (
-                                    <textarea
-                                        name="relevanceAISuggestions"
-                                        value={responses.relevanceAISuggestions}
-                                        onChange={handleChange}
-                                        placeholder='Waren die AI-Vorschläge klar und verständlich?'
-                                        className="editable-input mt-3"
-                                    />
-                                )}
-                                {responses.clarityAISuggestions === 'no' && (
-                                    <textarea
-                                        name="relevanceAISuggestions"
-                                        value={responses.relevanceAISuggestions}
-                                        onChange={handleChange}
-                                        placeholder='Weshalb waren die Vorschläge nicht relevant?'
-                                        className="editable-input mt-3"
-                                    />
-                                )}
-                            </div>
-                        </div>
-
-
-
-                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="ml-2">
-                                Hast du die AI-Vorschläge umgesetzt?
+                                Hast du den KI-Lösungsvorschlag umgesetzt?
                             </label>
                             <div className="flex flex-col pr-4">
                                 <div className="flex space-x-4">
@@ -1030,30 +874,10 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-
-
-
-                        <div className="bg-white grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg">
-                            <div className="ml-2">
-                                <label >
-                                    Hast du Vorschläge zur Verbesserung der AI-Vorschläge?
-                                </label>
-                                <div className="flex flex-col">
-                                    <textarea
-                                        name="improvementAISuggestions"
-                                        value={responses.improvementAISuggestions}
-                                        onChange={handleChange}
-                                        placeholder='Erzähl davon'
-                                        className="editable-input mt-3"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="bg-white grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg ">
                             <div className='ml-2'>
                                 <label>
-                                    Wie zufrieden bist du insgesamt mit den AI-Vorschlägen?
+                                    Wie zufrieden bist du insgesamt mit den KI-Funktionen? (Terminal, Chat, Lösungsvorschlag)
                                 </label>
                                 <div className="flex flex-col">
                                     <div className="flex">

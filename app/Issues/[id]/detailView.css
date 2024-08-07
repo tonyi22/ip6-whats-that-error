@@ -33,6 +33,25 @@ body {
     }
 }
 
+/* detailView.css */
+.transition-opacity {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.transition-transform {
+    transition: transform 0.3s ease-in-out;
+}
+
+.hidden-column {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.visible-column {
+    transform: translateX(0);
+    opacity: 1;
+}
+
 .dropdown-container {
     position: relative;
     display: inline-block;

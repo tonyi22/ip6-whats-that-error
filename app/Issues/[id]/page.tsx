@@ -15,17 +15,20 @@ import { IoTerminal } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import { IoIosHelpCircle } from "react-icons/io";
 import Terminal from './Terminal';
+import { BsColumnsGap } from 'react-icons/bs';
+import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const labels = (label: string, help: string) => {
-
-    return (<div className='flex items-center pb-2 justify-between'>
-        <p className='font-bold'>{label}</p>
-        <Tippy theme="tomato-theme" content={<span>{help}</span>}>
-            <span><IoIosHelpCircle className="text-l" /></span>
-        </Tippy>
-    </div>
-    )
-}
+    return (
+        <div className='flex items-center pb-2 justify-between'>
+            <p className='font-bold'>{label}</p>
+            <Tippy theme="tomato-theme" content={<span>{help}</span>}>
+                <span><IoIosHelpCircle className="text-l" /></span>
+            </Tippy>
+        </div>
+    );
+};
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -45,6 +48,7 @@ const systemsList = [
     'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
     'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
 ];
+
 function IssueDetail({ params }: { params: { id: string } }) {
     const alertTypes = ['Critical', 'Warning', 'Info', 'None'];
     const severityTypes = ['Low', 'Medium', 'High'];
@@ -58,6 +62,22 @@ function IssueDetail({ params }: { params: { id: string } }) {
     const [issueCopy, setIssueCopy] = useState<SystemMonitoringIssue | null>(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+    const [hide, setHide] = useState(true);
+    const [collapse, setCollapse] = useState(false);
+    const searchParams = useSearchParams();
+    const from = searchParams.get('from');
+
+    useEffect(() => {
+        console.log("from: ", from);
+        if (from === 'wizard') {
+            console.log('Coming from wizard page');
+            // Perform your action here
+        }
+    }, [from]);
+
+    const toggleThirdColumn = () => {
+        setHide(!hide);
+    };
 
     const chatButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -93,6 +113,16 @@ function IssueDetail({ params }: { params: { id: string } }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
+    }, []);
+
+    useEffect(() => {
+        // Check the referrer URL
+        const referrer = document.referrer;
+        console.log(referrer)
+        if (referrer.includes('/Issues/1/wizard')) {
+            console.log('Coming from wizard page');
+            // Perform your action here
+        }
     }, []);
 
     const handleAddSystem = (system: string) => {
@@ -163,6 +193,8 @@ function IssueDetail({ params }: { params: { id: string } }) {
         setEditMode(false);
     };
 
+
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setIssue(prev => {
@@ -171,7 +203,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
             let newValue: any = value;
 
             if (name === 'priority') {
-                newValue = parseInt(value, 4);
+                newValue = parseInt(value, 10);
             } else if (name === 'status') {
                 newValue = validateType(value, statusTypes, prev.status);
             } else if (name === 'alertType') {
@@ -193,8 +225,6 @@ function IssueDetail({ params }: { params: { id: string } }) {
         return <div className="mx-10 my-10 text-black dark:text-github-dark-text">Issue not found</div>;
     }
 
-
-
     return (
         <div className={`mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text`}>
             <div className='flex items-center justify-between mb-4'>
@@ -212,6 +242,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                             <IoTerminal />
                         </button>
                     }
+
                     {!isEditMode &&
                         <button ref={chatButtonRef} className={`${isChatOpen ? 'bg-blue-700' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`} onClick={openChat}>
                             <AiOutlineWechatWork className='text-xl' />
@@ -234,6 +265,13 @@ function IssueDetail({ params }: { params: { id: string } }) {
                             </button>
                         </Link>
                     )}
+
+                    <button
+                        onClick={toggleThirdColumn}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l-2xl shadow-md focus:outline-none focus:shadow-outline"
+                    >
+                        {hide ? <GoSidebarExpand className="text-xl" /> : <GoSidebarCollapse className="text-xl" />}
+                    </button>
                 </div>
             </div>
 
@@ -267,7 +305,6 @@ function IssueDetail({ params }: { params: { id: string } }) {
                     <div className='flex items-center'>
                         <p className="">Alert type:</p>
                         {isEditMode ? (
-
                             <select
                                 name="alertType"
                                 value={issue.alertType}
@@ -280,7 +317,6 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                     </option>
                                 ))}
                             </select>
-
                         ) : (
                             <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
                                 <span>{getAlertIcon(issue.alertType)}</span>
@@ -371,11 +407,10 @@ function IssueDetail({ params }: { params: { id: string } }) {
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-3 grid-rows-[auto, 1fr, 1fr, 1fr] gap-4">
+
+            <div className={`grid ${hide ? 'grid-cols-2' : 'grid-cols-3'} grid-rows-[auto, 1fr, 1fr, 1fr] gap-4 transition-all duration-300`}>
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Descirption", "Empfohlene Schritte zur Behebung des Problems")}
-
-
+                    {labels("Description", "Empfohlene Schritte zur Behebung des Problems")}
                     {isEditMode ? (
                         <textarea
                             name="description"
@@ -392,63 +427,9 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         </p>
                     )}
                 </div>
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Affected Systems", "Listet die Systeme auf, die von dem Issue betroffen sind.")}
-                    <div className="space-y-1">
-                        {isEditMode ? (
-                            <div>
-                                <div className='flex space-x-4 h-full'>
-                                    <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
-                                        <div
-                                            className="cursor-pointer"
-                                            onClick={toggleDropdown}
-                                        >
-                                            <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
-                                                Wähle die Systeme aus
-                                                <FaCaretDown className="ml-1" />
-                                            </div>
-                                        </div>
-                                        {dropdownOpen && (
-                                            <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
-                                                {systemsList.map(system => (
-                                                    <div
-                                                        key={system}
-                                                        className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleAddSystem(system);
-                                                        }}
-                                                    >
-                                                        {system}
-                                                        {issue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className={`flex-grow py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'border border-gray-300 rounded-md' : ''}`}>
-                                    {issue.affectedSystems.map((system, index) => (
-                                        <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
-                                            <span className="flex-grow">{system}</span>
-                                            <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ) : (
-                            issue.affectedSystems.length > 0 ? (
-                                issue.affectedSystems.map((system, index) => (
-                                    <p key={index} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {system}</p>
-                                ))
-                            ) : (
-                                <></>
-                            )
-                        )}
-                    </div>
-                </div>
+
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Lösungsvorschlag", "Empfohlene Schritte zur Behebung des Problems, basierend auf der Analyse und Diagnose der Störung.")}
+                    {labels("Solution", "Empfohlene Schritte zur Behebung des Problems, basierend auf der Analyse und Diagnose der Störung.")}
                     {isEditMode ? (
                         <textarea
                             name="loesungsvorschlag"
@@ -460,6 +441,62 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.loesungsvorschlag}</p>
                     )}
                 </div>
+
+                {!hide && (
+                    <div className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
+                        {labels("Affected Systems", "Listet die Systeme auf, die von dem Issue betroffen sind.")}
+                        <div className="space-y-1">
+                            {isEditMode ? (
+                                <div>
+                                    <div className='flex space-x-4 h-full'>
+                                        <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
+                                            <div className="cursor-pointer" onClick={toggleDropdown}>
+                                                <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
+                                                    Wähle die Systeme aus
+                                                    <FaCaretDown className="ml-1" />
+                                                </div>
+                                            </div>
+                                            {dropdownOpen && (
+                                                <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
+                                                    {systemsList.map(system => (
+                                                        <div
+                                                            key={system}
+                                                            className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleAddSystem(system);
+                                                            }}
+                                                        >
+                                                            {system}
+                                                            {issue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className={`flex-grow py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'border border-gray-300 rounded-md' : ''}`}>
+                                        {issue.affectedSystems.map((system, index) => (
+                                            <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
+                                                <span className="flex-grow">{system}</span>
+                                                <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                issue.affectedSystems.length > 0 ? (
+                                    issue.affectedSystems.map((system, index) => (
+                                        <p key={index} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {system}</p>
+                                    ))
+                                ) : (
+                                    <></>
+                                )
+                            )}
+                        </div>
+                    </div>
+                )}
+
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
                     {labels("Impact", "Zeigt die Auswirkungen des Issues auf das System oder die betroffenen Benutzer an.")}
                     {isEditMode ? (
@@ -473,39 +510,45 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.impact}</p>
                     )}
                 </div>
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Preventative Measures", "Vorbeugende Massnahmen, die ergriffen werden können, um das Auftreten ähnlicher Issues in der Zukunft zu verhindern.")}
-                    {isEditMode ? (
-                        <textarea
-                            name="preventativeMeasures"
-                            value={issue.preventativeMeasures}
-                            onChange={handleInputChange}
-                            className="editable-input"
-                        />
-                    ) : (
-                        <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.preventativeMeasures}</p>
-                    )}
-                </div>
-                <TabComponent />
 
-                <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Info", "Zusätzliche Informationen zur Problemmeldung, wie Ersteller, Priorität, Zeitstempel und Dauer des Ereignisses.")}
-                    <div className='grid grid-cols-2 gap-2'>
-                        <p className=''>Creator:</p>
-                        <p className='text-right'>{issue.creator}</p>
-                        <p className=''>Issue Nr.:</p>
-                        <p className='text-right'>{issue.id}</p>
-                        <p className=''>Duration:</p>
-                        <p className='text-right'>{issue.duration} h</p>
-                        <p className=''>Timestamp:</p>
-                        <p className='text-right'>{formatDate(issue.timestamp)}</p>
-                        <p className=''>Last updated:</p>
-                        <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
-                        <p className=''>End time:</p>
-                        <p className='text-right'>--:--</p>
+                {!hide && (
+                    <div className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
+                        {labels("Preventative Measures", "Vorbeugende Massnahmen, die ergriffen werden können, um das Auftreten ähnlicher Issues in der Zukunft zu verhindern.")}
+                        {isEditMode ? (
+                            <textarea
+                                name="preventativeMeasures"
+                                value={issue.preventativeMeasures}
+                                onChange={handleInputChange}
+                                className="editable-input"
+                            />
+                        ) : (
+                            <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.preventativeMeasures}</p>
+                        )}
                     </div>
-                </div>
-                <div className='col-start-3 col-span-1'>
+                )}
+
+                <TabComponent />
+                {!hide && (
+                    <div className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
+                        {labels("Info", "Zusätzliche Informationen zur Problemmeldung, wie Ersteller, Priorität, Zeitstempel und Dauer des Ereignisses.")}
+                        <div className='grid grid-cols-2 gap-2'>
+                            <p className=''>Creator:</p>
+                            <p className='text-right'>{issue.creator}</p>
+                            <p className=''>Issue Nr.:</p>
+                            <p className='text-right'>{issue.id}</p>
+                            <p className=''>Duration:</p>
+                            <p className='text-right'>{issue.duration} h</p>
+                            <p className=''>Timestamp:</p>
+                            <p className='text-right'>{formatDate(issue.timestamp)}</p>
+                            <p className=''>Last updated:</p>
+                            <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
+                            <p className=''>End time:</p>
+                            <p className='text-right'>--:--</p>
+                        </div>
+                    </div>
+                )}
+
+                <div className={`${hide ? "col-start-2" : "col-start-3"} col-span-1`}>
                     <div className='flex justify-end'>
                         {!isEditMode && (
                             <div className="flex justify-end space-x-4">
@@ -539,9 +582,8 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         <Terminal commands={issue.commands} onExecute={handleExecute} commandResponses={issue.commandResponses} />
                     </div>
                 )}
-
             </div>
-        </div >
+        </div>
     );
 }
 
