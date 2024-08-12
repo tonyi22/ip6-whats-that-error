@@ -2,8 +2,7 @@
 
 import styles from '../issues.module.css'
 import '../tippystyle.css'
-
-import { FaGreaterThan, FaLessThan, FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaGreaterThan, FaLessThan, FaSort, FaSortDown, FaSortUp, FaToggleOff, FaToggleOn } from "react-icons/fa";
 import { SystemMonitoringIssue } from '../data/data';
 import { MdOutlineFiberNew } from "react-icons/md";
 import { useEffect, useState } from 'react';
@@ -15,7 +14,8 @@ import issuesJson from '../data/issues.json' assert { type: 'json' };
 import { Button, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-
+import { useTranslation } from '../TranslationContext';
+import { LiaToggleOffSolid, LiaToggleOnSolid } from 'react-icons/lia';
 
 interface CardsHeaderProps {
     onSort: (column: string) => void;
@@ -54,12 +54,12 @@ const loadIssues = (): SystemMonitoringIssue[] => {
     }
 };
 
-
 const saveIssues = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
 }
 
 function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
+    const { translate } = useTranslation();
     const renderSortIcon = (column: string) => {
         if (sortColumn === column) {
             return sortDirection === 'asc' ? <FaSortUp className='hover:cursor-pointer' /> : <FaSortDown className='hover:cursor-pointer' />;
@@ -69,26 +69,22 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
 
     return (
         <thead className="bg-gray-300">
-            <tr>
-                <th className="rounded-tl-xl rounded-bl-xl px-2 py-3 text-center text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-20"
+            <tr className=''>
+                <th className="h-14 rounded-tl-xl rounded-bl-xl px-2 py-3 text-center text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-24"
                     onClick={() => onSort('alertType')}>
                     <Tippy theme="tomato-theme" content={<span><span className="font-bold text-blue-500">Blaues "i":</span> Informationsmeldung<br /><span className="font-bold text-red-500">Rotes "!":</span> Fehlermeldungen<br /><span className="font-bold text-yellow-500">Gelbes "!":</span> Warnmeldungen</span>}>
-                        <div className='flex items-center cursor-pointer'>Alert Type {renderSortIcon('alertType')}</div>
+                        <div className='flex items-center cursor-pointer'>{translate('alertType')} {renderSortIcon('alertType')}</div>
                     </Tippy>
                 </th>
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500" onClick={() => onSort('title')}>
-                    <div className='flex items-center'>Title {renderSortIcon('title')}</div>
+                    <div className='flex items-center'>{translate('title')} {renderSortIcon('title')}</div>
                 </th>
 
-                {false &&
-                    <th className="px-2 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500">Description</th>}
-
                 {true &&
-
                     <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 w-52 uppercase dark:text-neutral-500" onClick={() => onSort('incidentType')}>
                         <div className='flex items-center'>
                             <Tippy theme="tomato-theme" content={<span>
-                                <span className="font-bold">Performance:</span> Leistung der Anwendung<br />
+                                <span className="font-bold">{translate('performance')}</span> Leistung der Anwendung<br />
                                 <span className="font-bold">Storage:</span> Speicherprobleme<br />
                                 <span className="font-bold">Overheating:</span> Überhitzung<br />
                                 <span className="font-bold">Backups:</span> Backup-Probleme<br />
@@ -111,7 +107,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                                 <span className="font-bold">Security:</span> Sicherheitsprobleme
                             </span>}
                             >
-                                <div className='flex items-center'>Incident Type {renderSortIcon('incidentType')}</div>
+                                <div className='flex items-center'>{translate('incidentType')} {renderSortIcon('incidentType')}</div>
                             </Tippy>
                         </div>
                     </th>}
@@ -120,7 +116,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                     <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
                         <div className='flex items-center'>
                             <Tippy theme="tomato-theme" content={<span><span className="font-bold" >Schweregrad<br /></span><span className="font-bold text-green-500">Low:</span> Niedrig<br /><span className="font-bold text-yellow-500">Medium:</span> Mittel<br /><span className="font-bold text-red-500">High:</span> Hoch</span>}>
-                                <div className='flex items-center'>Severity {renderSortIcon('severity')}</div>
+                                <div className='flex items-center'>{translate('severity')}  {renderSortIcon('severity')}</div>
                             </Tippy>
                         </div>
                     </th>}
@@ -128,26 +124,26 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('priority')}>
                     <div className='flex items-center'>
                         <Tippy theme="tomato-theme" content={<span><span className="font-bold">1:</span> Niedrige Priorität<br /><span className="font-bold">2:</span> Mittlere Priorität<br /><span className="font-bold">3:</span> Hohe Priorität<br /><span className="font-bold">4:</span> Dringende Priorität</span>}>
-                            <div className='flex items-center'>Priority {renderSortIcon('priority')}</div>
+                            <div className='flex items-center'>{translate('priority')}  {renderSortIcon('priority')}</div>
                         </Tippy>
                     </div>
                 </th>
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('timestamp')}>
-                    <div className='flex items-center'> Timestamp {renderSortIcon('timestamp')}</div>
+                    <div className='flex items-center'> {translate('timestamp')}  {renderSortIcon('timestamp')}</div>
                 </th>
-                <th className="rounded-tr-xl rounded-br-xl px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-[5rem]">Option</th> {/* Add padding to the right */}
+                <th className="rounded-tr-xl rounded-br-xl px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-[5rem]">{translate('option')} </th> {/* Add padding to the right */}
             </tr>
         </thead >
     );
 }
 
-function List({ list }: { list: SystemMonitoringIssue[] }) {
+function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boolean }) {
     const router = useRouter();
     const [sortColumn, setSortColumn] = useState<string>('timestamp');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
     const handleRowClick = (id: number) => {
-        if (true) {
+        if (isLmode) {
             router.push(`/Issues/${id}/wizard`);
         } else {
             router.push(`/Issues/${id}`);
@@ -202,23 +198,16 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                         <Tippy theme="tomato-theme" content={<span>{getAlertText(listIssue.alertType)}</span>}>
                             <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
                         </Tippy>
-
                         <td className="pl-2 pr-6 py-3 truncate">{listIssue.title}</td>
-
                         {false &&
                             <td className="px-2 py-3 truncate">{listIssue.description}</td>}
-
                         {true &&
                             <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
                                 {listIssue.incidentType}
                             </span></td>}
-
-
                         {true &&
                             <td className="px-2 py-3 text-sm"><span className={`${getSeverityColor(listIssue.severity)} rounded-xl p-2`}>
                                 {listIssue.severity}</span></td>}
-
-
                         <td className="px-2 py-3 text-sm">
 
                             {getPriorityText(listIssue.priority,
@@ -226,10 +215,6 @@ function List({ list }: { list: SystemMonitoringIssue[] }) {
                                     {`${listIssue.priority}/4`}
                                 </span>)}
                         </td>
-
-
-
-
                         <td className="px-2 py-3 text-sm ">{formatDate(listIssue.timestamp)}</td>
                         <td className="text-center px-2 py-3 rounded-br-xl rounded-tr-xl"><CustomDropDown
                             id={listIssue.id}
@@ -248,6 +233,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
     }) {
     const [isClicked, setIsClicked] = useState(false);
     const router = useRouter();
+    const { translate } = useTranslation();
 
     const extractDescription = (desc: string) => {
         const prefix = "Einleitung";
@@ -276,9 +262,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
         <div className="relative  rounded-xl flex flex-col items-center border-4 w-1/2 px-5" >
             <div className="absolute top-0 right-0 -mt-6 -mr-6">
                 <MdOutlineFiberNew className="text-red-500 text-5xl" />
-
             </div>
-
 
             <div className='flex space-x-8 items-center mt-12'>
                 <button
@@ -306,7 +290,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                             <p className="leading-8 font-normal break-words overflow-hidden line-clamp-2">{truncatedDescription}</p>
                         </div>
                         <div className='flex justify-between mt-auto'>
-                            <p>Priority: {getPriorityText(priority,
+                            <p>{translate('priority')}: {getPriorityText(priority,
                                 <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
                                     {`${priority}/4`}
                                 </span>)}</p>
@@ -320,19 +304,11 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                     onClick={handleNext}>
                     <FaGreaterThan />
                 </button>
-
-
-
             </div>
 
             <div className='mt-5 w-full max-w-lg flex justify-between'>
                 <div className='w-[3rem]'></div>
-
-
-                <p>Issue {currentIndex + 1} von {length}</p>
-
-
-
+                <p>Issue {currentIndex + 1} {translate('of')} {length}</p>
                 <Menu as="div" className="relative inline-block text-left" >
                     <div className="relative">
                         <MenuButton className="inline-flex w-full justify-center gap-2 py-1.5 px-3 text-sm/6">
@@ -351,7 +327,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                                         className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
                                         onClick={() => handleSortNewIssues('alertType')}
                                     >
-                                        Alert Type
+                                        {translate('alertType')}
                                     </Button>
                                 )}
                             </MenuItem>
@@ -362,7 +338,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                                         className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
                                         onClick={() => handleSortNewIssues('priority')}
                                     >
-                                        Priority
+                                        {translate('priority')}
                                     </Button>
                                 )}
                             </MenuItem>
@@ -373,39 +349,30 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                                         className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm w-full')}
                                         onClick={() => handleSortNewIssues('timestamp')}
                                     >
-                                        Timestamp
+                                        {translate('timestamp')}
                                     </Button>
                                 )}
                             </MenuItem>
                         </div>
                     </MenuItems>
                 </Menu>
-
-
-
             </div>
-
-
 
             <div className="flex w-full max-w-lg justify-center mb-4">
                 <button
                     className="bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-600"
                     onClick={handleDismiss}>
-                    Gelesen
+                    {translate('read')}
                 </button>
-
             </div>
-
-
-
         </div >
-
     );
 }
 
 export default function IssuesPage() {
     const router = useRouter();
-
+    const { translate, setLanguage, language } = useTranslation();
+    const [isLMode, setIsLMode] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [openIssues, setOpenIssues] = useState<SystemMonitoringIssue[]>([]);
     const [newIssues, setNewIssues] = useState<SystemMonitoringIssue[]>([]);
@@ -464,8 +431,6 @@ export default function IssuesPage() {
             }
         }
     };
-
-
 
     const handleSortNewIssues = (sortColumn: SortableColumns) => {
         setNewIssues(prevNewIssues => {
@@ -533,6 +498,43 @@ export default function IssuesPage() {
 
     return (
         <div className={styles.app}>
+            <div className="w-5/6 flex justify-center">
+                <div className="w-full flex justify-between select-none items-center">
+                    <div>
+                        {isLMode ?
+                            <div className="flex items-center mt-12">
+                                <LiaToggleOnSolid
+                                    onClick={() => setIsLMode(!isLMode)}
+                                    className="text-3xl cursor-pointer select-none text-blue-500"
+                                />
+                                <span className="ml-4 text-lg select-none">{translate('modeOn')}</span>
+                            </div> :
+                            <div className="flex items-center mt-12">
+                                <LiaToggleOffSolid
+                                    onClick={() => setIsLMode(!isLMode)}
+                                    className="text-3xl cursor-pointer select-none"
+                                />
+                                <span className="ml-4 text-lg select-none">{translate('modeOff')}</span>
+                            </div>
+                        }
+                    </div>
+                    <div className='flex items-center mt-12 space-x-4'>
+                        <button
+                            className={`${language === 'en' ? 'text-blue-500' : 'text-black'}`}
+                            onClick={() => setLanguage('en')}
+                        >
+                            EN
+                        </button>
+                        <button
+                            className={`${language === 'de' ? 'text-blue-500' : 'text-black'}`}
+                            onClick={() => setLanguage('de')}
+                        >
+                            DE
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             {newIssues.length > 0 && currentId !== null &&
                 <div className="flex flex-col items-center w-full">
                     <Card1
@@ -554,18 +556,16 @@ export default function IssuesPage() {
                 </div>
             }
             <h3 className="text-5xl font-semibold mt-5">Issues</h3>
-
             <div className='w-5/6'>
                 <div className="flex justify-end mb-4">
                     <button
                         className="bg-gray-200 text-black px-4 py-3 rounded hover:bg-gray-300"
                         onClick={newIssuePage}>
-                        New Issue
+                        {translate('newIssue')}
                     </button>
                 </div>
-                <List list={openIssues} />
+                <List list={openIssues} isLmode={isLMode} />
             </div>
-
         </div >
     )
 }

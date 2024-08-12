@@ -14,9 +14,10 @@ import { IoTerminal } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import Stepper from './Stepper';
 import { useRouter } from 'next/navigation';
-import { log } from 'console';
 import Terminal from '../Terminal';
 import FeedbackModal from './FeedbackModal';
+import { useTranslation } from '@/app/TranslationContext';
+
 
 // Load and save issues from/to localStorage
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
@@ -47,6 +48,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
         'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'];
     const priorities = Array.from({ length: 4 }, (_, i) => i + 1);
     const router = useRouter();
+    const { translate } = useTranslation();
 
     const [isEditMode, setEditMode] = useState(false);
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
@@ -429,7 +431,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
 
                     <div className='flex justify-between items-center'>
                         <div className='flex items-center'>
-                            <p className="">Alert type:</p>
+                            <p className="">{translate('alertType')}:</p>
                             {isEditMode ? (
                                 <select
                                     name="alertType"

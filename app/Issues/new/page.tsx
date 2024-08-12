@@ -8,9 +8,12 @@ import '../[id]/detailView.css';
 import { compareSort } from '@/app/helperFunction';
 import { MdCancel } from "react-icons/md";
 import '../[id]/detailView.css';
+import { useTranslation } from '@/app/TranslationContext';
 
 const NewIssue = () => {
-    const alertTypes = ['Informationsmeldung', 'Warnmeldung', 'Fehlermeldung', 'None'] as const;
+    const { translate } = useTranslation();
+    const alertTypes = translate('alartTypes', false).split(', ');
+    //const alertTypes = ['Informationsmeldung', 'Warnmeldung', 'Fehlermeldung'] as const;
     const severityTypes = ['Low', 'Medium', 'High'] as const;
     const statusTypes = ['New', 'Open', 'Closed', 'In Progress'] as const;
     const incidentTypes = [
@@ -58,6 +61,7 @@ const NewIssue = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
+
 
     const titleInputRef = useRef<HTMLInputElement>(null); // Correct ref type for input
     const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
@@ -262,11 +266,11 @@ Lösungsvorschlag:
     return (
         <div className="flex justify-center my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
             <div className="bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-bold mb-4 text-center">Create New Issue</h3>
+                <h3 className="text-2xl font-bold mb-4 text-center">{translate('createNewIssue')}</h3>
                 <form>
                     <div className='mb-4'>
                         <div>
-                            <label className="block text-sm font-bold mb-2" htmlFor="title">Title *</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="title">{translate('title')} *</label>
                             <input
                                 type="text"
                                 name="title"
@@ -291,11 +295,11 @@ Lösungsvorschlag:
                                     >
                                         <MdCancel className="w-4 h-4 text-gray-700" />
                                     </button>
-                                    <h4 className="font-semibold text-sm">Title Template</h4>
+                                    <h4 className="font-semibold text-sm">{translate('titleTemp')}</h4>
                                     <div className="text-sm text-gray-700">
-                                        <span className="font-semibold">Format:</span> [Subject] [Predicate] [Object] [Conjunction] [Condition/Place/Action/Process]
+                                        <span className="font-semibold">Format:</span> {translate('titleTemplate')}
                                         <br />
-                                        <span className="font-semibold">Example:</span> Server CT-10 is overheating the system under high load.
+                                        <span className="font-semibold">{translate('example')}:</span> {translate('titleTemplateExample')}
                                     </div>
                                 </div>
                             )}
@@ -313,7 +317,7 @@ Lösungsvorschlag:
                     </div>
                     <div className='mb-4'>
                         <div >
-                            <label className="block text-sm font-bold mb-2" htmlFor="description">Description *</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="description">{translate('description')} *</label>
                             <textarea
                                 name="description"
                                 value={suggestionAccepted ? newIssue.description : newIssue.description}
@@ -376,7 +380,7 @@ Lösungsvorschlag:
 
                     <div className="flex justify-between items-center mb-4">
                         <div>
-                            <label className="block text-sm font-bold mb-2" htmlFor="alertType">Alert Type</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="alertType">{translate('alertType')}</label>
                             <select
                                 name="alertType"
                                 value={newIssue.alertType}
@@ -392,7 +396,7 @@ Lösungsvorschlag:
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold mb-2" htmlFor="severity">Severity</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="severity">{translate('severity')}</label>
                             <select
                                 name="severity"
                                 value={newIssue.severity}
@@ -408,7 +412,7 @@ Lösungsvorschlag:
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold mb-2" htmlFor="incidentType">Incident Type</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="incidentType">{translate('incidentType')}</label>
                             <select
                                 name="incidentType"
                                 value={newIssue.incidentType}
@@ -424,7 +428,7 @@ Lösungsvorschlag:
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold mb-2" htmlFor="priority">Priority</label>
+                            <label className="block text-sm font-bold mb-2" htmlFor="priority">{translate('priority')}</label>
                             <select
                                 name="priority"
                                 value={newIssue.priority}
@@ -441,13 +445,13 @@ Lösungsvorschlag:
                     </div>
 
                     <div className="mb-4">
-                        <label className="block text-sm font-bold mb-2" htmlFor="affectedSystems">Affected Systems</label>
+                        <label className="block text-sm font-bold mb-2" htmlFor="affectedSystems">{translate('affectedSystems')}</label>
 
                         <div className="flex space-x-4 h-full">
                             <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
                                 <div className="cursor-pointer" onClick={toggleDropdown}>
                                     <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
-                                        Wähle die Systeme aus
+                                        {translate('choseSystem')}
                                         <FaCaretDown className="ml-1" />
                                     </div>
                                 </div>
@@ -476,14 +480,14 @@ Lösungsvorschlag:
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="text-gray-500 cursor-default">Keine Systeme ausgewählt</div>
+                                    <div className="text-gray-500 cursor-default">{translate('noSystem')}</div>
                                 )}
                             </div>
                         </div>
                     </div>
 
                     <div className="mb-4">
-                        <label className="block text-sm font-bold mb-2" htmlFor="impact">Impact</label>
+                        <label className="block text-sm font-bold mb-2" htmlFor="impact">{translate('impact')}</label>
                         <textarea
                             name="impact"
                             value={newIssue.impact}
@@ -493,7 +497,7 @@ Lösungsvorschlag:
                     </div>
 
                     <div className="mb-4">
-                        <label className="block text-sm font-bold mb-2" htmlFor="preventativeMeasures">Preventative Measures</label>
+                        <label className="block text-sm font-bold mb-2" htmlFor="preventativeMeasures">{translate('preventativeMeasures')}</label>
                         <textarea
                             name="preventativeMeasures"
                             value={newIssue.preventativeMeasures}
@@ -503,8 +507,8 @@ Lösungsvorschlag:
                     </div>
 
                     <div className="flex justify-end space-x-4">
-                        <button type="button" onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
-                        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Create Issue</button>
+                        <button type="button" onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">{translate('cancel')}</button>
+                        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">{translate('createIssue')}</button>
                     </div>
                 </form>
             </div>

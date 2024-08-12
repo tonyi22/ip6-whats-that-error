@@ -18,6 +18,7 @@ import Terminal from './Terminal';
 import { BsColumnsGap } from 'react-icons/bs';
 import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslation } from '@/app/TranslationContext';
 
 const labels = (label: string, help: string) => {
     return (
@@ -50,6 +51,7 @@ const systemsList = [
 ];
 
 function IssueDetail({ params }: { params: { id: string } }) {
+    const { translate } = useTranslation()
     const alertTypes = ['Critical', 'Warning', 'Info', 'None'];
     const severityTypes = ['Low', 'Medium', 'High'];
     const statusTypes = ['New', 'Open', 'Closed', 'In Progress'];
@@ -249,7 +251,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         </button>}
                     {!isEditMode ? (
                         <button onClick={handleEdit} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center'>
-                            <span className='flex items-center'>Edit <CiEdit className='text-2xl ml-2' /></span>
+                            <span className='flex items-center'>{translate('edit')} <CiEdit className='text-2xl ml-2' /></span>
                         </button>
                     ) : (
                         <div className='flex space-x-4'>
@@ -261,7 +263,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         <Link href={`/Issues/${issue.id}/initial-feedback`}>
                             <button
                                 className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline'>
-                                Give Initial Feedback
+                                {translate('giveInitial')}
                             </button>
                         </Link>
                     )}
@@ -303,7 +305,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
 
                 <div className='flex justify-between items-center'>
                     <div className='flex items-center'>
-                        <p className="">Alert type:</p>
+                        <p className="">{translate('alertType')}:</p>
                         {isEditMode ? (
                             <select
                                 name="alertType"
@@ -324,7 +326,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         )}
                     </div>
                     <div>
-                        <p>Severity:
+                        <p>{translate('severity')}:
                             {isEditMode ? (
                                 <select
                                     name="severity"
@@ -361,7 +363,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         </p>
                     </div>
                     <div>
-                        <p>Incident type:
+                        <p>{translate('incidentType')}:
                             {isEditMode ? (
                                 <select
                                     name="incidentType"
@@ -383,7 +385,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         </p>
                     </div>
                     <div>
-                        <p>Priority:
+                        <p>{translate('priority')}:
                             {isEditMode ? (
                                 <select
                                     name="priority"
@@ -410,7 +412,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
 
             <div className={`grid ${hide ? 'grid-cols-2' : 'grid-cols-3'} grid-rows-[auto, 1fr, 1fr, 1fr] gap-4 transition-all duration-300`}>
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Description", "Empfohlene Schritte zur Behebung des Problems")}
+                    {labels(translate('description'), "Beschreibung des Problems")}
                     {isEditMode ? (
                         <textarea
                             name="description"
@@ -429,7 +431,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                 </div>
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Solution", "Empfohlene Schritte zur Behebung des Problems, basierend auf der Analyse und Diagnose der Störung.")}
+                    {labels(translate('suggestedSolution'), "Empfohlene Schritte zur Behebung des Problems, basierend auf der Analyse und Diagnose der Störung.")}
                     {isEditMode ? (
                         <textarea
                             name="loesungsvorschlag"
@@ -444,7 +446,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
 
                 {!hide && (
                     <div className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
-                        {labels("Affected Systems", "Listet die Systeme auf, die von dem Issue betroffen sind.")}
+                        {labels(translate('affectedSystems'), "Listet die Systeme auf, die von dem Issue betroffen sind.")}
                         <div className="space-y-1">
                             {isEditMode ? (
                                 <div>
@@ -498,7 +500,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                 )}
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels("Impact", "Zeigt die Auswirkungen des Issues auf das System oder die betroffenen Benutzer an.")}
+                    {labels(translate('impact'), "Zeigt die Auswirkungen des Issues auf das System oder die betroffenen Benutzer an.")}
                     {isEditMode ? (
                         <textarea
                             name="impact"
@@ -513,7 +515,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
 
                 {!hide && (
                     <div className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
-                        {labels("Preventative Measures", "Vorbeugende Massnahmen, die ergriffen werden können, um das Auftreten ähnlicher Issues in der Zukunft zu verhindern.")}
+                        {labels(translate('preventativeMeasures'), "Vorbeugende Massnahmen, die ergriffen werden können, um das Auftreten ähnlicher Issues in der Zukunft zu verhindern.")}
                         {isEditMode ? (
                             <textarea
                                 name="preventativeMeasures"
@@ -532,17 +534,17 @@ function IssueDetail({ params }: { params: { id: string } }) {
                     <div className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
                         {labels("Info", "Zusätzliche Informationen zur Problemmeldung, wie Ersteller, Priorität, Zeitstempel und Dauer des Ereignisses.")}
                         <div className='grid grid-cols-2 gap-2'>
-                            <p className=''>Creator:</p>
+                            <p className=''>{translate("creator")}:</p>
                             <p className='text-right'>{issue.creator}</p>
-                            <p className=''>Issue Nr.:</p>
+                            <p className=''>{translate("issueNumber")}:</p>
                             <p className='text-right'>{issue.id}</p>
-                            <p className=''>Duration:</p>
+                            <p className=''>{translate("duration")}:</p>
                             <p className='text-right'>{issue.duration} h</p>
-                            <p className=''>Timestamp:</p>
+                            <p className=''>{translate("timestamp")}:</p>
                             <p className='text-right'>{formatDate(issue.timestamp)}</p>
-                            <p className=''>Last updated:</p>
+                            <p className=''>{translate("lastUpdated")}:</p>
                             <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
-                            <p className=''>End time:</p>
+                            <p className=''>{translate("endTime")}:</p>
                             <p className='text-right'>--:--</p>
                         </div>
                     </div>
@@ -553,7 +555,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         {!isEditMode && (
                             <div className="flex justify-end space-x-4">
                                 <Link href={`/Issues/${issue.id}/feedback`}>
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Feedback and Close</button>
+                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">{translate('feedbackClose')}</button>
                                 </Link>
                             </div>
                         )}

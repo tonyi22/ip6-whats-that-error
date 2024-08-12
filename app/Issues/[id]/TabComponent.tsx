@@ -1,7 +1,9 @@
+import { useTranslation } from '@/app/TranslationContext';
 import React, { useState } from 'react';
 
 
 export function TabComponent() {
+    const { translate } = useTranslation()
     const [activeTab, setActiveTab] = useState('comments'); // 'comments' or 'attachments'
     const [comments, setComments] = useState('');
 
@@ -16,14 +18,14 @@ export function TabComponent() {
                     className={`rounded-lg px-3 py-2 text-xs font-semibold ${activeTab === 'comments' ? 'bg-teal-500 text-white' : 'dark:bg-gray-600 text-dark dark:text-github-secondary'}`}
                     onClick={() => setActiveTab('comments')}
                 >
-                    Comments
+                    {translate('comments')}
                 </button>
 
                 <button
                     className={`rounded-lg px-3 py-2 text-xs font-semibold ${activeTab === 'attachments' ? 'bg-teal-500 text-white' : 'dark:bg-gray-600 text-dark dark:text-github-secondary'}`}
                     onClick={() => setActiveTab('attachments')}
                 >
-                    Attachments
+                    {translate('attachments')}
                 </button>
             </div>
 
@@ -33,14 +35,14 @@ export function TabComponent() {
                         value={comments}
                         onChange={handleCommentsChange}
                         className="w-full h-40 p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-                        placeholder="Enter your comments here"
+                        placeholder={translate('commentsText')}
                     />
                 </div>
             )}
 
             {activeTab === 'attachments' && (
                 <div className="p-4 dark:text-github-dark-text">
-                    <p>Attachments content here</p>
+                    <p>{translate('attachmentsText')}</p>
                 </div>
             )}
         </div>
