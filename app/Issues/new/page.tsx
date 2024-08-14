@@ -235,7 +235,7 @@ const NewIssue = () => {
 
     return (
         <div className="flex justify-center my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
-            <div className="bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
+            <div className="bg-gradient-to-b from-[#fcf1fa] to-[#fefcff] my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold mb-4 text-center">{translate('createNewIssue')}</h3>
                 <form>
                     <div className='mb-4'>
