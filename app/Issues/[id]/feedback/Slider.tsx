@@ -65,6 +65,7 @@
 // export default SliderComponent;
 
 'use client'
+import { useTranslation } from '@/app/TranslationContext';
 import React from 'react';
 
 type SliderComponentProps = {
@@ -76,6 +77,7 @@ type SliderComponentProps = {
 
 const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min, max }) => {
     const ticks = [];
+    const { translate } = useTranslation();
     for (let i = min; i <= max; i++) {
         ticks.push(i);
     }
@@ -127,8 +129,8 @@ const SliderComponent: React.FC<SliderComponentProps> = ({ value, onChange, min,
                 ))}
             </div>
             <div className="flex justify-between text-sm mb-1">
-                <span>schwer</span>
-                <span>einfach</span>
+                <span>{translate("hard")}</span>
+                <span>{translate("easy")}</span>
             </div>
         </div>
     );

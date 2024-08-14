@@ -14,7 +14,7 @@
         "affectedSystems": [
             "BackupServer-01"
         ],
-        "alertType": "Critical",
+        "alertType": "Error",
         "incidentType": "Performance",
         "priority": 1,
         "severity": "High",
@@ -70,7 +70,7 @@
         "affectedSystems": [
             "ProxyServer-01"
         ],
-        "alertType": "Critical",
+        "alertType": "Error",
         "incidentType": "Data Integrity",
         "priority": 1,
         "severity": "High",
@@ -128,7 +128,7 @@
         "affectedSystems": [
             "LoadBalancer-01"
         ],
-        "alertType": "Critical",
+        "alertType": "Error",
         "incidentType": "Query",
         "priority": 1,
         "severity": "High",
@@ -157,7 +157,7 @@
         "affectedSystems": [
             "DevelopmentServer-01"
         ],
-        "alertType": "Critical",
+        "alertType": "Error",
         "incidentType": "Backup",
         "priority": 1,
         "severity": "High",
@@ -203,9 +203,9 @@
     {
         "title": "Speicherplatzverwaltung verursacht inkonsistente Daten unter hoher Last",
         "id": 8,
-        "description": "Einleitung\nBei hoher Last verursacht die Speicherplatzverwaltung des Systems inkonsistente Daten, was zu unerwartetem Verhalten führt.\n\nHintergrundinformationen\nDas Problem wurde bei Lasttests entdeckt, bei denen die Speicherplatzverwaltung intensive Schreib- und Leseoperationen durchführt.\n\nSchritte zur Reproduktion\n1. Starten Sie den Lasttest mit 1000 gleichzeitigen Benutzern.\n2. Führen Sie eine Reihe von Lese- und Schreiboperationen durch.\n3. Überprüfen Sie die Konsistenz der gespeicherten Daten.\n\nErwartetes Verhalten\nDie Daten sollten unter allen Lastbedingungen konsistent und korrekt gespeichert werden.\n\nTatsächliches Verhalten\nUnter hoher Last kommt es zu Dateninkonsistenzen, wobei einige Daten verloren gehen oder doppelt gespeichert werden.\n\nZusätzliche Informationen\nLog-Dateien der Lasttests beigefügt\nTritt auf in Version 5.6.2\nKeine Probleme bei weniger als 500 gleichzeitigen Benutzern.",
+        "description": "Einleitung\nBei hoher Last verursacht die Speicherplatzverwaltung des Systems inkonsistente Daten, was zu unerwartetem Verhalten führt.\n\nHintergrundinformationen\nDas Problem wurde bei Lasttests entdeckt, bei denen die Speicherplatzverwaltung intensive Schreib- und Leseoperationen durchführt.\n\nSchritte zur Reproduktion\n1. Starte den Lasttest mit 1000 gleichzeitigen Benutzern.\n2. Führe eine Reihe von Lese- und Schreiboperationen durch.\n3. Überprüfe die Konsistenz der gespeicherten Daten.\n\nErwartetes Verhalten\nDie Daten sollten unter allen Lastbedingungen konsistent und korrekt gespeichert werden.\n\nTatsächliches Verhalten\nUnter hoher Last kommt es zu Dateninkonsistenzen, wobei einige Daten verloren gehen oder doppelt gespeichert werden.\n\nZusätzliche Informationen\nLog-Dateien der Lasttests beigefügt\nTritt auf in Version 5.6.2\nKeine Probleme bei weniger als 500 gleichzeitigen Benutzern.",
         "status": "New",
-        "loesungsvorschlag": "Lösungsvorschlag\nOptimieren Sie die Speicherplatzverwaltung für parallele Schreib- und Lesezugriffe. Erwägen Sie die Implementierung einer Queue-Mechanismus, um Schreiboperationen zu puffern und zu serialisieren. Führen Sie erneut Lasttests durch, um die Wirksamkeit der Änderungen zu verifizieren.",
+        "loesungsvorschlag": "Lösungsvorschlag\nOptimiere die Speicherplatzverwaltung für parallele Schreib- und Lesezugriffe. Erwäge die Implementierung einer Queue-Mechanismus, um Schreiboperationen zu puffern und zu serialisieren. Führe erneut Lasttests durch, um die Wirksamkeit der Änderungen zu verifizieren.",
         "timestamp": "2024-02-25T00:43:55.048651",
         "creator": "User9",
         "duration": 12,
@@ -216,7 +216,7 @@
             "Firewall-01",
             "ProxyServer-01"
         ],
-        "alertType": "Critical",
+        "alertType": "Error",
         "incidentType": "Storage",
         "priority": 4,
         "severity": "Medium",
@@ -249,7 +249,7 @@
         "affectedSystems": [
             "Firewall-01"
         ],
-        "alertType": "Critical",
+        "alertType": "Error",
         "incidentType": "Storage",
         "priority": 4,
         "severity": "Medium",
@@ -281,7 +281,7 @@
         "affectedSystems": [
             "StorageSystem-01"
         ],
-        "alertType": "Low",
+        "alertType": "Info",
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "Low",
@@ -301,10 +301,10 @@
     {
         "title": "PRTG Core Server wird in CURIX nicht angezeigt",
         "id": 11,
-        "description": "Einleitung\nBeim Versuch, den PRTG Core Server in CURIX zu finden, wird dieser nicht angezeigt.\n\nHintergrundinformationen\nDieses Problem wurde von User2 gemeldet, der versuchte, den PRTG Core Server in der CURIX-Konfiguration zu finden.\n\nSchritte zur Reproduktion\n1. Öffnen Sie die CURIX-Konfigurationsseite.\n2. Suchen Sie nach dem PRTG Core Server.\n3. Überprüfen Sie die Liste der angezeigten Komponenten.\n\nErwartetes Verhalten\nDer PRTG Core Server sollte in der CURIX-Konfigurationsliste angezeigt werden.\n\nTatsächliches Verhalten\nDer PRTG Core Server wird in der CURIX-Konfigurationsliste nicht angezeigt.\n\nZusätzliche Informationen\n- Log-Datei beigefügt\n- Tritt auf in Version 3.4.1\n- Keine Auswirkungen auf andere Systeme festgestellt.",
+        "description": "Einleitung\nBeim Versuch, den PRTG Core Server in CURIX zu finden, wird dieser nicht angezeigt.\n\nHintergrundinformationen\nDieses Problem wurde von User2 gemeldet, der versuchte, den PRTG Core Server in der CURIX-Konfiguration zu finden.\n\nSchritte zur Reproduktion\n1. Öffne die CURIX-Konfigurationsseite.\n2. Suche nach dem PRTG Core Server.\n3. Überprüfe die Liste der angezeigten Komponenten.\n\nErwartetes Verhalten\nDer PRTG Core Server sollte in der CURIX-Konfigurationsliste angezeigt werden.\n\nTatsächliches Verhalten\nDer PRTG Core Server wird in der CURIX-Konfigurationsliste nicht angezeigt.\n\nZusätzliche Informationen\n- Log-Datei beigefügt\n- Tritt auf in Version 3.4.1\n- Keine Auswirkungen auf andere Systeme festgestellt.",
         "status": "Open",
         "timestamp": "2024-03-01T14:00:00.000Z",
-        "loesungsvorschlag": "Lösungsvorschlag\nÜberprüfen Sie die CURIX-Konfiguration und stellen Sie sicher, dass der PRTG Core Server korrekt konfiguriert und hinzugefügt wurde.",
+        "loesungsvorschlag": "Lösungsvorschlag\nÜberprüfen die CURIX-Konfiguration und stelle sicher, dass der PRTG Core Server korrekt konfiguriert und hinzugefügt wurde.",
         "creator": "User2",
         "duration": 5,
         "endTime": "2024-03-02T14:00:00.000Z",
@@ -314,7 +314,7 @@
             "DevelopmentServer-01",
             "ERPSystem-01"
         ],
-        "alertType": "Low",
+        "alertType": "Warning",
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "Low",

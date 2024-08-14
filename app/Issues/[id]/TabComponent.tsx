@@ -42,7 +42,6 @@ export function TabComponent() {
 
             {activeTab === 'attachments' && (
                 <div className="p-4 dark:text-github-dark-text">
-                    <p>{translate('attachmentsText')}</p>
                 </div>
             )}
         </div>

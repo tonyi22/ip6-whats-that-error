@@ -1,12 +1,14 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useRef, useState } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { classNames } from '../helperFunction';
+import { useTranslation } from '../TranslationContext';
 
 
 
 function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: boolean }) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const { translate } = useTranslation();
 
     const openMenuProgrammatically = (e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
@@ -46,7 +48,7 @@ function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: 
                                     className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    Initial Feedback
+                                    {translate("giveInitial")}
                                     <span className="inline-block ml-2 w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
                                 </a>
                             )}
@@ -60,7 +62,7 @@ function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: 
                                 className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                Open a Ticket
+                                {translate('openTicket')}
                             </a>
                         )}
                     </MenuItem>

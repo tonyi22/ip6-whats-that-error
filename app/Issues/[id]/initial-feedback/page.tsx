@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getAlertIcon, getAlertText, getPriorityText, getSeverityColor } from '@/app/helperFunction';
+import { getAlertIcon, getAlertText, getPriorityText, getSeverityColor, severityTranslation } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
 import Tippy from '@tippyjs/react';
+import { useTranslation } from '@/app/TranslationContext';
 
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
@@ -27,6 +28,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
+    const { translate, language } = useTranslation();
     const [responses, setResponses] = useState({
         issueClear: '',
         problemUnderstood: '',
@@ -120,20 +122,20 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                         <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
                         <div className='flex justify-between items-center my-2'>
                             <div className='flex items-center space-x-2'>
-                                <span>Alert icon:</span>
-                                <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
+                                <span>{translate("alertType")}:</span>
+                                <Tippy content={<span>{getAlertText(issue.alertType, translate)}</span>}>
                                     <span>{getAlertIcon(issue.alertType)}</span>
                                 </Tippy>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <span>Severity:</span>
-                                <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
+                                <span>{translate("severity")}:</span>
+                                <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{language === 'en' ? issue.severity : severityTranslation[issue.severity]}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <p>Priority: {getPriorityText(issue.priority,
+                                <p>{translate("priority")}: {getPriorityText(issue.priority,
                                     <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
                                         {`${issue.priority}/4`}
-                                    </span>)}</p>
+                                    </span>, translate)}</p>
 
 
                             </div>
@@ -143,12 +145,12 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                     </div>
 
                     <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
-                        <h3 className="text-2xl font-bold mb-4">Initial Feedback</h3>
+                        <h3 className="text-2xl font-bold mb-4">{translate("initialFeedback")}</h3>
 
                         {!issue.wizardFeedback &&
                             <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                 <label className="">
-                                    Ist die Beschreibung des Issues klar?
+                                    {translate("issueDescriptionClear")}
                                 </label>
                                 <div className="flex flex-col">
                                     <div className="flex space-x-4">
@@ -160,7 +162,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Ja</span>
+                                            <span className="ml-2">{translate("yes")}</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
@@ -170,14 +172,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Nein</span>
+                                            <span className="ml-2">{translate("no")}</span>
                                         </label>
                                     </div>
                                     {responses.issueClear === 'no' && (
                                         <textarea
                                             name="issueClearDetails"
                                             onChange={handleChange}
-                                            placeholder='Was war nicht klar?'
+                                            placeholder={translate("whatWasUnclear")}
                                             className="editable-input mt-2"
                                         />
                                     )}
@@ -186,7 +188,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                         {!issue.wizardFeedback &&
                             <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                 <label className="">
-                                    Hast du sofort verstanden, was das Problem ist?
+                                    {translate("problemUnderstanding")}
                                 </label>
                                 <div className="flex flex-col">
                                     <div className="flex space-x-4">
@@ -198,7 +200,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Ja</span>
+                                            <span className="ml-2">{translate("yes")}</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
@@ -208,7 +210,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Nein</span>
+                                            <span className="ml-2">{translate("no")}</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
@@ -218,14 +220,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Teilweise</span>
+                                            <span className="ml-2">{translate("partially")}</span>
                                         </label>
                                     </div>
                                     {(responses.problemUnderstood === 'no' || responses.problemUnderstood === 'teilweise') && (
                                         <textarea
                                             name="problemUnderstoodDetails"
                                             onChange={handleChange}
-                                            placeholder='Was hast du nicht verstanden?'
+                                            placeholder={translate("whatDidntYouUnderstand")}
                                             className="editable-input mt-2"
                                         />
                                     )}
@@ -234,7 +236,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">
-                                Fehlen dir wichtige Informationen?
+                                {translate("missingImportantInfo")}
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -246,7 +248,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -256,14 +258,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.infoMissing === 'yes' && (
                                     <textarea
                                         name="infoMissingDetails"
                                         onChange={handleChange}
-                                        placeholder='Was hat dir gefehlt?'
+                                        placeholder={translate("whatWasMissing")}
                                         className="editable-input mt-2"
                                     />
                                 )}
@@ -271,7 +273,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                         </div>
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">
-                                Wie würdest du die Verständlichkeit des Issues bewerten?
+                                {translate("issueClarityRating")}
                             </label>
                             <div className="flex flex-col justify-center">
                                 <div className="flex space-x-4 items-center">
@@ -284,7 +286,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
                             <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                                 <label className="">
-                                    Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?
+                                    {translate("requiredStepsKnowledge")}
                                 </label>
                                 <div className="flex flex-col">
                                     <div className="flex space-x-4">
@@ -296,7 +298,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Ja</span>
+                                            <span className="ml-2">{translate("yes")}</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
@@ -306,14 +308,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Nein</span>
+                                            <span className="ml-2">{translate("no")}</span>
                                         </label>
                                     </div>
                                     {responses.stepsKnown === 'no' && (
                                         <textarea
                                             name="stepsKnownDetails"
                                             onChange={handleChange}
-                                            placeholder='Bitte beschreiben...'
+                                            placeholder={translate("pleaseDescribe")}
                                             className="editable-input mt-2"
                                         />
                                     )}
@@ -329,7 +331,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">
-                                Wie nachvollziehbar ist die Priorität?
+                                {translate("priorityUnderstandability")}
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -340,7 +342,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">
-                                Wie nachvollziehbar ist die Severity?
+                                {translate("severityUnderstandability")}
                             </label>
                             <div className="flex flex-col">
                                 <div className="flex space-x-4">
@@ -361,13 +363,13 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                         onClick={() => router.back()}
                         className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                        Cancel
+                        {translate("cancel")}
                     </button>
                     <button
                         type="submit"
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                        Submit
+                        {translate("submit")}
                     </button>
                 </div>
             </form>

@@ -1,13 +1,14 @@
 'use client'
 import React, { useEffect, useState, useRef } from 'react';
 import '../detailView.css';
-import { compareSort, getAlertIcon, getAlertText, getPriorityText, getSeverityColor } from '@/app/helperFunction';
+import { alertTypeTransaltion, compareSort, getAlertIcon, getAlertText, getPriorityText, getSeverityColor, incidentTypeTranslationMapDeEn, incidentTypeTranslationMapEnDe, severityTranslation } from '@/app/helperFunction';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
 import { useRouter, useParams } from 'next/navigation';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Tippy from '@tippyjs/react';
+import { useTranslation } from '@/app/TranslationContext';
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -40,6 +41,8 @@ export function Feedback({ params }: { params: { id: string } }) {
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [sliderRating, setSliderRating] = useState(3);
     const [starRating, setStarRating] = useState(0);
+    const { translate, language } = useTranslation()
+
     const [thumbsRating, setThumbsRating] = useState(0);
     const [feedbackText, setFeedbackText] = useState('');
     const [emojiRating, setEmojiRating] = useState(0);
@@ -228,14 +231,14 @@ export function Feedback({ params }: { params: { id: string } }) {
             `}</style>
 
 
-            <div className="flex space-x-8">
+            <div className="space-x-8">
 
                 <div className="">
-                    <h3 className="text-2xl font-bold mb-4 text-center">Final Feedback</h3>
+                    <h3 className=" text-2xl font-bold mb-4 text-center ">{translate("final")}</h3>
                     <form onSubmit={handleSubmit}>
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div>
-                                <span className="ml-2">War der Titel des Issues klar und verständlich?</span>
+                                <span className="ml-2">{translate("issueTitleClarity")}</span>
                                 <label className="flex items-center text-gray-700 dark:text-gray-300">
                                     <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
                                         style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
@@ -254,7 +257,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -264,7 +267,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.titleUnderstandable === 'no' && (
@@ -273,7 +276,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             name="titleReason"
                                             value={responses.titleReason}
                                             onChange={handleChange}
-                                            placeholder='Was war unklar?'
+                                            placeholder={translate("whatWasUnclear")}
                                             className="editable-input mt-3"
                                         />
                                     </>
@@ -289,7 +292,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                             null : <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                 <div>
-                                    <span className="ml-2">War die Beschreibung des Issues klar und verständlich?</span>
+                                    <span className="ml-2">{translate("issueDescriptionClarity")}</span>
                                     <label className="flex items-center text-gray-700 dark:text-gray-300">
                                         <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
                                             style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
@@ -308,7 +311,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Ja</span>
+                                            <span className="ml-2">{translate("yes")}</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
@@ -318,7 +321,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 className="custom-radio"
                                                 onChange={handleChange}
                                             />
-                                            <span className="ml-2">Nein</span>
+                                            <span className="ml-2">{translate("no")}</span>
                                         </label>
                                     </div>
                                     {responses.descriptionUnderstandable === 'no' && (
@@ -327,7 +330,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 name="descriptionReason"
                                                 value={responses.descriptionReason}
                                                 onChange={handleChange}
-                                                placeholder='Was war unklar?'
+                                                placeholder={translate("whatWasUnclear")}
                                                 className="editable-input mt-3"
                                             />
                                         </>
@@ -341,9 +344,9 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 p-4 border rounded-lg">
                             <div>
-                                <span className="ml-2 ">War der Alert Type der richtige?</span>
+                                <span className="ml-2 ">{translate("wasAlertTypeCorrect")}</span>
                                 <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
-                                    <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
+                                    <Tippy content={<span>{getAlertText(issue.alertType, translate)}</span>}>
                                         <span>{getAlertIcon(issue.alertType)}</span>
                                     </Tippy>
                                 </label>
@@ -358,7 +361,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -368,21 +371,21 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.alertIconUnderstandable === 'no' && (
                                     <>
-                                        <p className='mt-4 mb-1 ml-1 text-sm'>Wähle den richtigen Alert Type</p>
+                                        <p className='mt-4 mb-1 ml-1 text-sm'>{translate("chooseCorrectType")}</p>
                                         <div className="inline-block">
                                             <select
                                                 name="correctAlertType"
-                                                value={responses.correctAlertType === '' ? issue.alertType : responses.correctAlertType}
+                                                value={responses.correctAlertType === '' ? language === 'en' ? issue.alertType : alertTypeTransaltion[issue.alertType] : responses.correctAlertType}
                                                 onChange={handleChange}
                                                 className="mt-2 input border border-grey-800 w-auto"
                                             >
-                                                {["Warning", "Info", "Critical"].map(type => (
-                                                    <option key={type} value={type} disabled={type === issue.alertType}>
+                                                {translate("alartTypes", false).split(", ").map(type => (
+                                                    <option key={type} value={type} disabled={type === (language === 'en' ? issue.alertType : alertTypeTransaltion[issue.alertType])}>
                                                         {type}
                                                     </option>
                                                 ))}
@@ -392,7 +395,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             name="alertIconReason"
                                             value={responses.alertIconReason}
                                             onChange={handleChange}
-                                            placeholder='Begründe den neuen Alert Type'
+                                            placeholder={translate("justifyNewAlertType")}
                                             className="editable-input mt-3"
                                         />
                                     </>
@@ -403,9 +406,9 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div className="flex flex-col">
-                                <span className="ml-2">War der Incident Type der richtigen Kategorie zugeordnet?</span>
+                                <span className="ml-2">{translate("wasIncidentTypeCorrectlyCategorized")}</span>
                                 <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
-                                    <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.incidentType}</span>
+                                    <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType]}</span>
                                 </label>
                             </div>
                             <div className="flex flex-col pr-4">
@@ -418,7 +421,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -428,25 +431,21 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.incidentTypeUnderstandable === 'no' && (
                                     <>
-                                        <p className='mt-4 mb-1 ml-1 text-sm'>Wähle den richtigen Incident Type</p>
+                                        <p className='mt-4 mb-1 ml-1 text-sm'>{translate("chooseCorrectType")}</p>
                                         <div className="inline-block">
                                             <select
                                                 name="correctIncidentType"
-                                                value={responses.correctIncidentType === '' ? issue.incidentType : responses.correctIncidentType}
+                                                value={responses.correctIncidentType === '' ? language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType] : responses.correctIncidentType}
                                                 onChange={handleChange}
-                                                className="mt-2 input border border-grey-800 w-auto"
+                                                className="mt-2 input border border-grey-500 w-auto"
                                             >
-                                                {[
-                                                    "Performance", "Storage", "Overheating", "Backups", "Power", "Data Integrity", "Connection", "Query", "Monitoring", "Network",
-                                                    "Authentication", "Resources", "Processes", "Configuration", "Data Export", "Documentation", "Startup", "Demonstration", "Communication",
-                                                    "Data Import", "Security", "other"
-                                                ].sort(compareSort).map(type => (
-                                                    <option key={type} value={type} disabled={type === issue.incidentType}>{type}</option>
+                                                {translate("incidentTypes", false).split(", ").sort(compareSort).map(type => (
+                                                    <option key={type} value={type} disabled={type === (language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType])}>{type}</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -457,7 +456,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
-                                War der KI-Lösungsvorschlag für das Issue relevant?
+                                {translate("wasAISolutionRelevant")}
                             </label>
                             <div className="flex flex-col pr-4">
                                 <div className="flex space-x-4">
@@ -469,7 +468,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -479,7 +478,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.clarityAISuggestions === 'yes' && (
@@ -487,7 +486,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="relevanceAISuggestions"
                                         value={responses.relevanceAISuggestions}
                                         onChange={handleChange}
-                                        placeholder='Waren die AI-Vorschläge klar und verständlich?'
+                                        placeholder={translate('wereAISuggestionsClear')}
                                         className="editable-input mt-3"
                                     />
                                 )}
@@ -496,7 +495,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="relevanceAISuggestions"
                                         value={responses.relevanceAISuggestions}
                                         onChange={handleChange}
-                                        placeholder='Weshalb waren die Vorschläge nicht relevant?'
+                                        placeholder={translate("whySuggestionsNotRelevant")}
                                         className="editable-input mt-3"
                                     />
                                 )}
@@ -506,7 +505,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                             {issue.isInitialGiven ? null :
                                 <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <label className="ml-2">
-                                        Wusstest du, was zu tun ist, um das Issue zu lösen?
+                                        {translate("didYouKnowHowToResolve")}
                                     </label>
                                     <div className="flex flex-col pr-4">
                                         <div className="flex space-x-4">
@@ -518,7 +517,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     className="custom-radio"
                                                     onChange={handleChange}
                                                 />
-                                                <span className="ml-2">Ja</span>
+                                                <span className="ml-2">{translate("yes")}</span>
                                             </label>
                                             <label className="flex items-center">
                                                 <input
@@ -528,7 +527,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     className="custom-radio"
                                                     onChange={handleChange}
                                                 />
-                                                <span className="ml-2">Nein</span>
+                                                <span className="ml-2">{translate("no")}</span>
                                             </label>
                                         </div>
                                         {responses.whatToDo === 'no' && (
@@ -536,7 +535,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 name="whatToDoReason"
                                                 value={responses.whatToDoReason}
                                                 onChange={handleChange}
-                                                placeholder='Wo fehlen dir Informationen? Z.B. Beschreibung, Systeme, Auswirkungen, Lösungsschritte...'
+                                                placeholder={translate("whereIsInformationMissing")}
                                                 className="editable-input mt-3"
                                             />
                                         )}
@@ -548,7 +547,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div>
-                                <span className="ml-2">War der Impact verständlich?</span>
+                                <span className="ml-2">{translate("impactUnderstandable")}</span>
                                 <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
                                     <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
                                         {issue.impact}
@@ -565,7 +564,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -575,7 +574,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.impactUnderstandable === 'no' && (
@@ -583,7 +582,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="impactReason"
                                         value={responses.impactReason}
                                         onChange={handleChange}
-                                        placeholder='Was war nicht verständilch?'
+                                        placeholder={translate("whatWasUnclear")}
                                         className="editable-input mt-3"
                                     />
                                 )}
@@ -593,7 +592,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                             {issue.isInitialGiven ? null :
                                 <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <div className="flex flex-col">
-                                        <span className="ml-2">War die Priorität nachvollziehbar?</span>
+                                        <span className="ml-2">{translate("priorityUnderstandable")}</span>
                                         <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
                                             <span className="bg-gray-200 dark:bg-gray-500 rounded-xl p-2">{issue.priority}/4</span>
                                         </label>
@@ -608,7 +607,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     className="custom-radio"
                                                     onChange={handleChange}
                                                 />
-                                                <span className="ml-2">Ja</span>
+                                                <span className="ml-2">{translate("yes")}</span>
                                             </label>
                                             <label className="flex items-center">
                                                 <input
@@ -618,12 +617,12 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     className="custom-radio"
                                                     onChange={handleChange}
                                                 />
-                                                <span className="ml-2">Nein</span>
+                                                <span className="ml-2">{translate("no")}</span>
                                             </label>
                                         </div>
                                         {responses.priorityUnderstandable === 'no' && (
                                             <>
-                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die korrekte Priorität auswählen</p>
+                                                <p className='mt-4 mb-1 ml-1 text-sm'>{translate("selectCorrectPriority")}</p>
                                                 <div className="inline-block">
                                                     <select
                                                         name="correctPriority"
@@ -641,7 +640,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     name="priorityReason"
                                                     value={responses.priorityReason}
                                                     onChange={handleChange}
-                                                    placeholder='Begründung für neue Priorität'
+                                                    placeholder={translate("reasonForNewPriority")}
                                                     className="editable-input mt-3"
                                                 />
                                             </>
@@ -654,7 +653,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div>
-                                <span className="ml-2">Waren die betroffenen Systeme korrekt?</span>
+                                <span className="ml-2">{translate("affectedSystemsCorrect")}</span>
                                 <div className={`flex-grow text-gray-700 mt-2 ml-2 py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex w-96 flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'rounded-lg shadow-md' : ''}`}>
                                     {issue.affectedSystems.map((system, index) => (
                                         <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
@@ -673,7 +672,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -683,7 +682,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.affSystems === 'no' && (
@@ -693,7 +692,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             onClick={toggleDropdown}
                                         >
                                             <div className="cursor-pointer inline-flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
-                                                Wähle die Systeme aus
+                                                {translate("choseSystem")}
                                                 <FaCaretDown className="ml-1" />
                                             </div>
                                         </div>
@@ -724,7 +723,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                             {issue.isInitialGiven ? null :
                                 <div className=" bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <div>
-                                        <span className="ml-2 block text-left">War die Severity nachvollziehbar? </span>
+                                        <span className="ml-2 block text-left">{translate("severityUnderstandable")}</span>
                                         <label className="flex mt-2 ml-2 items-center text-gray-700 dark:text-gray-300">
                                             <span className={`rounded-xl p-2 ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
                                         </label>
@@ -739,7 +738,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     className="custom-radio"
                                                     onChange={handleChange}
                                                 />
-                                                <span className="ml-2">Ja</span>
+                                                <span className="ml-2">{translate("yes")}</span>
                                             </label>
                                             <label className="flex items-center">
                                                 <input
@@ -749,21 +748,21 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     className="custom-radio"
                                                     onChange={handleChange}
                                                 />
-                                                <span className="ml-2">Nein</span>
+                                                <span className="ml-2">{translate("no")}</span>
                                             </label>
                                         </div>
                                         {responses.severityUnderstandable === 'no' && (
                                             <>
-                                                <p className='mt-4 mb-1 ml-1 text-sm'>Wähle die richtige Severity</p>
+                                                <p className='mt-4 mb-1 ml-1 text-sm'>{translate("selectCorrectSeverity")}</p>
                                                 <div className="inline-block">
                                                     <select
                                                         name="correctSeverity"
-                                                        value={responses.correctSeverity === '' ? issue.severity : responses.correctSeverity}
+                                                        value={responses.correctSeverity === '' ? language === 'en' ? issue.severity : severityTranslation[issue.severity] : responses.correctSeverity}
                                                         onChange={handleChange}
                                                         className="mt-2 input border border-grey-800 w-auto"
                                                     >
-                                                        {['Low', 'Medium', 'High'].map(severity => (
-                                                            <option key={severity} value={severity} disabled={severity === issue.severity}>
+                                                        {translate("severityTypes", false).split(", ").map(severity => (
+                                                            <option key={severity} value={severity} disabled={severity === (language === 'en' ? issue.severity : severityTranslation[issue.severity])}>
                                                                 {severity}
                                                             </option>
                                                         ))}
@@ -773,7 +772,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     name="severityReason"
                                                     value={responses.severityReason}
                                                     onChange={handleChange}
-                                                    placeholder='Begründung für neue Severity'
+                                                    placeholder={translate("reasonForNewSeverity")}
                                                     className="editable-input mt-3"
                                                 />
                                             </>
@@ -790,7 +789,7 @@ export function Feedback({ params }: { params: { id: string } }) {
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
-                                Hast du den Lösungsvorschlag tatsächlich umgesetzt?
+                                {translate("solutionImplemented")}
                             </label>
                             <div className="flex flex-col pr-4">
                                 <div className="flex space-x-4">
@@ -802,7 +801,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Ja</span>
+                                        <span className="ml-2">{translate("yes")}</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -812,7 +811,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             className="custom-radio"
                                             onChange={handleChange}
                                         />
-                                        <span className="ml-2">Nein</span>
+                                        <span className="ml-2">{translate("no")}</span>
                                     </label>
                                 </div>
                                 {responses.implemented === 'no' && (
@@ -820,64 +819,27 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="implementedReason"
                                         value={responses.implementedReason}
                                         onChange={handleChange}
-                                        placeholder='Wie hast du das Issue tatsächlich gelöst?'
+                                        placeholder={translate("issueResolved")}
                                         className="editable-input mt-3"
                                     />
                                 )}
-                            </div>
-                        </div>
-
-                        <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="ml-2">
-                                Hast du den KI-Lösungsvorschlag umgesetzt?
-                            </label>
-                            <div className="flex flex-col pr-4">
-                                <div className="flex space-x-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="implementationAISuggestions"
-                                            value="yes"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Ja</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="implementationAISuggestions"
-                                            value="no"
-                                            className="custom-radio"
-                                            onChange={handleChange}
-                                        />
-                                        <span className="ml-2">Nein</span>
-                                    </label>
-                                </div>
-                                {responses.implementationAISuggestions === 'yes' && (
+                                {responses.implemented === 'yes' && (
                                     <>
-                                        <p className='mt-4 mb-1 ml-1 text-sm'>Wie einfach war die Umsetzung?</p>
+                                        <p className='mt-4 mb-1 ml-1 text-sm'>{translate("implementationEase")}</p>
                                         <div className="flex space-x-4">
                                             <SliderComponent value={sliderRating} onChange={setSliderRating} min={1} max={4} />
                                         </div>
                                     </>
                                 )}
-                                {responses.implementationAISuggestions === 'no' && (
-                                    <textarea
-                                        name="implementationReason"
-                                        value={responses.implementationReason}
-                                        onChange={handleChange}
-                                        placeholder='Warum hast du die Vorschläge nicht angewendet?'
-                                        className="editable-input mt-3"
-                                    />
-                                )}
                             </div>
                         </div>
+
+
 
                         <div className="bg-white grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg ">
                             <div className='ml-2'>
                                 <label>
-                                    Wie zufrieden bist du insgesamt mit den KI-Funktionen? (Terminal, Chat, Lösungsvorschlag)
+                                    {translate("overallSatisfactionWithAIServices")}
                                 </label>
                                 <div className="flex flex-col">
                                     <div className="flex">
@@ -887,7 +849,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         name="overallSatisfactionAISuggestions"
                                         value={responses.overallSatisfactionAISuggestions}
                                         onChange={handleChange}
-                                        placeholder='Bitte erkläre deine Bewertung'
+                                        placeholder={translate("explainYourRating")}
                                         className="editable-input mt-3"
                                     />
                                 </div>
@@ -907,13 +869,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 }
                                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
                             >
-                                Cancel
+                                {translate("cancel")}
                             </button>
                             <button
                                 type="submit"
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
                             >
-                                Submit
+                                {translate("submit")}
                             </button>
                         </div>
                     </form>

@@ -16,7 +16,7 @@ export interface SystemMonitoringIssue {
     // 'VirtualizationServer-01' | 'DNSServer-01' | 'EmailServer-01' | 'ApplicationServer-01' | 'ERPSystem-01' |
     // 'CRMSystem-01' | 'FileServer-01' | 'ProxyServer-01' | 'DevelopmentServer-01' | 'TestServer-01';
 
-    alertType: 'Warning' | 'Info' | 'Critical';
+    alertType: 'Warning' | 'Info' | 'Error';
     incidentType: 'Performance' | 'Storage' | 'Overheating' | 'Backups' | 'Power' | 'Data Integrity' | 'Connection' | 'Query' | 'Monitoring' | 'Network' | 'Authentication' | 'Resources' | 'Processes' | 'Configuration' | 'Data Export' | 'Documentation' | 'Startup' | 'Demonstration' | 'Communication' | 'Data Import' | 'Security';
     priority: number;
     severity: 'Low' | 'Medium' | 'High';

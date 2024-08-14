@@ -2,7 +2,7 @@
     {
         "title": "Server CT-20 verursacht Ausfall bei Netzwerkauslastung",
         "id": 1,
-        "description": "Der Server CT-20 verursacht einen vollständigen Ausfall des Netzwerks bei hoher Auslastung. Benutzer berichten, dass Verbindungen regelmäßig unterbrochen werden.",
+        "description": "Der Server CT-20 verursacht einen vollständigen Ausfall des Netzwerks bei hoher Auslastung. Benutzer berichten, dass Verbindungen regelmässig unterbrochen werden.",
         "status": "New",
         "timestamp": "2024-03-01T14:00:00.000Z",
         "creator": "User2",
@@ -27,7 +27,7 @@
     {
         "title": "Fehlermeldung 503 tritt auf bei Zugriff auf Webserver unter hoher Last",
         "id": 2,
-        "description": "Bei hoher Auslastung zeigt der Webserver regelmäßig eine 503 Fehlermeldung. Dies führt zu erheblichen Unterbrechungen im Dienst.",
+        "description": "Bei hoher Auslastung zeigt der Webserver regelmässig eine 503 Fehlermeldung. Dies führt zu erheblichen Unterbrechungen im Dienst.",
         "status": "New",
         "timestamp": "2024-03-01T14:10:00.000Z",
         "creator": "User3",
@@ -50,9 +50,9 @@
         "isInitialGiven": true
     },
     {
-        "title": "Speicherkomponente zeigt Fehlverhalten beim Schreiben großer Dateien",
+        "title": "Speicherkomponente zeigt Fehlverhalten beim Schreiben grosser Dateien",
         "id": 3,
-        "description": "Beim Versuch, große Dateien zu speichern, zeigt die Speicherkomponente Fehlverhalten und verursacht Datenverluste.",
+        "description": "Beim Versuch, grosse Dateien zu speichern, zeigt die Speicherkomponente Fehlverhalten und verursacht Datenverluste.",
         "status": "New",
         "timestamp": "2024-03-01T14:20:00.000Z",
         "creator": "User4",
@@ -102,7 +102,7 @@
     {
         "title": "Fehlermeldung 500 tritt auf bei Datenabfrage in Berichtssystem",
         "id": 5,
-        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmäßig eine Fehlermeldung 500. Dies verhindert den Zugriff auf benötigte Berichte.",
+        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmässig eine Fehlermeldung 500. Dies verhindert den Zugriff auf benötigte Berichte.",
         "status": "New",
         "timestamp": "2024-03-01T14:40:00.000Z",
         "creator": "User6",
@@ -277,7 +277,7 @@
     {
         "title": "Fehler 503 bei hoher Last",
         "id": 12,
-        "description": "Der Webserver zeigt regelmäßig eine Fehlermeldung 503 bei hoher Auslastung.",
+        "description": "Der Webserver zeigt regelmässig eine Fehlermeldung 503 bei hoher Auslastung.",
         "status": "New",
         "timestamp": "2024-03-01T14:10:00.000Z",
         "creator": "User3",
@@ -300,9 +300,9 @@
         "isInitialGiven": false
     },
     {
-        "title": "Fehler beim Schreiben großer Dateien",
+        "title": "Fehler beim Schreiben grosser Dateien",
         "id": 13,
-        "description": "Die Speicherkomponente zeigt Fehlverhalten beim Schreiben großer Dateien und verursacht Datenverluste.",
+        "description": "Die Speicherkomponente zeigt Fehlverhalten beim Schreiben grosser Dateien und verursacht Datenverluste.",
         "status": "New",
         "timestamp": "2024-03-01T14:20:00.000Z",
         "creator": "User4",
@@ -352,7 +352,7 @@
     {
         "title": "Fehler 500 bei Datenabfrage",
         "id": 15,
-        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmäßig eine Fehlermeldung 500.",
+        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmässig eine Fehlermeldung 500.",
         "status": "New",
         "timestamp": "2024-03-01T14:40:00.000Z",
         "creator": "User6",
@@ -502,7 +502,7 @@
     {
         "title": "Threshold Violation detected",
         "id": 21,
-        "description": "Das System hat eine Schwellenwertüberschreitung im Speichersystem erkannt, die sofortige Maßnahmen erfordert.",
+        "description": "Das System hat eine Schwellenwertüberschreitung im Speichersystem erkannt, die sofortige Massnahmen erfordert.",
         "status": "New",
         "timestamp": "2024-03-02T10:00:00.000Z",
         "creator": "User12",
@@ -567,7 +567,7 @@
         "incidentType": "Connectivity",
         "priority": 3,
         "severity": "Low",
-        "preventativeMeasures": "Regelmäßige Überprüfung der Verbindungen und Wartung der Netzwerkinfrastruktur",
+        "preventativeMeasures": "Regelmässige Überprüfung der Verbindungen und Wartung der Netzwerkinfrastruktur",
         "attachments": [
             ""
         ],
@@ -667,7 +667,7 @@
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "High",
-        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der CMDB",
+        "preventativeMeasures": "Regelmässige Überprüfung und Aktualisierung der CMDB",
         "attachments": [
             ""
         ],
@@ -767,7 +767,7 @@
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der Benutzerverwaltungsdaten",
+        "preventativeMeasures": "Regelmässige Überprüfung und Aktualisierung der Benutzerverwaltungsdaten",
         "attachments": [
             ""
         ],
@@ -818,7 +818,7 @@
         "incidentType": "Data Export",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Regelmäßige Backups der Benutzerdaten",
+        "preventativeMeasures": "Regelmässige Backups der Benutzerdaten",
         "attachments": [
             ""
         ],
@@ -918,7 +918,7 @@
         "incidentType": "Startup",
         "priority": 1,
         "severity": "High",
-        "preventativeMeasures": "Regelmäßige Überprüfung der Systemanforderungen vor dem Start",
+        "preventativeMeasures": "Regelmässige Überprüfung der Systemanforderungen vor dem Start",
         "attachments": [
             ""
         ],
@@ -953,7 +953,7 @@
     {
         "title": "Stay informed",
         "id": 39,
-        "description": "Benutzer müssen regelmäßig über Systemupdates und Änderungen informiert werden.",
+        "description": "Benutzer müssen regelmässig über Systemupdates und Änderungen informiert werden.",
         "status": "New",
         "timestamp": "2024-03-12T12:00:00.000Z",
         "creator": "User39",
@@ -968,7 +968,7 @@
         "incidentType": "Communication",
         "priority": 3,
         "severity": "Low",
-        "preventativeMeasures": "Einrichtung eines regelmäßigen Informationsverteilers",
+        "preventativeMeasures": "Einrichtung eines regelmässigen Informationsverteilers",
         "attachments": [
             ""
         ],
@@ -993,7 +993,7 @@
         "incidentType": "Monitoring",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Einrichtung regelmäßiger Berichte und Überwachungsdashboards",
+        "preventativeMeasures": "Einrichtung regelmässiger Berichte und Überwachungsdashboards",
         "attachments": [
             ""
         ],
@@ -1018,7 +1018,7 @@
         "incidentType": "Data Import",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Regelmäßige Aktualisierung der Wissensdatenbank",
+        "preventativeMeasures": "Regelmässige Aktualisierung der Wissensdatenbank",
         "attachments": [
             ""
         ],
@@ -1043,7 +1043,7 @@
         "incidentType": "Security",
         "priority": 1,
         "severity": "High",
-        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der Zugriffsrechte",
+        "preventativeMeasures": "Regelmässige Überprüfung und Aktualisierung der Zugriffsrechte",
         "attachments": [
             ""
         ],
@@ -1068,7 +1068,7 @@
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Dokumentation der Anmeldeoptionen und regelmäßige Überprüfung",
+        "preventativeMeasures": "Dokumentation der Anmeldeoptionen und regelmässige Überprüfung",
         "attachments": [
             ""
         ],
@@ -1178,7 +1178,7 @@
     {
         "title": "Fehler 503 bei hoher Last",
         "id": 12,
-        "description": "Der Webserver zeigt regelmäßig eine Fehlermeldung 503 bei hoher Auslastung.",
+        "description": "Der Webserver zeigt regelmässig eine Fehlermeldung 503 bei hoher Auslastung.",
         "status": "New",
         "timestamp": "2024-03-01T14:10:00.000Z",
         "creator": "User3",
@@ -1201,9 +1201,9 @@
         "isInitialGiven": false
     },
     {
-        "title": "Fehler beim Schreiben großer Dateien",
+        "title": "Fehler beim Schreiben grosser Dateien",
         "id": 13,
-        "description": "Die Speicherkomponente zeigt Fehlverhalten beim Schreiben großer Dateien und verursacht Datenverluste.",
+        "description": "Die Speicherkomponente zeigt Fehlverhalten beim Schreiben grosser Dateien und verursacht Datenverluste.",
         "status": "New",
         "timestamp": "2024-03-01T14:20:00.000Z",
         "creator": "User4",
@@ -1253,7 +1253,7 @@
     {
         "title": "Fehler 500 bei Datenabfrage",
         "id": 15,
-        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmäßig eine Fehlermeldung 500.",
+        "description": "Beim Ausführen von Datenabfragen im Berichtssystem erscheint regelmässig eine Fehlermeldung 500.",
         "status": "New",
         "timestamp": "2024-03-01T14:40:00.000Z",
         "creator": "User6",
@@ -1403,7 +1403,7 @@
     {
         "title": "Threshold Violation detected",
         "id": 21,
-        "description": "Das System hat eine Schwellenwertüberschreitung im Speichersystem erkannt, die sofortige Maßnahmen erfordert.",
+        "description": "Das System hat eine Schwellenwertüberschreitung im Speichersystem erkannt, die sofortige Massnahmen erfordert.",
         "status": "New",
         "timestamp": "2024-03-02T10:00:00.000Z",
         "creator": "User12",
@@ -1468,7 +1468,7 @@
         "incidentType": "Connectivity",
         "priority": 3,
         "severity": "Low",
-        "preventativeMeasures": "Regelmäßige Überprüfung der Verbindungen und Wartung der Netzwerkinfrastruktur",
+        "preventativeMeasures": "Regelmässige Überprüfung der Verbindungen und Wartung der Netzwerkinfrastruktur",
         "attachments": [
             ""
         ],
@@ -1568,7 +1568,7 @@
         "incidentType": "Configuration",
         "priority": 1,
         "severity": "High",
-        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der CMDB",
+        "preventativeMeasures": "Regelmässige Überprüfung und Aktualisierung der CMDB",
         "attachments": [
             ""
         ],
@@ -1668,7 +1668,7 @@
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der Benutzerverwaltungsdaten",
+        "preventativeMeasures": "Regelmässige Überprüfung und Aktualisierung der Benutzerverwaltungsdaten",
         "attachments": [
             ""
         ],
@@ -1719,7 +1719,7 @@
         "incidentType": "Data Export",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Regelmäßige Backups der Benutzerdaten",
+        "preventativeMeasures": "Regelmässige Backups der Benutzerdaten",
         "attachments": [
             ""
         ],
@@ -1819,7 +1819,7 @@
         "incidentType": "Startup",
         "priority": 1,
         "severity": "High",
-        "preventativeMeasures": "Regelmäßige Überprüfung der Systemanforderungen vor dem Start",
+        "preventativeMeasures": "Regelmässige Überprüfung der Systemanforderungen vor dem Start",
         "attachments": [
             ""
         ],
@@ -1854,7 +1854,7 @@
     {
         "title": "Stay informed",
         "id": 39,
-        "description": "Benutzer müssen regelmäßig über Systemupdates und Änderungen informiert werden.",
+        "description": "Benutzer müssen regelmässig über Systemupdates und Änderungen informiert werden.",
         "status": "New",
         "timestamp": "2024-03-12T12:00:00.000Z",
         "creator": "User39",
@@ -1869,7 +1869,7 @@
         "incidentType": "Communication",
         "priority": 3,
         "severity": "Low",
-        "preventativeMeasures": "Einrichtung eines regelmäßigen Informationsverteilers",
+        "preventativeMeasures": "Einrichtung eines regelmässigen Informationsverteilers",
         "attachments": [
             ""
         ],
@@ -1894,7 +1894,7 @@
         "incidentType": "Monitoring",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Einrichtung regelmäßiger Berichte und Überwachungsdashboards",
+        "preventativeMeasures": "Einrichtung regelmässiger Berichte und Überwachungsdashboards",
         "attachments": [
             ""
         ],
@@ -1919,7 +1919,7 @@
         "incidentType": "Data Import",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Regelmäßige Aktualisierung der Wissensdatenbank",
+        "preventativeMeasures": "Regelmässige Aktualisierung der Wissensdatenbank",
         "attachments": [
             ""
         ],
@@ -1944,7 +1944,7 @@
         "incidentType": "Security",
         "priority": 1,
         "severity": "High",
-        "preventativeMeasures": "Regelmäßige Überprüfung und Aktualisierung der Zugriffsrechte",
+        "preventativeMeasures": "Regelmässige Überprüfung und Aktualisierung der Zugriffsrechte",
         "attachments": [
             ""
         ],
@@ -1969,7 +1969,7 @@
         "incidentType": "Configuration",
         "priority": 2,
         "severity": "Medium",
-        "preventativeMeasures": "Dokumentation der Anmeldeoptionen und regelmäßige Überprüfung",
+        "preventativeMeasures": "Dokumentation der Anmeldeoptionen und regelmässige Überprüfung",
         "attachments": [
             ""
         ],

@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
-import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText } from '@/app/helperFunction';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, severityTranslation } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
@@ -15,12 +15,11 @@ import { IoTerminal } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import { IoIosHelpCircle } from "react-icons/io";
 import Terminal from './Terminal';
-import { BsColumnsGap } from 'react-icons/bs';
 import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from '@/app/TranslationContext';
 
-const labels = (label: string, help: string) => {
+export const labels = (label: string, help: string) => {
     return (
         <div className='flex items-center pb-2 justify-between'>
             <p className='font-bold'>{label}</p>
@@ -51,13 +50,20 @@ const systemsList = [
 ];
 
 function IssueDetail({ params }: { params: { id: string } }) {
-    const { translate } = useTranslation()
-    const alertTypes = ['Critical', 'Warning', 'Info', 'None'];
-    const severityTypes = ['Low', 'Medium', 'High'];
-    const statusTypes = ['New', 'Open', 'Closed', 'In Progress'];
-    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
-        'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'];
-    const priorities = Array.from({ length: 4 }, (_, i) => i + 1);
+    const { translate, language } = useTranslation()
+    const alertTypes = translate("alartTypes", false).split(", ");
+    const severityTypes = translate("severityTypes", false).split(", ");
+    const statusTypes = translate("states", false).split(", ");
+
+    const incidentTypes = translate("incidentTypes", false).split(", ");
+    const prio = translate("prios", false).split(', ');
+
+    const priorities = [
+        { value: 1, label: prio[0] },
+        { value: 2, label: prio[1] },
+        { value: 3, label: prio[2] },
+        { value: 4, label: prio[3] }
+    ];
 
     const [isEditMode, setEditMode] = useState(false);
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
@@ -68,6 +74,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
     const [collapse, setCollapse] = useState(false);
     const searchParams = useSearchParams();
     const from = searchParams.get('from');
+    const commands = translate("commands", false).split(", ")
 
     useEffect(() => {
         console.log("from: ", from);
@@ -255,8 +262,8 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         </button>
                     ) : (
                         <div className='flex space-x-4'>
-                            <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
-                            <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
+                            <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">{translate("cancel")}</button>
+                            <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">{translate("save")}</button>
                         </div>
                     )}
                     {!issue.isInitialGiven && !isEditMode && (
@@ -288,7 +295,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                 <div className='mb-4'>
                     {isEditMode ? (
                         <div className='w-1/2'>
-                            <p className='font-bold pb-2'>Title</p>
+                            <p className='font-bold pb-2'>{translate("title")}</p>
                             <input
                                 maxLength={70}
                                 type="text"
@@ -320,7 +327,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                 ))}
                             </select>
                         ) : (
-                            <Tippy content={<span>{getAlertText(issue.alertType)}</span>}>
+                            <Tippy content={<span>{getAlertText(issue.alertType, translate)}</span>}>
                                 <span>{getAlertIcon(issue.alertType)}</span>
                             </Tippy>
                         )}
@@ -330,7 +337,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                             {isEditMode ? (
                                 <select
                                     name="severity"
-                                    value={issue.severity}
+                                    value={language === 'en' ? issue.severity : severityTranslation[issue.severity]}
                                     onChange={handleInputChange}
                                     className="input mx-2 border border-grey-800"
                                 >
@@ -342,7 +349,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                 </select>
                             ) : (
                                 <span className={`${getSeverityColor(issue.severity)} rounded-xl p-2 m-2`}>
-                                    {issue.severity}</span>
+                                    {language === 'en' ? issue.severity : severityTranslation[issue.severity]}</span>
                             )}
                         </p>
                     </div>
@@ -367,7 +374,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                             {isEditMode ? (
                                 <select
                                     name="incidentType"
-                                    value={issue.incidentType}
+                                    value={language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType]}
                                     onChange={handleInputChange}
                                     className="input mx-2 border border-grey-800"
                                 >
@@ -379,7 +386,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                 </select>
                             ) : (
                                 <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
-                                    {issue.incidentType}
+                                    {language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType]}
                                 </span>
                             )}
                         </p>
@@ -394,8 +401,8 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                     className="input mx-2 border border-grey-800"
                                 >
                                     {priorities.map(priority => (
-                                        <option key={priority} value={priority}>
-                                            {priority}, {priority === 1 ? 'niedrig' : priority === 2 ? 'mittel' : priority === 3 ? 'hoch' : 'dringend'}
+                                        <option key={priority.value} value={priority.value}>
+                                            {priority.value}:   {priority.label}
                                         </option>
                                     ))}
                                 </select>
@@ -403,7 +410,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                 getPriorityText(issue.priority,
                                     <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
                                         {`${issue.priority}/4`}
-                                    </span>)
+                                    </span>, translate)
                             )}
                         </p>
                     </div>
@@ -412,7 +419,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
 
             <div className={`grid ${hide ? 'grid-cols-2' : 'grid-cols-3'} grid-rows-[auto, 1fr, 1fr, 1fr] gap-4 transition-all duration-300`}>
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels(translate('description'), "Beschreibung des Problems")}
+                    {labels(translate('description'), translate("descriptionHelp"))}
                     {isEditMode ? (
                         <textarea
                             name="description"
@@ -431,7 +438,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                 </div>
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels(translate('suggestedSolution'), "Empfohlene Schritte zur Behebung des Problems, basierend auf der Analyse und Diagnose der Störung.")}
+                    {labels(translate('suggestedSolution'), translate("recommendedSteps"))}
                     {isEditMode ? (
                         <textarea
                             name="loesungsvorschlag"
@@ -446,61 +453,63 @@ function IssueDetail({ params }: { params: { id: string } }) {
 
                 {!hide && (
                     <div className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
-                        {labels(translate('affectedSystems'), "Listet die Systeme auf, die von dem Issue betroffen sind.")}
-                        <div className="space-y-1">
-                            {isEditMode ? (
-                                <div>
-                                    <div className='flex space-x-4 h-full'>
-                                        <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
-                                            <div className="cursor-pointer" onClick={toggleDropdown}>
-                                                <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
-                                                    Wähle die Systeme aus
-                                                    <FaCaretDown className="ml-1" />
+                        {labels(translate('affectedSystems'), translate("affectedSystemsHelp"))}
+                        < div className="space-y-1" >
+                            {
+                                isEditMode ? (
+                                    <div>
+                                        <div className='flex space-x-4 h-full'>
+                                            <div className="relative inline-block min-h-[45px]" ref={dropdownRef}>
+                                                <div className="cursor-pointer" onClick={toggleDropdown}>
+                                                    <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
+                                                        {translate("choseSystem")}
+                                                        <FaCaretDown className="ml-1" />
+                                                    </div>
                                                 </div>
+                                                {dropdownOpen && (
+                                                    <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
+                                                        {systemsList.map(system => (
+                                                            <div
+                                                                key={system}
+                                                                className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleAddSystem(system);
+                                                                }}
+                                                            >
+                                                                {system}
+                                                                {issue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
-                                            {dropdownOpen && (
-                                                <div className="absolute bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto shadow-lg w-64">
-                                                    {systemsList.map(system => (
-                                                        <div
-                                                            key={system}
-                                                            className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center justify-between"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleAddSystem(system);
-                                                            }}
-                                                        >
-                                                            {system}
-                                                            {issue.affectedSystems.includes(system) && <FaCheck className="text-green-500" />}
-                                                        </div>
-                                                    ))}
+                                        </div>
+                                        <div className={`flex-grow py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'border border-gray-300 rounded-md' : ''}`}>
+                                            {issue.affectedSystems.map((system, index) => (
+                                                <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
+                                                    <span className="flex-grow">{system}</span>
+                                                    <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">{translate("remove")}</button>
                                                 </div>
-                                            )}
+                                            ))}
                                         </div>
                                     </div>
-                                    <div className={`flex-grow py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'border border-gray-300 rounded-md' : ''}`}>
-                                        {issue.affectedSystems.map((system, index) => (
-                                            <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
-                                                <span className="flex-grow">{system}</span>
-                                                <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ) : (
-                                issue.affectedSystems.length > 0 ? (
-                                    issue.affectedSystems.map((system, index) => (
-                                        <p key={index} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {system}</p>
-                                    ))
                                 ) : (
-                                    <></>
-                                )
-                            )}
+                                    issue.affectedSystems.length > 0 ? (
+                                        issue.affectedSystems.map((system, index) => (
+                                            <p key={index} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}> - {system}</p>
+                                        ))
+                                    ) : (
+                                        <></>
+                                    )
+                                )}
                         </div>
                     </div>
-                )}
+                )
+                }
 
                 <div className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff]'>
-                    {labels(translate('impact'), "Zeigt die Auswirkungen des Issues auf das System oder die betroffenen Benutzer an.")}
+                    {labels(translate('impact'), translate('impactDescription'))}
                     {isEditMode ? (
                         <textarea
                             name="impact"
@@ -513,42 +522,46 @@ function IssueDetail({ params }: { params: { id: string } }) {
                     )}
                 </div>
 
-                {!hide && (
-                    <div className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
-                        {labels(translate('preventativeMeasures'), "Vorbeugende Massnahmen, die ergriffen werden können, um das Auftreten ähnlicher Issues in der Zukunft zu verhindern.")}
-                        {isEditMode ? (
-                            <textarea
-                                name="preventativeMeasures"
-                                value={issue.preventativeMeasures}
-                                onChange={handleInputChange}
-                                className="editable-input"
-                            />
-                        ) : (
-                            <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.preventativeMeasures}</p>
-                        )}
-                    </div>
-                )}
+                {
+                    !hide && (
+                        <div className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
+                            {labels(translate('preventativeMeasures'), translate("preventativeMeasuresHelp"))}
+                            {isEditMode ? (
+                                <textarea
+                                    name="preventativeMeasures"
+                                    value={issue.preventativeMeasures}
+                                    onChange={handleInputChange}
+                                    className="editable-input"
+                                />
+                            ) : (
+                                <p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.preventativeMeasures}</p>
+                            )}
+                        </div>
+                    )
+                }
 
                 <TabComponent />
-                {!hide && (
-                    <div className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
-                        {labels("Info", "Zusätzliche Informationen zur Problemmeldung, wie Ersteller, Priorität, Zeitstempel und Dauer des Ereignisses.")}
-                        <div className='grid grid-cols-2 gap-2'>
-                            <p className=''>{translate("creator")}:</p>
-                            <p className='text-right'>{issue.creator}</p>
-                            <p className=''>{translate("issueNumber")}:</p>
-                            <p className='text-right'>{issue.id}</p>
-                            <p className=''>{translate("duration")}:</p>
-                            <p className='text-right'>{issue.duration} h</p>
-                            <p className=''>{translate("timestamp")}:</p>
-                            <p className='text-right'>{formatDate(issue.timestamp)}</p>
-                            <p className=''>{translate("lastUpdated")}:</p>
-                            <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
-                            <p className=''>{translate("endTime")}:</p>
-                            <p className='text-right'>--:--</p>
+                {
+                    !hide && (
+                        <div className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] transition-transform duration-300 transform ${hide ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
+                            {labels("Info", translate("additionalInfoDescription"))}
+                            <div className='grid grid-cols-2 gap-2'>
+                                <p className=''>{translate("creator")}:</p>
+                                <p className='text-right'>{issue.creator}</p>
+                                <p className=''>{translate("issueNumber")}:</p>
+                                <p className='text-right'>{issue.id}</p>
+                                <p className=''>{translate("duration")}:</p>
+                                <p className='text-right'>{issue.duration} h</p>
+                                <p className=''>{translate("timestamp")}:</p>
+                                <p className='text-right'>{formatDate(issue.timestamp)}</p>
+                                <p className=''>{translate("lastUpdated")}:</p>
+                                <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
+                                <p className=''>{translate("endTime")}:</p>
+                                <p className='text-right'>--:--</p>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
                 <div className={`${hide ? "col-start-2" : "col-start-3"} col-span-1`}>
                     <div className='flex justify-end'>
@@ -561,7 +574,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         )}
                     </div>
                 </div>
-            </div>
+            </div >
             <div className="flex justify-center">
                 {isTerminalOpen && issue.commands.length > 0 && (
                     <div className='terminal-container'>
@@ -575,17 +588,17 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                 <MdCancel className="text-gray-700 transform scale-150" />
                             </button>
                         </div>
-                        <p className="text-black dark:text-gray-300 mb-4">Hier sind die empfohlenen Befehle, um Ihr Problem zu lösen:</p>
+                        <p className="text-black dark:text-gray-300 mb-4">{translate("recommendedCommands")}</p>
                         <ul className="list-disc pl-5 mb-4 text-black dark:text-gray-300">
-                            <li className="mb-2">Den PRTG Core Server-Dienst neu starten</li>
-                            <li className="mb-2">Den Status des PRTG Core Server-Dienstes überprüfen</li>
-                            <li className="mb-2">Den PRTG Core Server-Dienst beim Booten aktivieren</li>
+                            <li className="mb-2">{commands[0]}</li>
+                            <li className="mb-2">{commands[1]}</li>
+                            <li className="mb-2">{commands[2]}</li>
                         </ul>
                         <Terminal commands={issue.commands} onExecute={handleExecute} commandResponses={issue.commandResponses} />
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
 

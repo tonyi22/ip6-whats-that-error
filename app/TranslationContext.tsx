@@ -17,7 +17,7 @@ type Language = 'en' | 'de';
 
 interface TranslationContextProps {
     language: Language;
-    translate: (key: string, joinArray?: boolean) => string;
+    translate: (key: string, joinArray?: boolean, delimiter?: string) => string;
     setLanguage: (language: Language) => void;
 }
 
@@ -26,12 +26,15 @@ const TranslationContext = createContext<TranslationContextProps | undefined>(un
 export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [language, setLanguage] = useState<Language>('de');
 
-    const translate = (key: string, joinArray: boolean = true): string => {
+    const translate = (key: string, joinArray: boolean = true, delimiter: string = ', '): string => {
         const langTranslations: Translations = translations[language as keyof AllTranslations];
         const translation = langTranslations[key];
+
         if (Array.isArray(translation)) {
-            return joinArray ? translation.join(' ') : translation.join(', ');
+            // Always use the custom delimiter provided
+            return translation.join(delimiter);
         }
+
         return translation || key;
     };
 

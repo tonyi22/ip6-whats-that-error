@@ -13,20 +13,15 @@ import { useTranslation } from '@/app/TranslationContext';
 const NewIssue = () => {
     const { translate } = useTranslation();
     const alertTypes = translate('alartTypes', false).split(', ');
-    //const alertTypes = ['Informationsmeldung', 'Warnmeldung', 'Fehlermeldung'] as const;
-    const severityTypes = ['Low', 'Medium', 'High'] as const;
-    const statusTypes = ['New', 'Open', 'Closed', 'In Progress'] as const;
-    const incidentTypes = [
-        'Performance', 'Storage', 'Overheating', 'Backups', 'Power',
-        'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
-        'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export',
-        'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'
-    ];
+    const severityTypes = translate('severityTypes', false).split(', ');
+    const incidentTypes = translate("incidentTypes", false).split(', ');
+    const prio = translate("prios", false).split(', ');
+
     const priorities = [
-        { value: 1, label: "niedrig" },
-        { value: 2, label: "mittel" },
-        { value: 3, label: "hoch" },
-        { value: 4, label: "dringend" }
+        { value: 1, label: prio[0] },
+        { value: 2, label: prio[1] },
+        { value: 3, label: prio[2] },
+        { value: 4, label: prio[3] }
     ];
 
     const systemsList = [
@@ -144,7 +139,7 @@ const NewIssue = () => {
     const alertTypeMapping: { [key: string]: string } = {
         'Informationsmeldung': 'Info',
         'Warnmeldung': 'Warning',
-        'Fehlermeldung': 'Critical'
+        'Fehlermeldung': 'Error'
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -165,38 +160,12 @@ const NewIssue = () => {
     };
     const checkForTitleSuggestion = (title: string) => {
         const lowerCase = title.toLowerCase();
-        if (lowerCase.includes('datenbankserver') && lowerCase.includes('überhitzung')) {
-            setSuggestedDescription(`Einleitung:
-Der Datenbankserver CT-10 hat unter hoher Auslastung hohe Last- und Latenzprobleme verursacht, was die Leistung mehrerer Anwendungen beeinträchtigt.
-
-Hintergrundinformationen:
-Server CT-10 hostet die Hauptdatenbank für unsere E-Commerce-Plattform. Der Server ist entscheidend für die Abwicklung von Benutzertransaktionen und die Verwaltung von Bestandsdaten. Kürzlich haben Benutzer langsame Reaktionszeiten und gelegentliche Zeitüberschreitungen gemeldet.
-
-Schritte zur Reproduktion:
-1. Melden Sie sich bei der E-Commerce-Plattform an.
-2. Versuchen Sie, einen Artikel in den Warenkorb zu legen.
-3. Gehen Sie zur Kasse.
-4. Beobachten Sie die Reaktionszeit beim Absenden der Bestellung.
-
-Erwartetes Verhalten:
-Der Server sollte diese Vorgänge innerhalb akzeptabler Reaktionszeiten (unter 2 Sekunden) abwickeln.
-
-Tatsächliches Verhalten:
-Der Server benötigt 5-10 Sekunden zum Antworten und manchmal überschreiten die Anfragen die Zeitgrenze, was zu einer Fehlermeldung führt.
-
-Zusätzliche Informationen:
-- Server CT-10 läuft auf Ubuntu 20.04 mit MySQL 8.0.
-- Das Problem trat nach einem kürzlichen Anstieg des Datenverkehrs aufgrund einer Werbekampagne auf.
-- Die CPU-Auslastung auf dem Server liegt konstant über 90 %.
-- Die Festplatten-E/A-Operationen sind erheblich höher als gewöhnlich.
-- Relevante Fehlerprotokolle sind beigefügt.
-
-Lösungsvorschlag:
-- Untersuchen Sie die Abfragen, die eine hohe CPU- und E/A-Auslastung verursachen.
-- Erwägen Sie die Optimierung der Datenbankindizes.
-- Erhöhen Sie die Serverressourcen (CPU, RAM) bei Bedarf.
-- Prüfen Sie die Möglichkeit des Lastenausgleichs, indem Sie die Datenbanklast auf mehrere Server verteilen.`);
+        if (lowerCase.includes(translate("database")) && lowerCase.includes(translate("overheating"))
+        ) {
+            console.log(true);
+            setSuggestedDescription(translate("suggestedDescription"))
         } else {
+            console.log(false);
             setSuggestedDescription('');
         }
     };
@@ -262,6 +231,7 @@ Lösungsvorschlag:
             setDescriptionTemplateDismissed(false);
         }
     };
+    const template = translate("templateDes", false).split(", ")
 
     return (
         <div className="flex justify-center my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
@@ -311,7 +281,7 @@ Lösungsvorschlag:
                                     className="text-sm text-blue-500"
                                     onClick={handleTitleTemplateButtonClick}
                                 >
-                                    Show Template
+                                    {translate("showTemplate")}
                                 </button>
                             )}</div>
                     </div>
@@ -336,7 +306,7 @@ Lösungsvorschlag:
                                     className="mt-2 bg-blue-500 mb-4 text-white p-2 rounded-lg shadow-md"
                                     onClick={acceptSuggestion}
                                 >
-                                    Accept Suggestion
+                                    {translate("acceptSuggestion")}
                                 </button>
                             )}
 
@@ -353,14 +323,14 @@ Lösungsvorschlag:
                                     >
                                         <MdCancel className="w-4 h-4 text-gray-700" />
                                     </button>
-                                    <h4 className="font-semibold text-sm">Description Guide</h4>
+                                    <h4 className="font-semibold text-sm">{translate("descriptionTemplate")}</h4>
                                     <ol className="text-sm text-gray-700 list-decimal list-inside">
-                                        <li>Einleitung</li>
-                                        <li>Hintergrundinformationen</li>
-                                        <li>Schritte zur Reproduktion</li>
-                                        <li>Erwartetes Verhalten</li>
-                                        <li>Tatsächliches Verhalten</li>
-                                        <li>Zusätzliche Informationen</li>
+                                        <li>{template[0]}</li>
+                                        <li>{template[1]}</li>
+                                        <li>{template[2]}</li>
+                                        <li>{template[3]}</li>
+                                        <li>{template[4]}</li>
+                                        <li>{template[5]}</li>
                                     </ol>
                                 </div>
                             )}
@@ -373,7 +343,7 @@ Lösungsvorschlag:
                                 className="text-sm text-blue-500"
                                 onClick={handleDescriptionTemplateButtonClick}
                             >
-                                Show Template
+                                {translate("showTemplate")}
                             </button>
                         )}
                     </div>

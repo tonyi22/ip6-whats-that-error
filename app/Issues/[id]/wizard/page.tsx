@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
-import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText } from '@/app/helperFunction';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from '../TabComponent';
 import '../detailView.css';
@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import Terminal from '../Terminal';
 import FeedbackModal from './FeedbackModal';
 import { useTranslation } from '@/app/TranslationContext';
+import Tippy from '@tippyjs/react';
+import { labels } from '../page';
 
 
 // Load and save issues from/to localStorage
@@ -41,14 +43,14 @@ const systemsList = [
 ];
 
 function IssueJourney({ params }: { params: { id: string } }) {
-    const alertTypes = ['Critical', 'Warning', 'Info', 'None'];
-    const severityTypes = ['Low', 'Medium', 'High'];
-    const statusTypes = ['New', 'Open', 'Closed', 'In Progress'];
-    const incidentTypes = ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
-        'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security', 'other'];
+    const { translate, language } = useTranslation()
+    const alertTypes = translate("alartTypes", false).split(", ");
+    const severityTypes = translate("severityTypes", false).split(", ");
+    const statusTypes = translate("states", false).split(", ");
+
+    const incidentTypes = translate("incidentTypes", false).split(", ");
     const priorities = Array.from({ length: 4 }, (_, i) => i + 1);
     const router = useRouter();
-    const { translate } = useTranslation();
 
     const [isEditMode, setEditMode] = useState(false);
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
@@ -73,24 +75,14 @@ function IssueJourney({ params }: { params: { id: string } }) {
 
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
-    const [textBubbleContent, setTextBubbleContent] = useState([
-        "Diese Ansicht enthält wichtige Informationen zum Issue, einschließlich Titel, Alarmtyp, Schweregrad, Status, Incident-Typ und Priorität.",
-        "Detaillierte Beschreibung des Problems.",
-        "Listet die Systeme auf, die von dem Issue betroffen sind.",
-        "Empfohlene Schritte zur Behebung des Problems, basierend auf der Analyse und Diagnose der Störung.",
-        "Zeigt die Auswirkungen des Issues auf das System oder die betroffenen Benutzer an.",
-        "Vorbeugende Massnahmen, die ergriffen werden können, um das Auftreten ähnlicher Issues in der Zukunft zu verhindern.",
-        "Kommentare und Anhänge.",
-        "Zusätzliche Informationen zur Problemmeldung, wie Ersteller, Priorität, Zeitstempel und Dauer des Ereignisses."
-    ]);
 
-    const [wizardTextIntro, setWizardTextInstro] = useState([
-        "Willkommen beim Wizard! Hier werden Ihnen schrittweise die einzelnen Bereiche des Issues erklärt. Jeder Bereich wird nacheinander angezeigt und erläutert.",
-        "Hier sehen Sie den spezifischen Bereich des Issues, der gerade erklärt wird.",
-        "Dieser Abschnitt erklärt, welche Informationen im Issue enthalten sind und deren Bedeutung.",
-        "Mit diesem Knopf können Sie Fragen an die KI stellen, falls Sie Hilfe benötigen.",
-        "Nun beginnt die Tour."
-    ]);
+    const initialTranslation = translate("wizard", false, " $ ");
+    console.log("Initial Translation:", initialTranslation); // Log before splitting
+    const [textBubbleContent, setTextBubbleContent] = useState(initialTranslation.split(' $ '));
+    console.log("textBubbleContent:", textBubbleContent); // Log after splitting
+    console.log(textBubbleContent)
+
+    const [wizardTextIntro, setWizardTextInstro] = useState(translate("wizardTutorial", false, ' $ ').split(' $ '));
 
     const handleClick = () => {
         setCurrentStep(currentStep + 1);
@@ -307,14 +299,15 @@ function IssueJourney({ params }: { params: { id: string } }) {
     };
 
     const steps = [
-        "Overview",
-        "Description",
-        "Affected Systems",
-        "Solution Proposal",
-        "Impact",
-        "Preventative Measures",
-        "Tab Component",
-        "Additional Info"
+        translate("overview"),
+        translate("description"),
+        translate("suggestedSolution"),
+        translate("affectedSystems"),
+        translate("impact"),
+        translate("preventativeMeasures"),
+        translate("comments"),
+        "Info",
+
     ];
 
 
@@ -375,18 +368,18 @@ function IssueJourney({ params }: { params: { id: string } }) {
                         </button>}
                     {!isEditMode ? (
                         <button onClick={handleEdit} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center'>
-                            <span className='flex items-center'>Edit <CiEdit className='text-2xl ml-2' /></span>
+                            <span className='flex items-center'>{translate("edit")} <CiEdit className='text-2xl ml-2' /></span>
                         </button>
                     ) : (
                         <div className='flex space-x-4'>
-                            <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
-                            <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
+                            <button onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">{translate("cancel")}</button>
+                            <button onClick={handleSave} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">{translate("save")}</button>
                         </div>
                     )}
                     {!issue.isInitialGiven && !isEditMode && (
                         <Link href={`/Issues/${issue.id}/initial-feedback`}>
                             <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline'>
-                                Give Initial Feedback
+                                {translate("giveInitial")}
                             </button>
                         </Link>
                     )}
@@ -413,7 +406,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                     <div className='mb-4'>
                         {isEditMode ? (
                             <div className='w-1/2'>
-                                <p className='font-bold pb-2'>Title</p>
+                                <p className='font-bold pb-2'>{translate("title")}</p>
                                 <input
                                     maxLength={70}
                                     type="text"
@@ -446,11 +439,13 @@ function IssueJourney({ params }: { params: { id: string } }) {
                                     ))}
                                 </select>
                             ) : (
-                                <span>{getAlertIcon(issue.alertType)}</span>
+                                <Tippy content={<span>{getAlertText(issue.alertType, translate)}</span>}>
+                                    <span>{getAlertIcon(issue.alertType)}</span>
+                                </Tippy>
                             )}
                         </div>
                         <div>
-                            <p>Severity:
+                            <p>{translate('severity')}:
                                 {isEditMode ? (
                                     <select
                                         name="severity"
@@ -487,11 +482,11 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             </p>
                         </div>
                         <div>
-                            <p>Incident type:
+                            <p>{translate('incidentType')}:
                                 {isEditMode ? (
                                     <select
                                         name="incidentType"
-                                        value={issue.incidentType}
+                                        value={language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType]}
                                         onChange={handleInputChange}
                                         className="input mx-2 border border-grey-800"
                                     >
@@ -503,13 +498,13 @@ function IssueJourney({ params }: { params: { id: string } }) {
                                     </select>
                                 ) : (
                                     <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
-                                        {issue.incidentType}
+                                        {language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType]}
                                     </span>
                                 )}
                             </p>
                         </div>
                         <div>
-                            <p>Priority:
+                            <p>{translate('priority')}:
                                 {isEditMode ? (
                                     <select
                                         name="priority"
@@ -524,9 +519,10 @@ function IssueJourney({ params }: { params: { id: string } }) {
                                         ))}
                                     </select>
                                 ) : (
-                                    <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
-                                        {`${issue.priority}/4`}
-                                    </span>
+                                    getPriorityText(issue.priority,
+                                        <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2 m-2'>
+                                            {`${issue.priority}/4`}
+                                        </span>, translate)
                                 )}
                             </p>
                         </div>
@@ -541,7 +537,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                         <button
                             onClick={handleIntroNext}
                             className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
-                            Weiter
+                            {translate("next")}
                         </button>
                     </div>
                 )}
@@ -549,7 +545,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
 
 
                 <div ref={currentStep === 1 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[200px] col-span-1 row-span-2 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 1 ? 'active-step' : 'blacked-out'}`}>
-                    <p className='font-bold pb-2'>Description</p>
+                    {labels(translate('description'), translate("descriptionHelp"))}
 
                     {isEditMode ? (
                         <textarea
@@ -560,12 +556,12 @@ function IssueJourney({ params }: { params: { id: string } }) {
                         />
                     ) : ((issue.description === "" && showPromptDescription) ? (
                         <div className='text-center bg-white p-2 border rounded-md'>
-                            <p className='font-bold '>Es scheint als ob hier der Text fehlt. Willst du das mit KI ergänzen lassen?</p>
+                            <p className='font-bold '>{translate("textMissing")}</p>
                             <div className='mt-2 flex justify-center'>
-                                <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>Ja</button>
+                                <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>{translate("yes")}</button>
                                 <button onClick={() => {
                                     setShowPromptDescription(false)
-                                }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>Nein</button>
+                                }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>{translate("no")}</button>
                             </div>
                         </div>
 
@@ -579,8 +575,35 @@ function IssueJourney({ params }: { params: { id: string } }) {
                     ))}
                 </div>
 
-                <div ref={currentStep === 2 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 2 ? 'active-step' : 'blacked-out'}`}>
-                    <p className='font-bold pb-2'>Affected Systems</p>
+
+
+                <div ref={currentStep === 2 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 2 ? 'active-step' : 'blacked-out'}`}>
+                    {labels(translate('suggestedSolution'), translate("recommendedSteps"))}
+                    {isEditMode ? (
+                        <textarea
+                            name="loesungsvorschlag"
+                            value={issue.loesungsvorschlag}
+                            onChange={handleInputChange}
+                            className="editable-input"
+                        />
+                    ) : (
+                        ((issue.loesungsvorschlag === "" && showPromptLoesungsvorschlag) ? (
+                            <div className='text-center bg-white p-2 border rounded-md'>
+                                <p className='font-bold '>{translate("textMissing")}</p>
+                                <div className='mt-2 flex justify-center'>
+                                    <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>{translate("yes")}</button>
+                                    <button onClick={() => {
+                                        setshowPromptLoesungsvorschlag(false)
+                                    }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>{translate("no")}</button>
+                                </div>
+                            </div>
+                        ) :
+                            (<p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.loesungsvorschlag}</p>)
+                        ))}
+                </div>
+
+                <div ref={currentStep === 3 ? activeStepRef : null} data-step-title="affectedSystems" className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 3 ? 'active-step' : 'blacked-out'}`}>
+                    {labels(translate('affectedSystems'), translate("affectedSystemsHelp"))}
                     <div className="space-y-1">
                         {isEditMode ? (
                             <div>
@@ -591,7 +614,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                                             onClick={toggleDropdown}
                                         >
                                             <div className="cursor-pointer flex items-center border rounded-md py-1 px-4 bg-white shadow-sm min-h-[45px]">
-                                                Wähle die Systeme aus
+                                                {translate("choseSystem")}
                                                 <FaCaretDown className="ml-1" />
                                             </div>
                                         </div>
@@ -618,7 +641,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                                     {issue.affectedSystems.map((system, index) => (
                                         <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
                                             <span className="flex-grow">{system}</span>
-                                            <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">Remove</button>
+                                            <button type="button" onClick={() => handleRemoveSystem(index)} className="ml-2 text-red-500">{translate("remove")}</button>
                                         </div>
                                     ))}
                                 </div>
@@ -631,12 +654,12 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             ) : (
                                 showPromptAffectedSystems ? (
                                     <div className='text-center bg-white p-2 border rounded-md'>
-                                        <p className='font-bold '>Es scheint als ob hier der Text fehlt. Willst du das mit KI ergänzen lassen?</p>
+                                        <p className='font-bold '>{translate("textMissing")}</p>
                                         <div className='mt-2 flex justify-center'>
-                                            <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>Ja</button>
+                                            <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>{translate("yes")}</button>
                                             <button onClick={() => {
                                                 setShowPromptAffectedSystems(false)
-                                            }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>Nein</button>
+                                            }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>{translate("no")}</button>
                                         </div>
                                     </div>
                                 ) : (
@@ -647,33 +670,8 @@ function IssueJourney({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-                <div ref={currentStep === 3 ? activeStepRef : null} data-step-title="Lösungsvorschlag" className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 3 ? 'active-step' : 'blacked-out'}`}>
-                    <p className='font-bold pb-2'>Lösungsvorschlag</p>
-                    {isEditMode ? (
-                        <textarea
-                            name="loesungsvorschlag"
-                            value={issue.loesungsvorschlag}
-                            onChange={handleInputChange}
-                            className="editable-input"
-                        />
-                    ) : (
-                        ((issue.loesungsvorschlag === "" && showPromptLoesungsvorschlag) ? (
-                            <div className='text-center bg-white p-2 border rounded-md'>
-                                <p className='font-bold '>Es scheint als ob hier der Text fehlt. Willst du das mit KI ergänzen lassen?</p>
-                                <div className='mt-2 flex justify-center'>
-                                    <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>Ja</button>
-                                    <button onClick={() => {
-                                        setshowPromptLoesungsvorschlag(false)
-                                    }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>Nein</button>
-                                </div>
-                            </div>
-                        ) :
-                            (<p className='' style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{issue.loesungsvorschlag}</p>)
-                        ))}
-                </div>
-
                 <div ref={currentStep === 4 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 4 ? 'active-step' : 'blacked-out'}`}>
-                    <p className='font-bold pb-2'>Impact</p>
+                    {labels(translate('impact'), translate('impactDescription'))}
                     {isEditMode ? (
                         <textarea
                             name="impact"
@@ -683,12 +681,12 @@ function IssueJourney({ params }: { params: { id: string } }) {
                         />
                     ) : ((issue.impact === "" && showPromptImpact) ? (
                         <div className='text-center bg-white p-2 border rounded-md'>
-                            <p className='font-bold '>Es scheint als ob hier der Text fehlt. Willst du das mit KI ergänzen lassen?</p>
+                            <p className='font-bold '>{translate("textMissing")}</p>
                             <div className='mt-2 flex justify-center'>
-                                <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>Ja</button>
+                                <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>{translate("yes")}</button>
                                 <button onClick={() => {
                                     setShowPromptImpact(false)
-                                }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>Nein</button>
+                                }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>{translate("no")}</button>
                             </div>
                         </div>
                     ) : (
@@ -696,8 +694,8 @@ function IssueJourney({ params }: { params: { id: string } }) {
                     )}
                 </div>
 
-                <div ref={currentStep === 5 ? activeStepRef : null} data-step-title="Lösungsvorschlag" className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 5 ? 'active-step' : 'blacked-out'}`}>
-                    <p className='font-bold pb-2'>Preventative Measures</p>
+                <div ref={currentStep === 5 ? activeStepRef : null} data-step-title="preventativeMeasures" className={`bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 5 ? 'active-step' : 'blacked-out'}`}>
+                    {labels(translate('preventativeMeasures'), translate("preventativeMeasuresHelp"))}
                     {isEditMode ? (
                         <textarea
                             name="preventativeMeasures"
@@ -709,12 +707,12 @@ function IssueJourney({ params }: { params: { id: string } }) {
 
                         (issue.preventativeMeasures === "" && showPromptPreventativeMeasures) ? (
                             <div className='text-center bg-white p-2 border rounded-md'>
-                                <p className='font-bold '>Es scheint als ob hier der Text fehlt. Willst du das mit KI ergänzen lassen?</p>
+                                <p className='font-bold '>{translate("textMissing")}</p>
                                 <div className='mt-2 flex justify-center'>
-                                    <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>Ja</button>
+                                    <button className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>{translate("yes")}</button>
                                     <button onClick={() => {
                                         setShowPromptPreventativeMeasures(false)
-                                    }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>Nein</button>
+                                    }} className='bg-blue-500 hover:bg-blue-700 w-16 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>{translate("no")}</button>
                                 </div>
                             </div>
                         ) :
@@ -723,28 +721,28 @@ function IssueJourney({ params }: { params: { id: string } }) {
                     )}
                 </div>
 
-                <div ref={currentStep === 6 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[200px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 6 ? 'active-step' : 'blacked-out'}`}>
+                <div ref={currentStep === 6 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[200px] col-span-2 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 6 ? 'active-step' : 'blacked-out'}`}>
                     <TabComponent />
                 </div>
 
-                <div ref={currentStep === 7 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 7 ? 'active-step' : 'blacked-out'}`}>
-                    <p className='font-bold pb-2'>Info</p>
+                <div ref={currentStep === 7 ? activeStepRef : null} data-step-title="additionalInfoDescription" className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 7 ? 'active-step' : 'blacked-out'}`}>
+                    {labels("Info", translate("additionalInfoDescription"))}
                     <div className='grid grid-cols-2 gap-2'>
-                        <p className=''>Creator:</p>
+                        <p className=''>{translate("creator")}:</p>
                         <p className='text-right'>{issue.creator}</p>
-                        <p className=''>Issue Nr.:</p>
+                        <p className=''>{translate("issueNumber")}:</p>
                         <p className='text-right'>{issue.id}</p>
-                        <p className=''>Duration:</p>
+                        <p className=''>{translate("duration")}:</p>
                         <p className='text-right'>{issue.duration} h</p>
-                        <p className=''>Timestamp:</p>
+                        <p className=''>{translate("timestamp")}:</p>
                         <p className='text-right'>{formatDate(issue.timestamp)}</p>
-                        <p className=''>Last updated:</p>
+                        <p className=''>{translate("lastUpdated")}:</p>
                         <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
-                        <p className=''>End time:</p>
+                        <p className=''>{translate("endTime")}:</p>
                         <p className='text-right'>--:--</p>
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div className="flex justify-center z-20">
                 {isTerminalOpen && issue.commands.length > 0 && (
@@ -759,6 +757,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                                 <MdCancel className="text-gray-700 transform scale-150" />
                             </button>
                         </div>
+                        {/* Not neede really*/}
                         <p className="text-black dark:text-gray-300 mb-4">Hier sind die empfohlenen Befehle, um Ihr Problem zu lösen:</p>
                         <ul className="list-disc pl-5 mb-4 text-black dark:text-gray-300">
                             <li className="mb-2">Den PRTG Core Server-Dienst neu starten</li>
@@ -774,7 +773,8 @@ function IssueJourney({ params }: { params: { id: string } }) {
             <div className="fixed inset-0 bg-black opacity-80 z-0 pointer-events-none"></div>
 
             {/* Text bubble */}
-            {currentStep < 8 &&
+            {
+                currentStep < 8 &&
                 <div ref={textBubbleRef} className={`${currentStep === 6 || currentStep === 7 ? 'text-bubble-top' : 'text-bubble-bottom'} ${introFlag ? (introStep === 2 || introStep === 3) ? '' : 'blacked-out-intro' : ''}`}>
                     <div className="text-bubble-text">
                         <p style={{ whiteSpace: 'pre-line', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
@@ -801,7 +801,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             style={{
                                 visibility: currentStep === 0 ? 'hidden' : 'visible'
                             }}>
-                            Zurück
+                            {translate("back")}
                         </button>
 
                         <div className='flex space-x-2'>
@@ -815,49 +815,53 @@ function IssueJourney({ params }: { params: { id: string } }) {
                         <button
                             onClick={currentStep !== steps.length - 1 ? nextStep : handleClick}
                             className={`${introFlag ? "intro-button" : currentStep !== steps.length - 1 ? "" : "fertig-button"}`}>
-                            {currentStep !== steps.length - 1 ? "Weiter" : "Fertig"}
+                            {currentStep !== steps.length - 1 ? translate("next") : translate("finish")}
                         </button>
                     </div>
                 </div>
             }
 
             {/* Conditionally render the intro container for introStep === 1 */}
-            {(introFlag && introStep === 2 || introStep === 3 || introStep === 4) && (
-                <div ref={introContainerRef} className={`${introStep === 4 ? "intro-container-2" : "intro-container-2 intro-container-2-tour"}`}>
-                    <div className="comment">
-                        <p
-                            style={{ overflowWrap: 'break-word' }} >
-                            {wizardTextIntro[introStep]}
-                        </p>
+            {
+                (introFlag && introStep === 2 || introStep === 3 || introStep === 4) && (
+                    <div ref={introContainerRef} className={`${introStep === 4 ? "intro-container-2" : "intro-container-2 intro-container-2-tour"}`}>
+                        <div className="comment">
+                            <p
+                                style={{ overflowWrap: 'break-word' }} >
+                                {wizardTextIntro[introStep]}
+                            </p>
+                        </div>
+                        <button
+                            onClick={handleIntroNext}
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
+                            {introStep === 4 ? "Start" : translate("next")}
+                        </button>
                     </div>
-                    <button
-                        onClick={handleIntroNext}
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
-                        {introStep === 4 ? "Start" : "Weiter"}
-                    </button>
-                </div>
-            )}
+                )
+            }
 
-            {showFeedbackModal && (
-                <FeedbackModal
-                    onSubmit={() => {
-                        const issues = loadIssuesFromLocalStorage();
-                        const updatedIssues = issues.map(issue => {
-                            if (issue.id === Number(params.id)) {
-                                return { ...issue, wizardFeedback: true };
-                            }
-                            return issue;
-                        });
-                        saveIssuesToLocalStorage(updatedIssues);
-                        // Typecasting to any
-                        router.push(`/Issues/${params.id}?from=wizard`);
+            {
+                showFeedbackModal && (
+                    <FeedbackModal
+                        onSubmit={() => {
+                            const issues = loadIssuesFromLocalStorage();
+                            const updatedIssues = issues.map(issue => {
+                                if (issue.id === Number(params.id)) {
+                                    return { ...issue, wizardFeedback: true };
+                                }
+                                return issue;
+                            });
+                            saveIssuesToLocalStorage(updatedIssues);
+                            // Typecasting to any
+                            router.push(`/Issues/${params.id}?from=wizard`);
 
-                    }}
-                    onClose={
-                        () => setShowFeedbackModal(false)
-                    }
-                />
-            )}
+                        }}
+                        onClose={
+                            () => setShowFeedbackModal(false)
+                        }
+                    />
+                )
+            }
         </div >
     );
 }

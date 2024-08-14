@@ -7,7 +7,7 @@ import { SystemMonitoringIssue } from '../data/data';
 import { MdOutlineFiberNew } from "react-icons/md";
 import { useEffect, useState } from 'react';
 import { BiSortAlt2 } from "react-icons/bi";
-import { classNames, formatDate, getAlertIcon, getAlertIconBig, getAlertText, getPriorityText, getSeverityColor, validateType } from '../helperFunction';
+import { classNames, formatDate, getAlertIcon, getAlertIconBig, getAlertText, getPriorityText, getSeverityColor, incidentTypeTranslationMapEnDe, validateType } from '../helperFunction';
 import { useRouter } from 'next/navigation';
 import CustomDropDown from './dropDownMenu';
 import issuesJson from '../data/issues.json' assert { type: 'json' };
@@ -16,6 +16,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useTranslation } from '../TranslationContext';
 import { LiaToggleOffSolid, LiaToggleOnSolid } from 'react-icons/lia';
+import React from 'react';
 
 interface CardsHeaderProps {
     onSort: (column: string) => void;
@@ -39,7 +40,7 @@ const loadIssues = (): SystemMonitoringIssue[] => {
             return {
                 ...issue,
                 status: validateType(issue.status, ['New', 'Open', 'Closed', 'In Progress'], "Open"),
-                alertType: validateType(issue.alertType, ['Warning', 'Info', 'Critical'], "Warning"),
+                alertType: validateType(issue.alertType, ['Warning', 'Info', 'Error'], "Warning"),
                 incidentType: validateType(issue.incidentType, ['Performance', 'Storage', 'Overheating', 'Backups', 'Power', 'Data Integrity', 'Connection', 'Query', 'Monitoring', 'Network',
                     'Authentication', 'Resources', 'Processes', 'Configuration', 'Data Export', 'Documentation', 'Startup', 'Demonstration', 'Communication', 'Data Import', 'Security'], "Performance"),
                 severity: validateType(issue.severity, ['Low', 'Medium', 'High'], "Low"),
@@ -59,7 +60,7 @@ const saveIssues = (issues: SystemMonitoringIssue[]) => {
 }
 
 function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
-    const { translate } = useTranslation();
+    const { translate, language } = useTranslation();
     const renderSortIcon = (column: string) => {
         if (sortColumn === column) {
             return sortDirection === 'asc' ? <FaSortUp className='hover:cursor-pointer' /> : <FaSortDown className='hover:cursor-pointer' />;
@@ -67,12 +68,19 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
         return <FaSort className='hover:cursor-pointer' />;
     };
 
+    const color = translate("color", false).split(", ");
+    const type = translate("alartTypes", false).split(", ");
+    const incidents = translate("incidentTypes", false).split(", ");
+    const severities = translate("severityTypes", false).split(", ");
+    const prios = translate("prios", false).split(", ");
+
+
     return (
         <thead className="bg-gray-300">
             <tr className=''>
                 <th className="h-14 rounded-tl-xl rounded-bl-xl px-2 py-3 text-center text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-24"
                     onClick={() => onSort('alertType')}>
-                    <Tippy theme="tomato-theme" content={<span><span className="font-bold text-blue-500">Blaues "i":</span> Informationsmeldung<br /><span className="font-bold text-red-500">Rotes "!":</span> Fehlermeldungen<br /><span className="font-bold text-yellow-500">Gelbes "!":</span> Warnmeldungen</span>}>
+                    <Tippy theme="tomato-theme" content={<span><span className="font-bold text-blue-500">{color[0]}:</span> {type[0]}<br /><span className="font-bold text-red-500">{color[1]}:</span> {type[1]}<br /><span className="font-bold text-yellow-500">{color[2]}:</span> {type[2]}</span>}>
                         <div className='flex items-center cursor-pointer'>{translate('alertType')} {renderSortIcon('alertType')}</div>
                     </Tippy>
                 </th>
@@ -83,29 +91,16 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                 {true &&
                     <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 w-52 uppercase dark:text-neutral-500" onClick={() => onSort('incidentType')}>
                         <div className='flex items-center'>
-                            <Tippy theme="tomato-theme" content={<span>
-                                <span className="font-bold">{translate('performance')}</span> Leistung der Anwendung<br />
-                                <span className="font-bold">Storage:</span> Speicherprobleme<br />
-                                <span className="font-bold">Overheating:</span> Überhitzung<br />
-                                <span className="font-bold">Backups:</span> Backup-Probleme<br />
-                                <span className="font-bold">Power:</span> Stromversorgung<br />
-                                <span className="font-bold">Data Integrity:</span> Datenintegrität<br />
-                                <span className="font-bold">Connection:</span> Verbindungsprobleme<br />
-                                <span className="font-bold">Query:</span> Abfrageprobleme<br />
-                                <span className="font-bold">Monitoring:</span> Überwachung<br />
-                                <span className="font-bold">Network:</span> Netzwerkprobleme<br />
-                                <span className="font-bold">Authentication:</span> Authentifizierungsprobleme<br />
-                                <span className="font-bold">Resources:</span> Ressourcenprobleme<br />
-                                <span className="font-bold">Processes:</span> Prozessprobleme<br />
-                                <span className="font-bold">Configuration:</span> Konfigurationsprobleme<br />
-                                <span className="font-bold">Data Export:</span> Datenexportprobleme<br />
-                                <span className="font-bold">Documentation:</span> Dokumentationsprobleme<br />
-                                <span className="font-bold">Startup:</span> Startprobleme<br />
-                                <span className="font-bold">Demonstration:</span> Demonstrationsprobleme<br />
-                                <span className="font-bold">Communication:</span> Kommunikationsprobleme<br />
-                                <span className="font-bold">Data Import:</span> Datenimportprobleme<br />
-                                <span className="font-bold">Security:</span> Sicherheitsprobleme
-                            </span>}
+                            <Tippy theme="tomato-theme" content={
+                                <span>
+                                    {incidents.sort().map((incident, index) => (
+                                        <React.Fragment key={index}>
+                                            <span className="">{translate(incident)}</span>
+                                            <br />
+                                        </React.Fragment>
+                                    ))}
+                                </span>
+                            }
                             >
                                 <div className='flex items-center'>{translate('incidentType')} {renderSortIcon('incidentType')}</div>
                             </Tippy>
@@ -115,7 +110,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                 {true &&
                     <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
                         <div className='flex items-center'>
-                            <Tippy theme="tomato-theme" content={<span><span className="font-bold" >Schweregrad<br /></span><span className="font-bold text-green-500">Low:</span> Niedrig<br /><span className="font-bold text-yellow-500">Medium:</span> Mittel<br /><span className="font-bold text-red-500">High:</span> Hoch</span>}>
+                            <Tippy theme="tomato-theme" content={<span><span className="font-bold" ></span><span className="text-green-500">{severities[0]}</span><br /><span className="text-yellow-500">{severities[1]}</span><br /><span className="text-red-500">{severities[2]}</span></span>}>
                                 <div className='flex items-center'>{translate('severity')}  {renderSortIcon('severity')}</div>
                             </Tippy>
                         </div>
@@ -123,7 +118,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
 
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('priority')}>
                     <div className='flex items-center'>
-                        <Tippy theme="tomato-theme" content={<span><span className="font-bold">1:</span> Niedrige Priorität<br /><span className="font-bold">2:</span> Mittlere Priorität<br /><span className="font-bold">3:</span> Hohe Priorität<br /><span className="font-bold">4:</span> Dringende Priorität</span>}>
+                        <Tippy theme="tomato-theme" content={<span><span className="font-bold">1:</span>  {prios[0]}<br /><span className="font-bold">2:</span> {prios[1]}<br /><span className="font-bold">3:</span> {prios[2]}<br /><span className="font-bold">4:</span> {prios[3]}</span>}>
                             <div className='flex items-center'>{translate('priority')}  {renderSortIcon('priority')}</div>
                         </Tippy>
                     </div>
@@ -139,6 +134,7 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
 
 function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boolean }) {
     const router = useRouter();
+    const { translate, language } = useTranslation();
     const [sortColumn, setSortColumn] = useState<string>('timestamp');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
@@ -151,7 +147,7 @@ function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boole
     };
 
     const customSortOrder = {
-        alertType: ['Critical', 'Warning', 'Info'],
+        alertType: ['Error', 'Warning', 'Info'],
         severity: ['High', 'Medium', 'Low']
     };
 
@@ -195,7 +191,7 @@ function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boole
                         className="bg-[#fcf1fa] hover:bg-[#f2ebf5] hover:cursor-pointer border border-red-500"
                         onClick={() => handleRowClick(listIssue.id)}
                     >
-                        <Tippy theme="tomato-theme" content={<span>{getAlertText(listIssue.alertType)}</span>}>
+                        <Tippy theme="tomato-theme" content={<span>{getAlertText(listIssue.alertType, translate)}</span>}>
                             <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
                         </Tippy>
                         <td className="pl-2 pr-6 py-3 truncate">{listIssue.title}</td>
@@ -203,7 +199,7 @@ function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boole
                             <td className="px-2 py-3 truncate">{listIssue.description}</td>}
                         {true &&
                             <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
-                                {listIssue.incidentType}
+                                {language === "en" ? listIssue.incidentType : incidentTypeTranslationMapEnDe[listIssue.incidentType]}
                             </span></td>}
                         {true &&
                             <td className="px-2 py-3 text-sm"><span className={`${getSeverityColor(listIssue.severity)} rounded-xl p-2`}>
@@ -213,7 +209,7 @@ function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boole
                             {getPriorityText(listIssue.priority,
                                 <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
                                     {`${listIssue.priority}/4`}
-                                </span>)}
+                                </span>, translate)}
                         </td>
                         <td className="px-2 py-3 text-sm ">{formatDate(listIssue.timestamp)}</td>
                         <td className="text-center px-2 py-3 rounded-br-xl rounded-tr-xl"><CustomDropDown
@@ -280,7 +276,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                         <div className="space-y-2 flex-grow space">
                             <div className="flex space-x-6">
                                 <div className="min-w-max">
-                                    <Tippy theme="tomato-theme" content={<span>{getAlertText(alertType)}</span>}>
+                                    <Tippy theme="tomato-theme" content={<span>{getAlertText(alertType, translate)}</span>}>
                                         <span>{icon}</span>
                                     </Tippy>
                                 </div>
@@ -293,7 +289,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                             <p>{translate('priority')}: {getPriorityText(priority,
                                 <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
                                     {`${priority}/4`}
-                                </span>)}</p>
+                                </span>, translate)}</p>
                             <p>{timestamp}</p>
                         </div>
                     </div>
@@ -453,7 +449,7 @@ export default function IssuesPage() {
                     return b.priority - a.priority;
                 } else if (sortColumn === 'alertType') {
                     const customSortOrder = {
-                        alertType: ['Critical', 'Warning', 'Info'],
+                        alertType: ['Error', 'Warning', 'Info'],
                     };
                     aValue = customSortOrder[sortColumn].indexOf(aValue);
                     bValue = customSortOrder[sortColumn].indexOf(bValue);
@@ -466,7 +462,7 @@ export default function IssuesPage() {
                     return aValue - bValue;
                 } else if (sortColumn === 'severity') {
                     const customSortOrder: { [key: string]: string[] } = {
-                        alertType: ['Critical', 'Warning', 'Info'],
+                        alertType: ['Error', 'Warning', 'Info'],
                     };
                     aValue = customSortOrder[sortColumn].indexOf(aValue);
                     bValue = customSortOrder[sortColumn].indexOf(bValue);

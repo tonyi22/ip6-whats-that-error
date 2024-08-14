@@ -1,5 +1,6 @@
 'use client';
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useTranslation } from '@/app/TranslationContext';
+import { useState, ChangeEvent, FormEvent, useTransition } from 'react';
 
 interface FeedbackModalProps {
     onSubmit: (responses: FeedbackResponses) => void;
@@ -18,6 +19,7 @@ interface FeedbackResponses {
 }
 
 function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
+    const { translate } = useTranslation();
     const [responses, setResponses] = useState<FeedbackResponses>({
         issueClear: '',
         problemUnderstood: '',
@@ -69,7 +71,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                 <h3 className="text-2xl font-bold mb-4">Wizard Feedback</h3>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 gap-4 mb-4 border p-4 rounded-lg bg-white">
-                        <label>Ist die Beschreibung des Issues klar?</label>
+                        <label>{translate("issueDescriptionClear")}</label>
                         <div className="flex space-x-4">
                             <label className="flex items-center">
                                 <input
@@ -79,7 +81,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     className="custom-radio"
                                     onChange={handleChange}
                                 />
-                                <span className="ml-2">Ja</span>
+                                <span className="ml-2">{translate("yes")}</span>
                             </label>
                             <label className="flex items-center">
                                 <input
@@ -89,21 +91,21 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     className="custom-radio"
                                     onChange={handleChange}
                                 />
-                                <span className="ml-2">Nein</span>
+                                <span className="ml-2">{translate("no")}</span>
                             </label>
                         </div>
                         {responses.issueClear === 'no' && (
                             <textarea
                                 name="issueClearDetails"
                                 onChange={handleChange}
-                                placeholder="Was war nicht klar?"
+                                placeholder={translate("whatWasUnclear")}
                                 className="editable-input mt-2"
                             />
                         )}
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 mb-4 border p-4 rounded-lg bg-white">
-                        <label>Hast du sofort verstanden, was das Problem ist?</label>
+                        <label>{translate("problemUnderstanding")}</label>
                         <div className="flex space-x-4">
                             <label className="flex items-center">
                                 <input
@@ -113,7 +115,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     className="custom-radio"
                                     onChange={handleChange}
                                 />
-                                <span className="ml-2">Ja</span>
+                                <span className="ml-2">{translate("yes")}</span>
                             </label>
                             <label className="flex items-center">
                                 <input
@@ -123,7 +125,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     className="custom-radio"
                                     onChange={handleChange}
                                 />
-                                <span className="ml-2">Nein</span>
+                                <span className="ml-2">{translate("no")}</span>
                             </label>
                             <label className="flex items-center">
                                 <input
@@ -133,21 +135,21 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     className="custom-radio"
                                     onChange={handleChange}
                                 />
-                                <span className="ml-2">Teilweise</span>
+                                <span className="ml-2">{translate("partially")}</span>
                             </label>
                         </div>
                         {(responses.problemUnderstood === 'no' || responses.problemUnderstood === 'teilweise') && (
                             <textarea
                                 name="problemUnderstoodDetails"
                                 onChange={handleChange}
-                                placeholder="Was hast du nicht verstanden?"
+                                placeholder={translate("whatDidntYouUnderstand")}
                                 className="editable-input mt-2"
                             />
                         )}
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 mb-4 border p-4 rounded-lg bg-white">
-                        <label>Wusstest du, welche Schritte zur Lösung des Issues erforderlich sind?</label>
+                        <label>{translate("requiredStepsKnowledge")}</label>
                         <div className="flex space-x-4">
                             <label className="flex items-center">
                                 <input
@@ -157,7 +159,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     className="custom-radio"
                                     onChange={handleChange}
                                 />
-                                <span className="ml-2">Ja</span>
+                                <span className="ml-2">{translate("yes")}</span>
                             </label>
                             <label className="flex items-center">
                                 <input
@@ -167,14 +169,14 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     className="custom-radio"
                                     onChange={handleChange}
                                 />
-                                <span className="ml-2">Nein</span>
+                                <span className="ml-2">{translate("no")}</span>
                             </label>
                         </div>
                         {responses.stepsKnown === 'no' && (
                             <textarea
                                 name="stepsKnownDetails"
                                 onChange={handleChange}
-                                placeholder="Bitte beschreiben..."
+                                placeholder={translate("pleaseDescribe")}
                                 className="editable-input mt-2"
                             />
                         )}
@@ -185,7 +187,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                             type="submit"
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
                         >
-                            Submit
+                            {translate("submit")}
                         </button>
                     </div>
                 </form>
