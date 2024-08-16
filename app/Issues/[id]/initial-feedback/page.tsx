@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getAlertIcon, getAlertText, getPriorityText, getSeverityColor, severityTranslation } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
 import Tippy from '@tippyjs/react';
 import { useTranslation } from '@/app/TranslationContext';
-
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
@@ -21,11 +20,8 @@ const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
 function InitialFeedbackForm({ params }: { params: { id: string } }) {
     const [sliderRatingPriority, setSliderRatingPriority] = useState(3);
     const [sliderRatingSeverity, setSliderRatingSeverity] = useState(3);
-    const [starRating, setStarRating] = useState(0);
-    const [thumbsRating, setThumbsRating] = useState(0);
-    const [feedbackText, setFeedbackText] = useState('');
-    const [emojiRating, setEmojiRating] = useState(0);
-    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+    const [starRating, setStarRating] = useState<number | null>(null);
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const { translate, language } = useTranslation();
@@ -45,8 +41,6 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
         const foundIssue = issues.find(issue => issue.id === Number(params.id));
         if (foundIssue) {
             setIssue(foundIssue);
-        } else {
-            console.log(`Issue mit ID ${params.id} nicht gefunden`);
         }
     }, [params.id]);
 
@@ -64,6 +58,11 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (starRating === null) {
+            alert("Please select a star rating.");
+            return;
+        }
+        setIsSubmitted(true);
 
         const issues = loadIssuesFromLocalStorage();
         // Update the issue's isInitialGiven property
@@ -76,21 +75,14 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
         // Save the updated issues array to local storage
         saveIssuesToLocalStorage(updatedIssues);
-        console.log('Submitted responses:', responses);
-        router.push('/Issues')
+        router.push(`/Issues/${params.id}`)
     };
-
-
 
     if (!issue) {
         return <div>Issue nicht gefunden</div>;
     }
 
-
-
     return (
-
-
 
         <div className="bg-gradient-to-b from-[#fcf1fa] to-[#fefcff] max-w-6xl mx-auto my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text rounded-lg shadow-md">
 
@@ -120,7 +112,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                 <div className="flex space-x-8 ">
                     <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
                         <h3 className="text-2xl font-bold mb-4">Issue Details</h3>
-                        <div className='flex justify-between items-center my-2'>
+                        <div className='flex justify-between items-center my-2 border p-4 rounded-lg' >
                             <div className='flex items-center space-x-2'>
                                 <span>{translate("alertType")}:</span>
                                 <Tippy content={<span>{getAlertText(issue.alertType, translate)}</span>}>
@@ -136,12 +128,16 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                     <span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
                                         {`${issue.priority}/4`}
                                     </span>, translate)}</p>
-
-
                             </div>
                         </div>
-                        <h4 className="text-xl font-semibold mt-5">{issue.title}</h4>
-                        <p className="mt-5" style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description}</p>
+                        <div className='border p-4 rounded-lg'>
+                            <p className="">{translate("title")}:</p>
+                            <h4 className="text-xl font-semibold mt-1">{issue.title ? issue.title : translate("missing")}</h4>
+                        </div>
+                        <div className='border p-4 rounded-lg mt-2'>
+                            <p className="">{translate("description")}:</p>
+                            <p className="mt-1" style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{issue.description ? issue.description : translate("missing")}</p>
+                        </div>
                     </div>
 
                     <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg">
@@ -161,6 +157,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 value="yes"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("yes")}</span>
                                         </label>
@@ -171,6 +168,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 value="no"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("no")}</span>
                                         </label>
@@ -181,6 +179,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                             onChange={handleChange}
                                             placeholder={translate("whatWasUnclear")}
                                             className="editable-input mt-2"
+                                            required
                                         />
                                     )}
                                 </div>
@@ -199,6 +198,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 value="yes"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("yes")}</span>
                                         </label>
@@ -209,6 +209,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 value="no"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("no")}</span>
                                         </label>
@@ -219,6 +220,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 value="teilweise"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("partially")}</span>
                                         </label>
@@ -229,6 +231,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                             onChange={handleChange}
                                             placeholder={translate("whatDidntYouUnderstand")}
                                             className="editable-input mt-2"
+                                            required
                                         />
                                     )}
                                 </div>
@@ -247,6 +250,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                             value="yes"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("yes")}</span>
                                     </label>
@@ -257,6 +261,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                             value="no"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("no")}</span>
                                     </label>
@@ -267,20 +272,12 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                         onChange={handleChange}
                                         placeholder={translate("whatWasMissing")}
                                         className="editable-input mt-2"
+                                        required
                                     />
                                 )}
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="">
-                                {translate("issueClarityRating")}
-                            </label>
-                            <div className="flex flex-col justify-center">
-                                <div className="flex space-x-4 items-center">
-                                    <SternComponent rating={starRating} onChange={setStarRating} />
-                                </div>
-                            </div>
-                        </div>
+
                         {!issue.wizardFeedback &&
 
 
@@ -297,6 +294,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 value="yes"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("yes")}</span>
                                         </label>
@@ -307,6 +305,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                                 value="no"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("no")}</span>
                                         </label>
@@ -317,6 +316,7 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                             onChange={handleChange}
                                             placeholder={translate("pleaseDescribe")}
                                             className="editable-input mt-2"
+                                            required
                                         />
                                     )}
                                 </div>
@@ -324,10 +324,19 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
 
 
 
-
-
-
-
+                        <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
+                            <label className="">
+                                {translate("issueClarityRating")}
+                            </label>
+                            <div className="flex flex-col justify-center">
+                                <div className="flex space-x-4 items-center">
+                                    <SternComponent rating={starRating} onChange={setStarRating} />
+                                </div>
+                                {isSubmitted && starRating === null && (
+                                    <p className="text-red-500 text-sm mt-2">Rating is required.</p>
+                                )}
+                            </div>
+                        </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4 border p-4 rounded-lg">
                             <label className="">
@@ -350,9 +359,6 @@ function InitialFeedbackForm({ params }: { params: { id: string } }) {
                                 </div>
                             </div>
                         </div>
-
-
-
 
                     </div>
 

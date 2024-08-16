@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaSpinner } from "react-icons/fa"; // Import a spinner icon from react-icons
+import { FaSpinner } from "react-icons/fa";
 
 interface CommandState {
     isLoading: boolean;
@@ -9,11 +9,10 @@ interface CommandState {
 
 interface TerminalProps {
     commands: string[];
-    onExecute: (command: string) => Promise<string>;
-    commandResponses: string[][]; // Updated to array of arrays for multiple responses
+    commandResponses: string[][];
 }
 
-const Terminal: React.FC<TerminalProps> = ({ commands, onExecute, commandResponses }) => {
+const Terminal: React.FC<TerminalProps> = ({ commands, commandResponses }) => {
     const [commandStates, setCommandStates] = useState<CommandState[]>(
         commands.map(() => ({ isLoading: false, results: [], executed: false }))
     );

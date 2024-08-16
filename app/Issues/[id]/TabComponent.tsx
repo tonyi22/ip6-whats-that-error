@@ -1,10 +1,9 @@
 import { useTranslation } from '@/app/TranslationContext';
 import React, { useState } from 'react';
 
-
 export function TabComponent() {
     const { translate } = useTranslation()
-    const [activeTab, setActiveTab] = useState('comments'); // 'comments' or 'attachments'
+    const [activeTab, setActiveTab] = useState('comments');
     const [comments, setComments] = useState('');
 
     const handleCommentsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

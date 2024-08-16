@@ -1,10 +1,9 @@
 'use client';
 import { useTranslation } from '@/app/TranslationContext';
-import { useState, ChangeEvent, FormEvent, useTransition } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 
 interface FeedbackModalProps {
     onSubmit: (responses: FeedbackResponses) => void;
-    onClose: () => void;
 }
 
 interface FeedbackResponses {
@@ -18,7 +17,7 @@ interface FeedbackResponses {
     infoMissingDetails: string;
 }
 
-function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
+function FeedbackModal({ onSubmit }: FeedbackModalProps) {
     const { translate } = useTranslation();
     const [responses, setResponses] = useState<FeedbackResponses>({
         issueClear: '',
@@ -41,6 +40,10 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+        if (!responses.issueClearDetails || !responses.problemUnderstood || !responses.stepsKnown) {
+            alert(translate('pleaseFillOutAllRequiredFields'));
+            return;
+        }
         onSubmit(responses);
     };
 
@@ -80,6 +83,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     value="yes"
                                     className="custom-radio"
                                     onChange={handleChange}
+                                    required
                                 />
                                 <span className="ml-2">{translate("yes")}</span>
                             </label>
@@ -90,6 +94,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     value="no"
                                     className="custom-radio"
                                     onChange={handleChange}
+                                    required
                                 />
                                 <span className="ml-2">{translate("no")}</span>
                             </label>
@@ -100,6 +105,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                 onChange={handleChange}
                                 placeholder={translate("whatWasUnclear")}
                                 className="editable-input mt-2"
+                                required
                             />
                         )}
                     </div>
@@ -114,6 +120,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     value="yes"
                                     className="custom-radio"
                                     onChange={handleChange}
+                                    required
                                 />
                                 <span className="ml-2">{translate("yes")}</span>
                             </label>
@@ -124,6 +131,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     value="no"
                                     className="custom-radio"
                                     onChange={handleChange}
+                                    required
                                 />
                                 <span className="ml-2">{translate("no")}</span>
                             </label>
@@ -134,6 +142,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     value="teilweise"
                                     className="custom-radio"
                                     onChange={handleChange}
+                                    required
                                 />
                                 <span className="ml-2">{translate("partially")}</span>
                             </label>
@@ -144,6 +153,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                 onChange={handleChange}
                                 placeholder={translate("whatDidntYouUnderstand")}
                                 className="editable-input mt-2"
+                                required
                             />
                         )}
                     </div>
@@ -158,6 +168,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     value="yes"
                                     className="custom-radio"
                                     onChange={handleChange}
+                                    required
                                 />
                                 <span className="ml-2">{translate("yes")}</span>
                             </label>
@@ -168,6 +179,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                     value="no"
                                     className="custom-radio"
                                     onChange={handleChange}
+                                    required
                                 />
                                 <span className="ml-2">{translate("no")}</span>
                             </label>
@@ -178,6 +190,7 @@ function FeedbackModal({ onSubmit, onClose }: FeedbackModalProps) {
                                 onChange={handleChange}
                                 placeholder={translate("pleaseDescribe")}
                                 className="editable-input mt-2"
+                                required
                             />
                         )}
                     </div>

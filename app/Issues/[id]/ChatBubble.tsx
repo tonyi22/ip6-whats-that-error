@@ -1,5 +1,5 @@
 import { useTranslation } from '@/app/TranslationContext';
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MdCancel } from 'react-icons/md';
 
 interface ChatBubbleProps {
@@ -11,7 +11,6 @@ interface ChatBubbleProps {
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, buttonRef, activeStepRef, textBubbleRef }) => {
-    console.log("Active step:", activeStepRef)
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState<{ msg: string, isUser: boolean }[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +59,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, buttonRef, act
         }
     }, [chatLog, isLoading]);
 
+    // Place at the right place, lefr or right
     useEffect(() => {
         const updateChatBubblePosition = () => {
             if (chatBubbleRef.current && buttonRef.current) {
@@ -67,7 +67,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, buttonRef, act
                 const textBubbleRect = textBubbleRef?.current?.getBoundingClientRect();
 
                 if (activeStepRef?.current && textBubbleRect !== undefined) {
-                    // here in wizard
                     const stepTitle = activeStepRef.current.dataset.stepTitle ?? '';
                     const stepTitles = ["preventativeMeasures", "affectedSystems", "additionalInfoDescription"];
                     if (stepTitles.includes(stepTitle)) {
@@ -77,7 +76,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ isOpen, onClose, buttonRef, act
                     }
                     chatBubbleRef.current.style.top = `${textBubbleRect?.top + window.scrollY - 40}px`;
                 } else {
-                    // this is correct
                     chatBubbleRef.current.style.top = `${buttonRect.bottom + window.scrollY + 17}px`;
                     chatBubbleRef.current.style.left = `${buttonRect.left + window.scrollX - 213}px`;
                 }

@@ -14,7 +14,7 @@ const Stepper: React.FC<StepperProps> = ({ steps, currentStep, onStepClick }) =>
                     <div
                         key={index}
                         className={`step ${currentStep === index ? 'active' : ''}`}
-                        onClick={() => onStepClick(index)} // Make steps clickable
+                        onClick={() => onStepClick(index)}
                     >
                         {step}
                     </div>

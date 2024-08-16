@@ -1,10 +1,11 @@
 'use client'
+
 import React, { useEffect, useState, useRef } from 'react';
 import '../detailView.css';
-import { alertTypeTransaltion, compareSort, getAlertIcon, getAlertText, getPriorityText, getSeverityColor, incidentTypeTranslationMapDeEn, incidentTypeTranslationMapEnDe, severityTranslation } from '@/app/helperFunction';
+import { alertTypeTransaltion, compareSort, getAlertIcon, getAlertText, getSeverityColor, incidentTypeTranslationMapEnDe, severityTranslation, systemsList } from '@/app/helperFunction';
 import SliderComponent from './Slider';
 import SternComponent from './Stern';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Tippy from '@tippyjs/react';
@@ -22,32 +23,12 @@ const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
 };
 
-type RatingComponentProps = {
-    onChange: (rating: number) => void;
-};
-
-const RatingComponent: React.FC<RatingComponentProps> = ({ onChange }) => {
-    return (
-        <div>
-            {[...Array(5)].map((_, i) => (
-                <span key={i} onClick={() => onChange(i + 1)} style={{ cursor: 'pointer', color: '#ffd700' }}>★</span>
-            ))}
-        </div>
-    );
-};
-
 export function Feedback({ params }: { params: { id: string } }) {
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [sliderRating, setSliderRating] = useState(3);
     const [starRating, setStarRating] = useState(0);
     const { translate, language } = useTranslation()
-
-    const [thumbsRating, setThumbsRating] = useState(0);
-    const [feedbackText, setFeedbackText] = useState('');
-    const [emojiRating, setEmojiRating] = useState(0);
-    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-    const checkboxOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
 
     const [responses, setResponses] = useState({
         issueClear: '',
@@ -113,13 +94,6 @@ export function Feedback({ params }: { params: { id: string } }) {
         textfeldunderstandable: '',
     });
 
-    const systemsList = [
-        'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
-        'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
-        'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
-        'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
-    ];
-
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -179,8 +153,8 @@ export function Feedback({ params }: { params: { id: string } }) {
         e.preventDefault();
         // Submit feedback logic
         if (issue) {
-            const updatedIssue = { ...issue, status: 'Closed' as const }; // Update the status to 'done'
-            setIssue(updatedIssue); // Update the issue state
+            const updatedIssue = { ...issue, status: 'Closed' as const };
+            setIssue(updatedIssue);
             const issues = loadIssuesFromLocalStorage();
             const index = issues.findIndex(i => i.id === issue.id);
             if (index !== -1) {
@@ -188,16 +162,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                 saveIssuesToLocalStorage(issues);
             }
         }
-        console.log('Submitted responses:', responses);
     };
 
     useEffect(() => {
         const issues = loadIssuesFromLocalStorage();
         const foundIssue = issues.find(issue => issue.id === Number(params.id));
-        if (foundIssue) { // Update state only if issue is found
+        if (foundIssue) {
             setIssue(foundIssue);
-        } else {
-            console.log(`Issue with ID ${params.id} not found`);
         }
     }, [params.id]);
 
@@ -243,7 +214,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                     <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
                                         style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
                                     >
-                                        {issue.title}
+                                        {issue.title ? issue.title : translate("missing")}
                                     </p>
                                 </label>
                             </div>
@@ -256,6 +227,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="yes"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("yes")}</span>
                                     </label>
@@ -266,6 +238,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="no"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("no")}</span>
                                     </label>
@@ -278,17 +251,14 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             onChange={handleChange}
                                             placeholder={translate("whatWasUnclear")}
                                             className="editable-input mt-3"
+                                            required
                                         />
                                     </>
                                 )}
                             </div>
                         </div>
 
-                        <div> {issue.isInitialGiven ?
-
-
-
-
+                        <div> {issue.isInitialGiven || issue.wizardFeedback ?
 
                             null : <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                 <div>
@@ -297,7 +267,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         <p className="max-h-96 overflow-y-auto bg-github-secondary dark:bg-github-dark-tertiary max-w-l mt-2 ml-2 rounded-lg shadow-md p-4"
                                             style={{ wordBreak: 'break-word', whiteSpace: 'pre-line', maxHeight: '1050px' }}
                                         >
-                                            {issue.description}
+                                            {issue.description ? issue.description : translate("missing")}
                                         </p>
                                     </label>
                                 </div>
@@ -310,6 +280,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 value="yes"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("yes")}</span>
                                         </label>
@@ -320,6 +291,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 value="no"
                                                 className="custom-radio"
                                                 onChange={handleChange}
+                                                required
                                             />
                                             <span className="ml-2">{translate("no")}</span>
                                         </label>
@@ -332,6 +304,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 onChange={handleChange}
                                                 placeholder={translate("whatWasUnclear")}
                                                 className="editable-input mt-3"
+                                                required
                                             />
                                         </>
                                     )}
@@ -339,8 +312,6 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>}
 
                         </div>
-
-
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 p-4 border rounded-lg">
                             <div>
@@ -360,6 +331,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="yes"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("yes")}</span>
                                     </label>
@@ -370,6 +342,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="no"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("no")}</span>
                                     </label>
@@ -383,8 +356,9 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 value={responses.correctAlertType === '' ? language === 'en' ? issue.alertType : alertTypeTransaltion[issue.alertType] : responses.correctAlertType}
                                                 onChange={handleChange}
                                                 className="mt-2 input border border-grey-800 w-auto"
+                                                required
                                             >
-                                                {translate("alartTypes", false).split(", ").map(type => (
+                                                {translate("alertTypes", false).split(", ").map(type => (
                                                     <option key={type} value={type} disabled={type === (language === 'en' ? issue.alertType : alertTypeTransaltion[issue.alertType])}>
                                                         {type}
                                                     </option>
@@ -397,6 +371,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             onChange={handleChange}
                                             placeholder={translate("justifyNewAlertType")}
                                             className="editable-input mt-3"
+                                            required
                                         />
                                     </>
 
@@ -420,6 +395,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="yes"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("yes")}</span>
                                     </label>
@@ -430,6 +406,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="no"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("no")}</span>
                                     </label>
@@ -443,6 +420,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 value={responses.correctIncidentType === '' ? language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType] : responses.correctIncidentType}
                                                 onChange={handleChange}
                                                 className="mt-2 input border border-grey-500 w-auto"
+                                                required
                                             >
                                                 {translate("incidentTypes", false).split(", ").sort(compareSort).map(type => (
                                                     <option key={type} value={type} disabled={type === (language === 'en' ? issue.incidentType : incidentTypeTranslationMapEnDe[issue.incidentType])}>{type}</option>
@@ -455,9 +433,19 @@ export function Feedback({ params }: { params: { id: string } }) {
                         </div>
 
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
-                            <label className="ml-2">
-                                {translate("wasAISolutionRelevant")}
-                            </label>
+                            <div>
+                                <label className="ml-2">
+                                    {translate("wasAISolutionRelevant")}
+                                </label>
+                                <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
+
+                                    <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
+                                        {issue.loesungsvorschlag ? issue.loesungsvorschlag : translate("missing")}
+                                    </p>
+
+                                </label>
+                            </div>
+
                             <div className="flex flex-col pr-4">
                                 <div className="flex space-x-4">
                                     <label className="flex items-center">
@@ -467,6 +455,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="yes"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("yes")}</span>
                                     </label>
@@ -477,6 +466,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="no"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("no")}</span>
                                     </label>
@@ -488,6 +478,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         onChange={handleChange}
                                         placeholder={translate('wereAISuggestionsClear')}
                                         className="editable-input mt-3"
+                                        required
                                     />
                                 )}
                                 {responses.clarityAISuggestions === 'no' && (
@@ -497,12 +488,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         onChange={handleChange}
                                         placeholder={translate("whySuggestionsNotRelevant")}
                                         className="editable-input mt-3"
+                                        required
                                     />
                                 )}
                             </div>
                         </div>
                         <div>
-                            {issue.isInitialGiven ? null :
+                            {issue.isInitialGiven || issue.wizardFeedback ? null :
                                 <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                                     <label className="ml-2">
                                         {translate("didYouKnowHowToResolve")}
@@ -516,6 +508,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     value="yes"
                                                     className="custom-radio"
                                                     onChange={handleChange}
+                                                    required
                                                 />
                                                 <span className="ml-2">{translate("yes")}</span>
                                             </label>
@@ -526,6 +519,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                     value="no"
                                                     className="custom-radio"
                                                     onChange={handleChange}
+                                                    required
                                                 />
                                                 <span className="ml-2">{translate("no")}</span>
                                             </label>
@@ -537,6 +531,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                                 onChange={handleChange}
                                                 placeholder={translate("whereIsInformationMissing")}
                                                 className="editable-input mt-3"
+                                                required
                                             />
                                         )}
                                     </div>
@@ -544,14 +539,15 @@ export function Feedback({ params }: { params: { id: string } }) {
                             }
                         </div>
 
-
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">{translate("impactUnderstandable")}</span>
                                 <label className="mt-2 ml-2 flex items-center text-gray-700 dark:text-gray-300">
+
                                     <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
-                                        {issue.impact}
+                                        {issue.impact ? issue.impact : translate("missing")}
                                     </p>
+
                                 </label>
                             </div>
                             <div className="flex flex-col pr-4">
@@ -563,6 +559,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="yes"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("yes")}</span>
                                     </label>
@@ -573,6 +570,7 @@ export function Feedback({ params }: { params: { id: string } }) {
                                             value="no"
                                             className="custom-radio"
                                             onChange={handleChange}
+                                            required
                                         />
                                         <span className="ml-2">{translate("no")}</span>
                                     </label>
@@ -584,10 +582,12 @@ export function Feedback({ params }: { params: { id: string } }) {
                                         onChange={handleChange}
                                         placeholder={translate("whatWasUnclear")}
                                         className="editable-input mt-3"
+                                        required
                                     />
                                 )}
                             </div>
                         </div>
+
                         <div>
                             {issue.isInitialGiven ? null :
                                 <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
@@ -649,17 +649,24 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 </div>}
                         </div>
 
-
-
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <div>
                                 <span className="ml-2">{translate("affectedSystemsCorrect")}</span>
-                                <div className={`flex-grow text-gray-700 mt-2 ml-2 py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex w-96 flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'rounded-lg shadow-md' : ''}`}>
-                                    {issue.affectedSystems.map((system, index) => (
-                                        <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
-                                            <span className="flex-grow">{system}</span>
-                                        </div>
-                                    ))}
+                                <div className={`flex-grow text-gray-700 mt-2 py-1 px-2 max-h-60 overflow-y-auto min-h-[40px] flex w-96 flex-col justify-center mt-2 ${issue.affectedSystems.length !== 0 ? 'rounded-lg shadow-md' : ''}`}>
+                                    {issue.affectedSystems.length > 0 ?
+
+                                        issue.affectedSystems.map((system, index) => (
+                                            <div key={index} className={`flex items-center ${index !== issue.affectedSystems.length - 1 ? 'border-b border-gray-300' : ''} min-h-[40px]`}>
+                                                <span className="flex-grow">{system}</span>
+                                            </div>
+                                        )) :
+                                        <label className="mt-2 flex items-center text-gray-700 dark:text-gray-300">
+
+                                            <p className='bg-github-secondary dark:bg-github-dark-tertiary max-w-l rounded-lg shadow-md p-4'>
+                                                {translate("missing")}
+                                            </p>
+
+                                        </label>}
                                 </div>
                             </div>
                             <div className="flex flex-col pr-4">
@@ -717,7 +724,6 @@ export function Feedback({ params }: { params: { id: string } }) {
                                 )}
                             </div>
                         </div>
-
 
                         <div>
                             {issue.isInitialGiven ? null :
@@ -782,11 +788,6 @@ export function Feedback({ params }: { params: { id: string } }) {
                             }
                         </div>
 
-
-
-
-
-
                         <div className="bg-white grid grid-cols-[60%_40%] gap-4 mb-4 border p-4 rounded-lg">
                             <label className="ml-2">
                                 {translate("solutionImplemented")}
@@ -834,8 +835,6 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-
-
                         <div className="bg-white grid grid-cols-[60%_40%] mb-4 border p-4 rounded-lg ">
                             <div className='ml-2'>
                                 <label>
@@ -856,17 +855,13 @@ export function Feedback({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-
-
                         <div className="flex justify-end space-x-4 mt-6 p-4 rounded-lg">
                             <button
                                 type="button"
                                 onClick={() => {
 
-                                    router.push('/Issues')
-                                }
-
-                                }
+                                    router.push(`/Issues/${issue.id}`);
+                                }}
                                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
                             >
                                 {translate("cancel")}
@@ -874,6 +869,9 @@ export function Feedback({ params }: { params: { id: string } }) {
                             <button
                                 type="submit"
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
+                                onClick={() => {
+                                    router.push("/Issues");
+                                }}
                             >
                                 {translate("submit")}
                             </button>

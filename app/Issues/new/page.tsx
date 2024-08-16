@@ -1,18 +1,19 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import systemMonitoringIssuesArray from '../page';
 import '../[id]/detailView.css';
-import { compareSort } from '@/app/helperFunction';
+import { alertTypeTransaltion, compareSort, incidentTypeTranslationMapEnDe, severityTranslation, systemsList, translateIssueToEnglish } from '@/app/helperFunction';
 import { MdCancel } from "react-icons/md";
 import '../[id]/detailView.css';
-import { useTranslation } from '@/app/TranslationContext';
+import { Language, useTranslation } from '@/app/TranslationContext';
+import { SystemMonitoringIssue } from '@/app/data/data';
 
 const NewIssue = () => {
-    const { translate } = useTranslation();
-    const alertTypes = translate('alartTypes', false).split(', ');
+    const { translate, language } = useTranslation();
+    const alertTypes = translate('alertTypes', false).split(', ');
     const severityTypes = translate('severityTypes', false).split(', ');
     const incidentTypes = translate("incidentTypes", false).split(', ');
     const prio = translate("prios", false).split(', ');
@@ -24,18 +25,28 @@ const NewIssue = () => {
         { value: 4, label: prio[3] }
     ];
 
-    const systemsList = [
-        'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
-        'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
-        'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
-        'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
-    ];
+    const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[], language: Language) => {
+        const translatedIssues = issues.map(issue => translateIssueToEnglish(issue, language));
+        localStorage.setItem('issues', JSON.stringify(translatedIssues));
+    };
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+        const storedIssues = JSON.parse(localStorage.getItem('issues') || '[]');
+
+        storedIssues.push(newIssue);
+
+        saveIssuesToLocalStorage(storedIssues, language);
+
+        router.push('/Issues');
+    };
 
     const [newIssue, setNewIssue] = useState({
         id: systemMonitoringIssuesArray.length + 1,
         title: '',
         description: '',
-        alertType: 'None',
+        alertType: 'Info',
         severity: 'Low',
         status: 'New',
         incidentType: 'Performance',
@@ -51,19 +62,18 @@ const NewIssue = () => {
         attachments: [],
         duration: 0,
         isInitialGiven: false,
+        commands: []
     });
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
-
-    const titleInputRef = useRef<HTMLInputElement>(null); // Correct ref type for input
+    const titleInputRef = useRef<HTMLInputElement>(null);
     const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
 
-    const titleShowTempRef = useRef<HTMLButtonElement>(null); // Separate ref for title show template button
-    const descriptionShowTempRef = useRef<HTMLButtonElement>(null); // Separate ref for description show template button
-
+    const titleShowTempRef = useRef<HTMLButtonElement>(null);
+    const descriptionShowTempRef = useRef<HTMLButtonElement>(null);
 
     const [showTitleTemplate, setShowTitleTemplate] = useState(false);
     const [titleTemplateDismissed, setTitleTemplateDismissed] = useState(false);
@@ -84,7 +94,6 @@ const NewIssue = () => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setDropdownOpen(false);
         }
-
 
         if (titleTemplateRef.current && !titleTemplateRef.current.contains(event.target as Node) &&
             titleInputRef.current && !titleInputRef.current.contains(event.target as Node) &&
@@ -111,8 +120,6 @@ const NewIssue = () => {
         showTemplateAgain('description');
     };
 
-
-
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -136,17 +143,11 @@ const NewIssue = () => {
         }));
     };
 
-    const alertTypeMapping: { [key: string]: string } = {
-        'Informationsmeldung': 'Info',
-        'Warnmeldung': 'Warning',
-        'Fehlermeldung': 'Error'
-    };
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setNewIssue(prev => ({
             ...prev,
-            [name]: name === 'priority' ? parseInt(value, 4) : name === 'alertType' ? alertTypeMapping[value] || value : value
+            [name]: name === 'priority' ? parseInt(value, 10) : value
         }));
 
         if (name === 'title') {
@@ -158,14 +159,13 @@ const NewIssue = () => {
             }
         }
     };
+
     const checkForTitleSuggestion = (title: string) => {
         const lowerCase = title.toLowerCase();
         if (lowerCase.includes(translate("database")) && lowerCase.includes(translate("overheating"))
         ) {
-            console.log(true);
             setSuggestedDescription(translate("suggestedDescription"))
         } else {
-            console.log(false);
             setSuggestedDescription('');
         }
     };
@@ -183,8 +183,6 @@ const NewIssue = () => {
             setSuggestedDescription('');
         }
     }, [suggestionAccepted]);
-
-
 
     const handleCancel = () => {
         router.push('/Issues');
@@ -237,7 +235,7 @@ const NewIssue = () => {
         <div className="flex justify-center my-10 p-8 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text">
             <div className="bg-gradient-to-b from-[#fcf1fa] to-[#fefcff] my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text w-full max-w-4xl p-10 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold mb-4 text-center">{translate('createNewIssue')}</h3>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className='mb-4'>
                         <div>
                             <label className="block text-sm font-bold mb-2" htmlFor="title">{translate('title')} *</label>
@@ -285,6 +283,7 @@ const NewIssue = () => {
                                 </button>
                             )}</div>
                     </div>
+
                     <div className='mb-4'>
                         <div >
                             <label className="block text-sm font-bold mb-2" htmlFor="description">{translate('description')} *</label>
@@ -353,7 +352,7 @@ const NewIssue = () => {
                             <label className="block text-sm font-bold mb-2" htmlFor="alertType">{translate('alertType')}</label>
                             <select
                                 name="alertType"
-                                value={newIssue.alertType}
+                                value={language === "en" ? newIssue.alertType : alertTypeTransaltion[newIssue.alertType]}
                                 onChange={handleInputChange}
                                 className="input border border-grey-800"
                             >
@@ -369,7 +368,7 @@ const NewIssue = () => {
                             <label className="block text-sm font-bold mb-2" htmlFor="severity">{translate('severity')}</label>
                             <select
                                 name="severity"
-                                value={newIssue.severity}
+                                value={language === "en" ? newIssue.severity : severityTranslation[newIssue.alertType]}
                                 onChange={handleInputChange}
                                 className="input border border-grey-800"
                             >
@@ -385,7 +384,7 @@ const NewIssue = () => {
                             <label className="block text-sm font-bold mb-2" htmlFor="incidentType">{translate('incidentType')}</label>
                             <select
                                 name="incidentType"
-                                value={newIssue.incidentType}
+                                value={language === "en" ? newIssue.incidentType : incidentTypeTranslationMapEnDe[newIssue.incidentType]}
                                 onChange={handleInputChange}
                                 className="input border border-grey-800"
                             >

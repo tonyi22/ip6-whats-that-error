@@ -1,9 +1,10 @@
 'use client';
+
 import React, { useEffect, useState, useRef } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
-import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, severityTranslation } from '@/app/helperFunction';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, severityTranslation, statusTranslation, alertTypeTransaltion, translateIssueToEnglish, systemsList, calculateDaysSinceTimestamp } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
@@ -17,7 +18,7 @@ import { IoIosHelpCircle } from "react-icons/io";
 import Terminal from './Terminal';
 import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
 import { useSearchParams } from 'next/navigation';
-import { useTranslation } from '@/app/TranslationContext';
+import { Language, useTranslation } from '@/app/TranslationContext';
 
 export const labels = (label: string, help: string) => {
     return (
@@ -38,20 +39,14 @@ const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     return [];
 };
 
-const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
-    localStorage.setItem('issues', JSON.stringify(issues));
+const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[], language: Language) => {
+    const translatedIssues = issues.map(issue => translateIssueToEnglish(issue, language));
+    localStorage.setItem('issues', JSON.stringify(translatedIssues));
 };
-
-const systemsList = [
-    'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
-    'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
-    'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
-    'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
-];
 
 function IssueDetail({ params }: { params: { id: string } }) {
     const { translate, language } = useTranslation()
-    const alertTypes = translate("alartTypes", false).split(", ");
+    const alertTypes = translate("alertTypes", false).split(", ");
     const severityTypes = translate("severityTypes", false).split(", ");
     const statusTypes = translate("states", false).split(", ");
 
@@ -76,14 +71,6 @@ function IssueDetail({ params }: { params: { id: string } }) {
     const from = searchParams.get('from');
     const commands = translate("commands", false).split(", ")
 
-    useEffect(() => {
-        console.log("from: ", from);
-        if (from === 'wizard') {
-            console.log('Coming from wizard page');
-            // Perform your action here
-        }
-    }, [from]);
-
     const toggleThirdColumn = () => {
         setHide(!hide);
     };
@@ -106,8 +93,6 @@ function IssueDetail({ params }: { params: { id: string } }) {
         const foundIssue = issues.find(issue => issue.id === Number(params.id));
         if (foundIssue) {
             setIssue(foundIssue);
-        } else {
-            console.log(`Issue with ID ${params.id} not found`);
         }
     }, [params.id]);
 
@@ -122,16 +107,6 @@ function IssueDetail({ params }: { params: { id: string } }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
-
-    useEffect(() => {
-        // Check the referrer URL
-        const referrer = document.referrer;
-        console.log(referrer)
-        if (referrer.includes('/Issues/1/wizard')) {
-            console.log('Coming from wizard page');
-            // Perform your action here
-        }
     }, []);
 
     const handleAddSystem = (system: string) => {
@@ -165,12 +140,12 @@ function IssueDetail({ params }: { params: { id: string } }) {
     };
 
     const handleEdit = () => {
-        setIssueCopy(JSON.parse(JSON.stringify(issue))); // Create a deep copy of the issue
+        setIssueCopy(JSON.parse(JSON.stringify(issue)));
         setEditMode(true);
     };
 
     const handleCancel = () => {
-        setIssue(issueCopy!); // Revert to the original issue
+        setIssue(issueCopy!);
         setEditMode(false);
     };
 
@@ -196,7 +171,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
             const index = issues.findIndex(i => i.id === issue.id);
             if (index !== -1) {
                 issues[index] = issue;
-                saveIssuesToLocalStorage(issues);
+                saveIssuesToLocalStorage(issues, language);
             }
         }
         setEditMode(false);
@@ -223,16 +198,27 @@ function IssueDetail({ params }: { params: { id: string } }) {
                 newValue = validateType(value, severityTypes, prev.severity);
             }
 
-            return {
+            const updatedIssue = {
                 ...prev,
                 [name]: newValue,
             };
+
+            const issues = loadIssuesFromLocalStorage();
+            const index = issues.findIndex(i => i.id === updatedIssue.id);
+            if (index !== -1) {
+                issues[index] = updatedIssue;
+                saveIssuesToLocalStorage(issues, language);
+            }
+
+            return updatedIssue;
         });
     };
+
 
     if (!issue) {
         return <div className="mx-10 my-10 text-black dark:text-github-dark-text">Issue not found</div>;
     }
+
 
     return (
         <div className={`mx-10 my-10 bg-github-tertiary dark:bg-github-dark-background text-black dark:text-github-dark-text`}>
@@ -316,7 +302,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         {isEditMode ? (
                             <select
                                 name="alertType"
-                                value={issue.alertType}
+                                value={language === 'en' ? issue.alertType : alertTypeTransaltion[issue.alertType]}
                                 onChange={handleInputChange}
                                 className="input mx-2 border border-grey-800"
                             >
@@ -357,7 +343,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                         <p>Status:
                             <select
                                 name="status"
-                                value={issue.status}
+                                value={language === 'en' ? issue.status : statusTranslation[issue.status]}
                                 onChange={handleInputChange}
                                 className="input mx-2 border border-grey-800"
                             >
@@ -551,13 +537,13 @@ function IssueDetail({ params }: { params: { id: string } }) {
                                 <p className=''>{translate("issueNumber")}:</p>
                                 <p className='text-right'>{issue.id}</p>
                                 <p className=''>{translate("duration")}:</p>
-                                <p className='text-right'>{issue.duration} h</p>
+                                <p className='text-right'>{calculateDaysSinceTimestamp(issue.timestamp)} {translate("days")}</p>
                                 <p className=''>{translate("timestamp")}:</p>
                                 <p className='text-right'>{formatDate(issue.timestamp)}</p>
                                 <p className=''>{translate("lastUpdated")}:</p>
-                                <p className='text-right'>{formatDate(issue.lastUpdated)}</p>
+                                <p className='text-right'>{issue.lastUpdated > issue.timestamp ? formatDate(issue.lastUpdated) : "--:--"}</p>
                                 <p className=''>{translate("endTime")}:</p>
-                                <p className='text-right'>--:--</p>
+                                <p className='text-right'>{issue.endTime ? formatDate(issue.endTime) : "--:--"}</p>
                             </div>
                         </div>
                     )
@@ -582,7 +568,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                             <h1 className="text-2xl font-bold text-black dark:text-white">Terminal</h1>
                             <button
                                 type="button"
-                                className="text-black dark:text-white self-center" /* Add self-center to the button */
+                                className="text-black dark:text-white self-center"
                                 onClick={openTerminal}
                             >
                                 <MdCancel className="text-gray-700 transform scale-150" />
@@ -594,7 +580,7 @@ function IssueDetail({ params }: { params: { id: string } }) {
                             <li className="mb-2">{commands[1]}</li>
                             <li className="mb-2">{commands[2]}</li>
                         </ul>
-                        <Terminal commands={issue.commands} onExecute={handleExecute} commandResponses={issue.commandResponses} />
+                        <Terminal commands={issue.commands} commandResponses={issue.commandResponses} />
                     </div>
                 )}
             </div>

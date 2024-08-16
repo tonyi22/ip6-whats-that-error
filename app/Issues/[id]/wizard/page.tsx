@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
-import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe } from '@/app/helperFunction';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, systemsList } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from '../TabComponent';
 import '../detailView.css';
@@ -34,17 +34,9 @@ const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
 };
 
-// Predefined systems list
-const systemsList = [
-    'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
-    'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
-    'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
-    'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
-];
-
 function IssueJourney({ params }: { params: { id: string } }) {
     const { translate, language } = useTranslation()
-    const alertTypes = translate("alartTypes", false).split(", ");
+    const alertTypes = translate("alertTypes", false).split(", ");
     const severityTypes = translate("severityTypes", false).split(", ");
     const statusTypes = translate("states", false).split(", ");
 
@@ -57,7 +49,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
     const [issueCopy, setIssueCopy] = useState<SystemMonitoringIssue | null>(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-    const [currentStep, setCurrentStep] = useState(0); // State to manage current steip
+    const [currentStep, setCurrentStep] = useState(0);
     const [introStep, setIntroStep] = useState(0);
     const [introFlag, setIntroFlag] = useState(true);
 
@@ -70,23 +62,23 @@ function IssueJourney({ params }: { params: { id: string } }) {
     const chatButtonRef = useRef<HTMLButtonElement>(null);
     const activeStepRef = useRef<HTMLDivElement>(null);
     const textBubbleRef = useRef<HTMLDivElement>(null);
-    // ref for intro
     const introContainerRef = useRef<HTMLDivElement>(null);
 
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
 
     const initialTranslation = translate("wizard", false, " $ ");
-    console.log("Initial Translation:", initialTranslation); // Log before splitting
     const [textBubbleContent, setTextBubbleContent] = useState(initialTranslation.split(' $ '));
-    console.log("textBubbleContent:", textBubbleContent); // Log after splitting
-    console.log(textBubbleContent)
 
     const [wizardTextIntro, setWizardTextInstro] = useState(translate("wizardTutorial", false, ' $ ').split(' $ '));
 
     const handleClick = () => {
         setCurrentStep(currentStep + 1);
-        setShowFeedbackModal(true)
+        if (issue?.wizardFeedback) {
+            router.push(`/Issues/${params.id}?from=wizard`);
+        } else {
+            setShowFeedbackModal(true);
+        }
     };
 
     const openChat = () => {
@@ -130,8 +122,6 @@ function IssueJourney({ params }: { params: { id: string } }) {
         const foundIssue = issues.find(issue => issue.id === Number(params.id));
         if (foundIssue) {
             setIssue(foundIssue);
-        } else {
-            console.log(`Issue with ID ${params.id} not found`);
         }
     }, [params.id]);
 
@@ -153,7 +143,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
             }
         };
 
-        // Create an IntersectionObserver
+        // Create an IntersecionObserver
         const intersectionObserver = new IntersectionObserver(([entry]) => {
             if (entry.isIntersecting) {
                 updateTextBubblePosition();
@@ -171,7 +161,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                 intersectionObserver.unobserve(activeStepRef.current);
             }
         };
-    }, [currentStep]); // Dependency array
+    }, [currentStep]);
 
     useEffect(() => {
         const updateTextBubblePosition = () => {
@@ -235,12 +225,12 @@ function IssueJourney({ params }: { params: { id: string } }) {
     };
 
     const handleEdit = () => {
-        setIssueCopy(JSON.parse(JSON.stringify(issue))); // Create a deep copy of the issue
+        setIssueCopy(JSON.parse(JSON.stringify(issue)));
         setEditMode(true);
     };
 
     const handleCancel = () => {
-        setIssue(issueCopy!); // Revert to the original issue
+        setIssue(issueCopy!);
         setEditMode(false);
     };
 
@@ -298,6 +288,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
         });
     };
 
+    // Al steps for the wizard
     const steps = [
         translate("overview"),
         translate("description"),
@@ -307,10 +298,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
         translate("preventativeMeasures"),
         translate("comments"),
         "Info",
-
     ];
-
-
 
     const nextStep = () => {
         if (isChatOpen) {
@@ -391,13 +379,13 @@ function IssueJourney({ params }: { params: { id: string } }) {
                 onClose={() => setIsChatOpen(false)}
                 buttonRef={chatButtonRef}
                 activeStepRef={activeStepRef}
-                textBubbleRef={textBubbleRef} // Pass textBubbleRef to ChatBubble
+                textBubbleRef={textBubbleRef}
             />
             {!introFlag && currentStep < 8 &&
                 <Stepper
                     steps={steps}
                     currentStep={currentStep}
-                    onStepClick={goToStep} // Add onStepClick for clickable steps
+                    onStepClick={goToStep}
                 />
             }
             <div className="grid grid-cols-3 grid-rows-[auto, 1fr, 1fr, 1fr] gap-4 relative z-10">
@@ -575,8 +563,6 @@ function IssueJourney({ params }: { params: { id: string } }) {
                     ))}
                 </div>
 
-
-
                 <div ref={currentStep === 2 ? activeStepRef : null} className={`bg-github-secondary dark:bg-github-dark-tertiary rounded-lg shadow-md min-h-[150px] col-span-1 row-span-1 p-4 bg-gradient-to-b from-[#fcf1fa] to-[#f7ebff] ${currentStep === 2 ? 'active-step' : 'blacked-out'}`}>
                     {labels(translate('suggestedSolution'), translate("recommendedSteps"))}
                     {isEditMode ? (
@@ -751,7 +737,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             <h1 className="text-2xl font-bold text-black dark:text-white">Terminal</h1>
                             <button
                                 type="button"
-                                className="text-black dark:text-white self-center" /* Add self-center to the button */
+                                className="text-black dark:text-white self-center"
                                 onClick={openTerminal}
                             >
                                 <MdCancel className="text-gray-700 transform scale-150" />
@@ -764,7 +750,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
                             <li className="mb-2">Den Status des PRTG Core Server-Dienstes überprüfen</li>
                             <li className="mb-2">Den PRTG Core Server-Dienst beim Booten aktivieren</li>
                         </ul>
-                        <Terminal commands={issue.commands} onExecute={handleExecute} commandResponses={issue.commandResponses} />
+                        <Terminal commands={issue.commands} commandResponses={issue.commandResponses} />
                     </div>
                 )}
             </div>
@@ -821,7 +807,6 @@ function IssueJourney({ params }: { params: { id: string } }) {
                 </div>
             }
 
-            {/* Conditionally render the intro container for introStep === 1 */}
             {
                 (introFlag && introStep === 2 || introStep === 3 || introStep === 4) && (
                     <div ref={introContainerRef} className={`${introStep === 4 ? "intro-container-2" : "intro-container-2 intro-container-2-tour"}`}>
@@ -841,7 +826,7 @@ function IssueJourney({ params }: { params: { id: string } }) {
             }
 
             {
-                showFeedbackModal && (
+                showFeedbackModal && !issue.wizardFeedback && (
                     <FeedbackModal
                         onSubmit={() => {
                             const issues = loadIssuesFromLocalStorage();
@@ -852,13 +837,8 @@ function IssueJourney({ params }: { params: { id: string } }) {
                                 return issue;
                             });
                             saveIssuesToLocalStorage(updatedIssues);
-                            // Typecasting to any
                             router.push(`/Issues/${params.id}?from=wizard`);
-
                         }}
-                        onClose={
-                            () => setShowFeedbackModal(false)
-                        }
                     />
                 )
             }

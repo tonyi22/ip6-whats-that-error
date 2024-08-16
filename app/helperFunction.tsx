@@ -1,11 +1,53 @@
 import { IoWarningOutline } from "react-icons/io5";
-//import { PiWarningOctagonBold } from "react-icons/pi";
-// import { TfiInfoAlt } from "react-icons/tfi";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
 import Tippy from "@tippyjs/react";
+
+// helper functions used in other files
+
+export const calculateDaysSinceTimestamp = (timestamp: Date) => {
+    const currentDate = new Date();
+    const issueDate = new Date(timestamp);
+    const timeDifference = currentDate.getTime() - issueDate.getTime();
+    const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+    return daysDifference;
+};
+
+export const systemsList = [
+    'WebServer-01', 'DatabaseServer-01', 'StorageSystem-01', 'NetworkSwitch-01', 'LoadBalancer-01',
+    'BackupServer-01', 'MonitoringSystem-01', 'AuthenticationServer-01', 'APIGateway-01', 'Firewall-01',
+    'VirtualizationServer-01', 'DNSServer-01', 'EmailServer-01', 'ApplicationServer-01', 'ERPSystem-01',
+    'CRMSystem-01', 'FileServer-01', 'ProxyServer-01', 'DevelopmentServer-01', 'TestServer-01'
+];
+
+export function translateIssueToEnglish(issue: any, language: string): any {
+    if (language === 'de') {
+        return {
+            ...issue,
+            status: statusTranslationDeEn[issue.status] || issue.status,
+            severity: severityTranslationDeEn[issue.severity] || issue.severity,
+            alertType: alertTypesTranslationDeEn[issue.alertType] || issue.alertType,
+            incidentType: incidentTypeTranslationMapDeEn[issue.incidentType] || issue.incidentType,
+        };
+    }
+    return issue;
+}
+
+export const statusTranslation: { [key: string]: string } = {
+    "New": "Neu",
+    "Open": "Offen",
+    "Closed": "Geschlossen",
+    "In Progress": "In Bearbeitung"
+}
+
+export const statusTranslationDeEn: { [key: string]: string } = {
+    "Neu": "New",
+    "Offen": "Open",
+    "Geschlossen": "Closed",
+    "In Bearbeitung": "In Progress"
+}
 
 export const severityTranslation: { [key: string]: string } = {
     "High": "Hoch",
@@ -13,10 +55,22 @@ export const severityTranslation: { [key: string]: string } = {
     "Low": "Niedrig"
 }
 
+export const severityTranslationDeEn: { [key: string]: string } = {
+    "Hoch": "High",
+    "Mittel": "Medium",
+    "Niedrig": "Low"
+}
+
 export const alertTypeTransaltion: { [key: string]: string } = {
     "Info": "Informationsmeldung",
     "Warning": "Warnmeldung",
     "Error": "Fehlermeldung"
+}
+
+export const alertTypesTranslationDeEn: { [key: string]: string } = {
+    "Informationsmeldung": "Info",
+    "Warnmeldung": "Warning",
+    "Fehlermeldung": "Error",
 }
 
 export const incidentTypeTranslationMapDeEn: { [key: string]: string } = {
@@ -69,7 +123,6 @@ export const incidentTypeTranslationMapEnDe: { [key: string]: string } = {
     "Other": "Sonstiges"
 };
 
-
 export function validateType<T>(value: any, validValues: T[], defaultValue: T): T {
     return validValues.includes(value) ? value : defaultValue;
 }
@@ -78,7 +131,6 @@ export function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-//helper function to format date
 export const formatDate = (date: string | number | Date) => {
     return format(new Date(date), 'HH:mm, dd.MM.yy ', { locale: de });
 };
@@ -99,11 +151,8 @@ export const compareSort = (a: string, b: string) => {
     return a.localeCompare(b);
 }
 
-
 export const getAlertText = (alertType: string, translate: (key1: string, key2: boolean) => string) => {
-    const types = translate('alartTypes', false).split(", ");
-    console.log('Translated alert types:', types);  // Debugging line
-    console.log('Alert type:', alertType);  // Debugging line
+    const types = translate('alertTypes', false).split(", ");
     switch (alertType) {
         case 'Warning':
             return types[1];
@@ -126,10 +175,8 @@ export const getPriorityText = (prio: number, tippyContent: React.ReactNode, tra
             <span>{tippyContent}</span>
         </Tippy>
     );
-
 }
 
-//function to show the correct icon depending on the alert type
 export const getAlertIcon = (alertType: string) => {
     switch (alertType) {
         case 'Warning':

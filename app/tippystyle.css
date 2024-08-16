@@ -1,12 +1,7 @@
 /* Custom theme for Tippy.js tooltips */
 .tippy-box[data-theme~='tomato-theme'] {
     background-color: #000000c8;
-    /* Change to your desired background color */
     color: #ffffff;
-    /* Change to your desired text color */
     border: 1px solid #e2e8f0;
-    /* Optional: Add a border for better visibility */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* Optional: Add a subtle shadow */
-    /* Allow the width to adjust based on content */
 }

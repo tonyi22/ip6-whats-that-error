@@ -1,11 +1,12 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useRef, useState, useTransition } from 'react';
+import { useRef } from 'react';
 import { classNames } from '../helperFunction';
 import { useTranslation } from '../TranslationContext';
+import Link from 'next/link';
 
 
-
+// Custom drop down element 
 function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: boolean }) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const { translate } = useTranslation();
@@ -14,7 +15,6 @@ function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: 
         e.stopPropagation();
         buttonRef.current?.click();
     };
-
 
     return (
         <Menu as="div" className="relative inline-block text-left" >
@@ -32,7 +32,6 @@ function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: 
                         ></span>
                     )}
                 </MenuButton>
-
             </div>
 
             <MenuItems
@@ -43,27 +42,27 @@ function CustomDropDown({ id, initialFeedback }: { id: number, initialFeedback: 
                     {!initialFeedback &&
                         <MenuItem>
                             {({ focus }) => (
-                                <a
+                                <Link
                                     href={`/Issues/${id}/initial-feedback`}
                                     className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     {translate("giveInitial")}
                                     <span className="inline-block ml-2 w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
-                                </a>
+                                </Link>
                             )}
                         </MenuItem>
 
                     }
                     <MenuItem>
                         {({ focus }) => (
-                            <a
+                            <Link
                                 href={`/Issues/ticket`}
                                 className={classNames(focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 {translate('openTicket')}
-                            </a>
+                            </Link>
                         )}
                     </MenuItem>
                 </div>

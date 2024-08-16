@@ -1,6 +1,6 @@
 "use client";
 
-// TranslationContext.tsx
+// used to translate
 import React, { createContext, useContext, useState } from 'react';
 import translations from '@/app/data/translations.json';
 
@@ -13,7 +13,7 @@ export interface AllTranslations {
     de: Translations;
 }
 
-type Language = 'en' | 'de';
+export type Language = 'en' | 'de';
 
 interface TranslationContextProps {
     language: Language;
@@ -31,7 +31,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         const translation = langTranslations[key];
 
         if (Array.isArray(translation)) {
-            // Always use the custom delimiter provided
             return translation.join(delimiter);
         }
 

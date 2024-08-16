@@ -2,7 +2,7 @@
 
 import styles from '../issues.module.css'
 import '../tippystyle.css'
-import { FaGreaterThan, FaLessThan, FaSort, FaSortDown, FaSortUp, FaToggleOff, FaToggleOn } from "react-icons/fa";
+import { FaGreaterThan, FaLessThan, FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import { SystemMonitoringIssue } from '../data/data';
 import { MdOutlineFiberNew } from "react-icons/md";
 import { useEffect, useState } from 'react';
@@ -24,15 +24,38 @@ interface CardsHeaderProps {
     sortDirection: 'asc' | 'desc';
 }
 
+interface Card1Props {
+    id: number;
+    heading: string;
+    description: string;
+    icon: React.ReactNode;
+    className?: string;
+    priority: number;
+    timestamp: string;
+    handlePrevious: () => void;
+    handleNext: () => void;
+    length: number;
+    currentIndex: number;
+    handleDismiss: () => void;
+    handleSortNewIssues: (sortColumn: SortableColumns) => void;
+    alertType: string;
+    newIssues: SystemMonitoringIssue[];
+    openIssues: SystemMonitoringIssue[];
+    setOpenIssues: React.Dispatch<React.SetStateAction<SystemMonitoringIssue[]>>;
+    setNewIssues: React.Dispatch<React.SetStateAction<SystemMonitoringIssue[]>>;
+    isWizardMode: boolean;
+    router: any;  // You might want to type this properly, e.g., with Next.js' `NextRouter`
+}
+
 type SortableColumns = 'alertType' | 'priority' | 'timestamp';
 
+// Load issues from localStorage or json
 const loadIssues = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');
     if (storedIssues) {
         return JSON.parse(storedIssues);
     } else {
         const issues: SystemMonitoringIssue[] = issuesJson.map(issue => {
-            // Ensure commandResponses is initialized as an array of arrays
             const commandResponses: string[][] = issue.commandResponses && issue.commandResponses.length > 0
                 ? issue.commandResponses
                 : issue.commands.map(() => []);
@@ -59,6 +82,7 @@ const saveIssues = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
 }
 
+// Table head
 function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
     const { translate, language } = useTranslation();
     const renderSortIcon = (column: string) => {
@@ -69,11 +93,10 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
     };
 
     const color = translate("color", false).split(", ");
-    const type = translate("alartTypes", false).split(", ");
+    const type = translate("alertTypes", false).split(", ");
     const incidents = translate("incidentTypes", false).split(", ");
     const severities = translate("severityTypes", false).split(", ");
     const prios = translate("prios", false).split(", ");
-
 
     return (
         <thead className="bg-gray-300">
@@ -88,33 +111,32 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
                     <div className='flex items-center'>{translate('title')} {renderSortIcon('title')}</div>
                 </th>
 
-                {true &&
-                    <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 w-52 uppercase dark:text-neutral-500" onClick={() => onSort('incidentType')}>
-                        <div className='flex items-center'>
-                            <Tippy theme="tomato-theme" content={
-                                <span>
-                                    {incidents.sort().map((incident, index) => (
-                                        <React.Fragment key={index}>
-                                            <span className="">{translate(incident)}</span>
-                                            <br />
-                                        </React.Fragment>
-                                    ))}
-                                </span>
-                            }
-                            >
-                                <div className='flex items-center'>{translate('incidentType')} {renderSortIcon('incidentType')}</div>
-                            </Tippy>
-                        </div>
-                    </th>}
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 w-52 uppercase dark:text-neutral-500" onClick={() => onSort('incidentType')}>
+                    <div className='flex items-center'>
+                        <Tippy theme="tomato-theme" content={
+                            <span>
+                                {incidents.sort().map((incident, index) => (
+                                    <React.Fragment key={index}>
+                                        <span className="">{translate(incident)}</span>
+                                        <br />
+                                    </React.Fragment>
+                                ))}
+                            </span>
+                        }
+                        >
+                            <div className='flex items-center'>{translate('incidentType')} {renderSortIcon('incidentType')}</div>
+                        </Tippy>
+                    </div>
+                </th>
 
-                {true &&
-                    <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
-                        <div className='flex items-center'>
-                            <Tippy theme="tomato-theme" content={<span><span className="font-bold" ></span><span className="text-green-500">{severities[0]}</span><br /><span className="text-yellow-500">{severities[1]}</span><br /><span className="text-red-500">{severities[2]}</span></span>}>
-                                <div className='flex items-center'>{translate('severity')}  {renderSortIcon('severity')}</div>
-                            </Tippy>
-                        </div>
-                    </th>}
+
+                <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('severity')}>
+                    <div className='flex items-center'>
+                        <Tippy theme="tomato-theme" content={<span><span className="font-bold" ></span><span className="text-green-500">{severities[0]}</span><br /><span className="text-yellow-500">{severities[1]}</span><br /><span className="text-red-500">{severities[2]}</span></span>}>
+                            <div className='flex items-center'>{translate('severity')}  {renderSortIcon('severity')}</div>
+                        </Tippy>
+                    </div>
+                </th>
 
                 <th className="px-4 py-3 text-start text-xs font-medium text-gray-800 uppercase dark:text-neutral-500 w-40" onClick={() => onSort('priority')}>
                     <div className='flex items-center'>
@@ -132,14 +154,15 @@ function CardsHeader({ onSort, sortColumn, sortDirection }: CardsHeaderProps) {
     );
 }
 
-function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boolean }) {
+// Table body
+function List({ list, isWizardMode }: { list: SystemMonitoringIssue[], isWizardMode: boolean }) {
     const router = useRouter();
     const { translate, language } = useTranslation();
     const [sortColumn, setSortColumn] = useState<string>('timestamp');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
     const handleRowClick = (id: number) => {
-        if (isLmode) {
+        if (isWizardMode) {
             router.push(`/Issues/${id}/wizard`);
         } else {
             router.push(`/Issues/${id}`);
@@ -195,15 +218,13 @@ function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boole
                             <td className="rounded-bl-xl rounded-tl-xl px-2 py-3 w-40">{getAlertIcon(listIssue.alertType)}</td>
                         </Tippy>
                         <td className="pl-2 pr-6 py-3 truncate">{listIssue.title}</td>
-                        {false &&
-                            <td className="px-2 py-3 truncate">{listIssue.description}</td>}
-                        {true &&
-                            <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
-                                {language === "en" ? listIssue.incidentType : incidentTypeTranslationMapEnDe[listIssue.incidentType]}
-                            </span></td>}
-                        {true &&
-                            <td className="px-2 py-3 text-sm"><span className={`${getSeverityColor(listIssue.severity)} rounded-xl p-2`}>
-                                {listIssue.severity}</span></td>}
+
+                        <td className="px-2 py-3 text-sm"><span className='bg-gray-200 dark:bg-gray-500 rounded-xl p-2'>
+                            {language === "en" ? listIssue.incidentType : incidentTypeTranslationMapEnDe[listIssue.incidentType]}
+                        </span></td>
+
+                        <td className="px-2 py-3 text-sm"><span className={`${getSeverityColor(listIssue.severity)} rounded-xl p-2`}>
+                            {listIssue.severity}</span></td>
                         <td className="px-2 py-3 text-sm">
 
                             {getPriorityText(listIssue.priority,
@@ -222,25 +243,23 @@ function List({ list, isLmode }: { list: SystemMonitoringIssue[], isLmode: boole
     );
 }
 
-function Card1({ id, heading, description, icon, className = '', priority, timestamp, handlePrevious, handleNext, length, currentIndex, handleDismiss, handleSortNewIssues, alertType }:
-    {
-        id: number, heading: string, description: string, icon: React.ReactNode, className?: string, priority: number, timestamp: string, handlePrevious: () => void,
-        handleNext: () => void, length: number, currentIndex: number, handleDismiss: () => void, handleSortNewIssues: (sortColumn: SortableColumns) => void, alertType: string
-    }) {
+// New Issues Card
+function NweIssues({ id, heading, description, icon, className = '', priority, timestamp, handlePrevious, handleNext, length, currentIndex, handleDismiss, handleSortNewIssues, newIssues, alertType, openIssues, setOpenIssues, setNewIssues
+    , isWizardMode, router }
+    : Card1Props) {
     const [isClicked, setIsClicked] = useState(false);
-    const router = useRouter();
     const { translate } = useTranslation();
 
     const extractDescription = (desc: string) => {
         const prefix = "Einleitung";
         if (desc.startsWith(prefix)) {
-            desc = desc.slice(prefix.length);  // Remove "Einleitung:"
+            desc = desc.slice(prefix.length);
         }
         const firstNewlineIndex = desc.indexOf('\n');
-        if (firstNewlineIndex === -1) return ''; // No newline found, return empty string
+        if (firstNewlineIndex === -1) return '';
 
         const secondNewlineIndex = desc.indexOf('\n', firstNewlineIndex + 1);
-        if (secondNewlineIndex === -1) return ''; // No second newline found, return empty string
+        if (secondNewlineIndex === -1) return '';
 
         return desc.substring(firstNewlineIndex + 1, secondNewlineIndex).trim();
     };
@@ -248,10 +267,26 @@ function Card1({ id, heading, description, icon, className = '', priority, times
     const truncatedDescription = extractDescription(description);
 
     const handleClick = () => {
+        // Find and update the issue status to "Open"
+        const updatedNewIssues = newIssues.map(issue =>
+            issue.id === id ? { ...issue, status: 'Open' as 'Open' } : issue
+        );
+
+        // Update the open issues list and save it to localStorage
+        const updatedOpenIssues = [...openIssues, ...updatedNewIssues.filter(issue => issue.id === id)];
+        setOpenIssues(updatedOpenIssues.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+        setNewIssues(updatedNewIssues.filter(issue => issue.id !== id));
+        saveIssues([...updatedOpenIssues, ...updatedNewIssues.filter(issue => issue.id !== id)]);
+
+        // Redirect based on isLMode
         setIsClicked(true);
         setTimeout(() => {
-            router.push(`/Issues/${id}`);
-        }, 300); // 300ms matches the CSS transition duration
+            if (isWizardMode) {
+                router.push(`/Issues/${id}/wizard`);
+            } else {
+                router.push(`/Issues/${id}`);
+            }
+        }, 300);
     };
 
     return (
@@ -260,7 +295,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                 <MdOutlineFiberNew className="text-red-500 text-5xl" />
             </div>
 
-            <div className='flex space-x-8 items-center mt-12'>
+            <div className='flex w-full space-x-8 items-center mt-12'>
                 <button
                     className={`p-2 text-xl bg-gray-200 rounded-full hover:bg-gray-300 ${length > 1 ? '' : 'invisible'}`}
                     onClick={handlePrevious}>
@@ -272,7 +307,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
                     onClick={handleClick}
                     className={`card gap-4 rounded-xl shadow-sm px-6 py-3 shadow-2xl w-full relative bg-[#fcf4ff] ${styles.card} ${className}  h-60 transition-transform duration-300 ${isClicked ? 'transform scale-105' : ''}`}
                 >
-                    <div className="flex flex-col h-full space-y-2 flex-grow">
+                    <div className="flex flex-col h-full  space-y-2 flex-grow">
                         <div className="space-y-2 flex-grow space">
                             <div className="flex space-x-6">
                                 <div className="min-w-max">
@@ -368,7 +403,7 @@ function Card1({ id, heading, description, icon, className = '', priority, times
 export default function IssuesPage() {
     const router = useRouter();
     const { translate, setLanguage, language } = useTranslation();
-    const [isLMode, setIsLMode] = useState(false);
+    const [isWizardMode, setIsWizardMode] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [openIssues, setOpenIssues] = useState<SystemMonitoringIssue[]>([]);
     const [newIssues, setNewIssues] = useState<SystemMonitoringIssue[]>([]);
@@ -383,11 +418,10 @@ export default function IssuesPage() {
 
     useEffect(() => {
         const loadedIssues = loadIssues();
-        console.log("Loaded issues:", loadedIssues);
         setOpenIssues(loadedIssues.filter(issue => issue.status !== "New").sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
         setNewIssues(loadedIssues.filter(issue => issue.status === "New").sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
         setIsLoading(false);
-    }, []); // Run only once on mount
+    }, []);
 
     useEffect(() => {
         if (newIssues.length > 0) {
@@ -415,7 +449,7 @@ export default function IssuesPage() {
                 const newOpenIssue = { ...dismissedIssue, status: "Open" as 'Open' };
                 setOpenIssues(prevOpenIssues => [...prevOpenIssues, newOpenIssue].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
                 setNewIssues(updatedNewIssues);
-                saveIssues([...updatedNewIssues, ...openIssues, newOpenIssue]); // Save updated issues to localStorage
+                saveIssues([...updatedNewIssues, ...openIssues, newOpenIssue]);
             }
 
             if (updatedNewIssues.length > 0) {
@@ -423,11 +457,11 @@ export default function IssuesPage() {
                 setCurrentId(updatedNewIssues[0].id);
             } else {
                 setCurrentIndex(-1);
-                setCurrentId(null); // Use null instead of -1
+                setCurrentId(null);
             }
         }
     };
-
+    // Custom sort function
     const handleSortNewIssues = (sortColumn: SortableColumns) => {
         setNewIssues(prevNewIssues => {
             return [...prevNewIssues].sort((a, b) => {
@@ -497,17 +531,17 @@ export default function IssuesPage() {
             <div className="w-5/6 flex justify-center">
                 <div className="w-full flex justify-between select-none items-center">
                     <div>
-                        {isLMode ?
+                        {isWizardMode ?
                             <div className="flex items-center mt-12">
                                 <LiaToggleOnSolid
-                                    onClick={() => setIsLMode(!isLMode)}
+                                    onClick={() => setIsWizardMode(!isWizardMode)}
                                     className="text-3xl cursor-pointer select-none text-blue-500"
                                 />
                                 <span className="ml-4 text-lg select-none">{translate('modeOn')}</span>
                             </div> :
                             <div className="flex items-center mt-12">
                                 <LiaToggleOffSolid
-                                    onClick={() => setIsLMode(!isLMode)}
+                                    onClick={() => setIsWizardMode(!isWizardMode)}
                                     className="text-3xl cursor-pointer select-none"
                                 />
                                 <span className="ml-4 text-lg select-none">{translate('modeOff')}</span>
@@ -533,7 +567,7 @@ export default function IssuesPage() {
 
             {newIssues.length > 0 && currentId !== null &&
                 <div className="flex flex-col items-center w-full">
-                    <Card1
+                    <NweIssues
                         id={newIssues[currentIndex].id}
                         className={newIssues.length > 1 ? styles.mainIssue : ''}
                         heading={newIssues[currentIndex].title}
@@ -548,6 +582,12 @@ export default function IssuesPage() {
                         handleDismiss={handleDismiss}
                         handleSortNewIssues={handleSortNewIssues}
                         alertType={newIssues[currentIndex].alertType}
+                        newIssues={newIssues}
+                        openIssues={openIssues}
+                        setOpenIssues={setOpenIssues}
+                        setNewIssues={setNewIssues}
+                        isWizardMode={isWizardMode}
+                        router={router}
                     />
                 </div>
             }
@@ -560,7 +600,7 @@ export default function IssuesPage() {
                         {translate('newIssue')}
                     </button>
                 </div>
-                <List list={openIssues} isLmode={isLMode} />
+                <List list={openIssues} isWizardMode={isWizardMode} />
             </div>
         </div >
     )

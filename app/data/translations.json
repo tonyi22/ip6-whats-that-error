@@ -48,7 +48,7 @@
         "titleTemplate": "[Subject] [Predicate] [Object] [Conjunction] [Condition/Place/Action/Process]",
         "titleTemplateExample": "Example: Server CT-10 is overheating the system under high load.",
         "example": "Example",
-        "alartTypes": [
+        "alertTypes": [
             "Info",
             "Warning",
             "Error"
@@ -104,8 +104,8 @@
         "states": [
             "New",
             "Open",
-            "Closed",
-            "In Progress"
+            "In Progress",
+            "Closed"
         ],
         "descriptionHelp": "Problem description.",
         "recommendedSteps": "Recommended steps to resolve the issue.",
@@ -194,7 +194,9 @@
         ],
         "hard": "hard",
         "easy": "easy",
-        "overview": "Overview"
+        "overview": "Overview",
+        "missing": "No information provided.",
+        "days": "days"
     },
     "de": {
         "initialFeedback": "Initiales Feedback",
@@ -238,7 +240,7 @@
         "titleTemplateExample": "Server CT-10 überhitzt das System unter hoher Last.",
         "example": "Beispiel",
         "descriptionTemplate": "Vorlage",
-        "alartTypes": [
+        "alertTypes": [
             "Informationsmeldung",
             "Warnmeldung",
             "Fehlermeldung"
@@ -302,8 +304,8 @@
         "states": [
             "Neu",
             "Offen",
-            "Geschlossen",
-            "In Bearbeitung"
+            "In Bearbeitung",
+            "Geschlossen"
         ],
         "descriptionHelp": "Beschreibung des Problems.",
         "recommendedSteps": "Empfohlene Schritte zur Behebung des Problems.",
@@ -340,11 +342,11 @@
         "chooseCorrectType": "Wähle den richtigen Typ",
         "wasIncidentTypeCorrectlyCategorized": "War der Incident-Typ der richtigen Kategorie zugeordnet?",
         "wasAISolutionRelevant": "War der KI-Lösungsvorschlag für das Issue relevant?",
-        "wereAISuggestionsClear": "Waren die AI-Vorschläge klar und verständlich?",
+        "wereAISuggestionsClear": "Waren die KI-Vorschläge klar und verständlich?",
         "whySuggestionsNotRelevant": "Weshalb waren die Vorschläge nicht relevant?",
         "didYouKnowHowToResolve": "Wusstest du, was zu tun ist, um das Issue zu lösen?",
         "whereIsInformationMissing": "Wo fehlen dir Informationen?",
-        "impactUnderstandable": "War der Auswirkung verständlich?",
+        "impactUnderstandable": "War die Auswirkung verständlich?",
         "priorityUnderstandable": "War die Priorität nachvollziehbar?",
         "selectCorrectPriority": "Wähle die korrekte Priorität aus.",
         "reasonForNewPriority": "Begründung für neue Priorität",
@@ -377,7 +379,7 @@
             "Mit diesem Knopf kannst du Fragen an die KI stellen, falls du Hilfe benötigst.",
             "Nun beginnt die Tour."
         ],
-        "textMissing": "Es scheint als ob hier der Text fehlt. Willst du das mit KI ergänzen lassen?",
+        "textMissing": "Es scheint als ob hier der Text fehlt. Willst du ihn mit der KI ergänzen lassen?",
         "remove": "Entfernen",
         "next": "Weiter",
         "finish": "Fertig",
@@ -391,6 +393,8 @@
         ],
         "hard": "schwer",
         "easy": "einfach",
-        "overview": "Übersicht"
+        "overview": "Übersicht",
+        "missing": "Keine Informationen vorhanden.",
+        "days": "Tage"
     }
 }
