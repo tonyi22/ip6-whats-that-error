@@ -23,9 +23,46 @@ Der Server läuft standardmässig unter [http://localhost:3000](http://localhost
 ### Hinweis zu `npm`
 Dieses Projekt verwendet `npm` für die Installation und Verwaltung von Abhängigkeiten. Stellen Sie sicher, dass `npm` auf Ihrem System installiert ist.
 
-Falls `npm` nicht auf Ihrem System installiert ist, können Sie es [hier herunterladen](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) und installieren. 
+Falls `npm` nicht auf Ihrem System installiert ist, können Sie es [hier herunterladen](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) und installieren.
 
-Nach der Installation von `npm` können Sie die Abhängigkeiten des Projekts wie oben beschrieben installieren und den Entwicklungsserver starten.
+#### Anleitung für Mac-Benutzer
+Kurze Anleitung für Mac User:
+
+Für Mac-Benutzer kann es erforderlich sein, die Command Line Tools zu installieren, bevor npm verwendet werden kann. So geht's: 
+
+Öffnen Sie ein Terminal und geben Sie den folgenden Befehl ein:
+
+```
+xcode-select --install
+```
+
+Um `nvm` (Node Version Manager) zu installieren, verwenden Sie den folgenden Befehl:
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+```
+
+Nach der Installation von `nvm` (möglicherweise müssen Sie Ihr Terminal neu starten), können Sie Node.js installieren:
+
+```
+nvm install 20
+```
+Falls dieser Befehl nach der nicht gefunden wird, müssen möglicherweise noch zwei Zeilen in die Datei ~/.bash_profile eingefügt werden. Diese Datei kann im Terminal mit folgendem Befehl geöffnet werden:
+```
+nano ~/.bash_profile
+```
+Fügen Sie die folgenden Zeilen am Ende der Datei hinzu:
+
+```
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+```
+
+Danach probieren Sie wieder die Installation aus:
+```
+nvm install 20
+```
+
+Nach der Installation von `npm` können Sie die Abhängigkeiten des Projekts wie oben (`npm install`) beschrieben installieren und den Entwicklungsserver starten.
 
 ### Verwendung von Local Storage 
 Dieses Projekt verwendet **Local Storage**, um bestimmte Änderungen und Benutzereinstellungen zwischen den Sitzungen zu speichern. Dies ermöglicht es, dass Änderungen im System beibehalten werden, selbst wenn der Server neu gestartet wird oder die Seite neu geladen wird.
