@@ -73,7 +73,7 @@ Falls Sie Änderungen rückgängig machen möchten oder auf den ursprünglichen 
 *Abbildung 1: Screenshot des Entwicklerwerkzeugs in Safari mit geöffnetem Dropdown-Menü, um den LocalStorage zu löschen.*
 
 ### Terminal-Funktion
-Die Terminal-Funktion ist derzeit nur für das Issue mit der ID 11 implementiert.
+Die Terminal-Funktion ist derzeit nur für das Issue mit der ID 10 implementiert.
 
 ### Mögliche Probleme
 In seltenen Fällen können Probleme auftreten, insbesondere in Bezug auf das Design (z. B. CSS-Probleme). Wenn solche Probleme auftreten, versuchen Sie, den .next-Ordner im Projektverzeichnis zu löschen und die App anschlissend neu zu starten. Dies kann oft Probleme beheben, die durch zwischengespeicherte Dateien verursacht werden.

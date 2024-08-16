@@ -147,7 +147,7 @@ const NewIssue = () => {
         const { name, value } = e.target;
         setNewIssue(prev => ({
             ...prev,
-            [name]: name === 'priority' ? parseInt(value, 10) : value
+            [name]: name === 'priority' ? parseInt(value, 4) : value
         }));
 
         if (name === 'title') {
