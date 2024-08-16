@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
-import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, systemsList } from '@/app/helperFunction';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, systemsList, labels } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from '../TabComponent';
 import '../detailView.css';
@@ -18,7 +18,6 @@ import Terminal from '../Terminal';
 import FeedbackModal from './FeedbackModal';
 import { useTranslation } from '@/app/TranslationContext';
 import Tippy from '@tippyjs/react';
-import { labels } from '../page';
 
 
 // Load and save issues from/to localStorage

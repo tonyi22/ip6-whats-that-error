@@ -400,7 +400,7 @@ function NweIssues({ id, heading, description, icon, className = '', priority, t
     );
 }
 
-export default function IssuesPage() {
+function IssuesPage() {
     const router = useRouter();
     const { translate, setLanguage, language } = useTranslation();
     const [isWizardMode, setIsWizardMode] = useState(false);
@@ -605,3 +605,5 @@ export default function IssuesPage() {
         </div >
     )
 }
+
+export default IssuesPage;

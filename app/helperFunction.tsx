@@ -4,8 +4,20 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 import { de } from 'date-fns/locale';
 import { format } from 'date-fns';
 import Tippy from "@tippyjs/react";
+import { IoIosHelpCircle } from "react-icons/io";
 
 // helper functions used in other files
+
+export const labels = (label: string, help: string) => {
+    return (
+        <div className='flex items-center pb-2 justify-between'>
+            <p className='font-bold'>{label}</p>
+            <Tippy theme="tomato-theme" content={<span>{help}</span>}>
+                <span><IoIosHelpCircle className="text-l" /></span>
+            </Tippy>
+        </div>
+    );
+};
 
 export const calculateDaysSinceTimestamp = (timestamp: Date) => {
     const currentDate = new Date();

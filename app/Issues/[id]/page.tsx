@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaCaretDown, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
-import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, severityTranslation, statusTranslation, alertTypeTransaltion, translateIssueToEnglish, systemsList, calculateDaysSinceTimestamp } from '@/app/helperFunction';
+import { formatDate, getAlertIcon, getSeverityColor, validateType, compareSort, getPriorityText, getAlertText, incidentTypeTranslationMapEnDe, severityTranslation, statusTranslation, alertTypeTransaltion, translateIssueToEnglish, systemsList, calculateDaysSinceTimestamp, labels } from '@/app/helperFunction';
 import { SystemMonitoringIssue } from '@/app/data/data';
 import { TabComponent } from './TabComponent';
 import './detailView.css';
@@ -14,22 +14,10 @@ import { AiOutlineWechatWork } from "react-icons/ai";
 import ChatBubble from './ChatBubble';
 import { IoTerminal } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
-import { IoIosHelpCircle } from "react-icons/io";
 import Terminal from './Terminal';
 import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
 import { useSearchParams } from 'next/navigation';
 import { Language, useTranslation } from '@/app/TranslationContext';
-
-export const labels = (label: string, help: string) => {
-    return (
-        <div className='flex items-center pb-2 justify-between'>
-            <p className='font-bold'>{label}</p>
-            <Tippy theme="tomato-theme" content={<span>{help}</span>}>
-                <span><IoIosHelpCircle className="text-l" /></span>
-            </Tippy>
-        </div>
-    );
-};
 
 const loadIssuesFromLocalStorage = (): SystemMonitoringIssue[] => {
     const storedIssues = localStorage.getItem('issues');

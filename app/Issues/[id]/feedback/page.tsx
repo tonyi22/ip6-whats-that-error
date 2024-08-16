@@ -23,7 +23,7 @@ const saveIssuesToLocalStorage = (issues: SystemMonitoringIssue[]) => {
     localStorage.setItem('issues', JSON.stringify(issues));
 };
 
-export function Feedback({ params }: { params: { id: string } }) {
+function Feedback({ params }: { params: { id: string } }) {
     const router = useRouter();
     const [issue, setIssue] = useState<SystemMonitoringIssue | null>(null);
     const [sliderRating, setSliderRating] = useState(3);
